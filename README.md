@@ -10,13 +10,15 @@ Core features
 + .. Segment-segment intersection
 + .. Segment-point intersection
 + 00 Polygon-point containment
-+ 01 Polygon-segment intersection
++ 01 Polygon-segment intersection test
 + 02 Polygon permiter-point containment (precise)
 + 03 Polygon permiter-point containment (default)
 + 04 Polygon-segment containment
 + 05 Polygon-polygon containment
 + 06 Vertex normal facing	
 + 07 Polygon area, winding direction
++ 08 Segment-segment intersection point
++ 09 Polygon offset
 
 + Polygon outline / Polygon offset / polygon buffer (however you name it)
 + Polygon triangulation (actually using a subset of Triangle.NET for now)
@@ -30,11 +32,11 @@ All works with closed convex / concave even self-intersecting polygons. There is
 Test scenes
 -----------
 
-Test scenes are designed to experience / proof the features. Hit play, then manipulate the geometry in Scene window while in game mode (strict to XY plane, and move the points directly, not their parent container). Every relevant code is in `<Test_scene>_Controller.cs`, so you can see how to use the API.
+Test scenes are designed to experience / proof the features. Hit play, then manipulate the geometry in Scene window while in game mode (strict to XY plane, and move the points directly, not their parent container). Every relevant code is in `<Test_scene>_Controller.cs`, so you can see **how to use the API**.
 
-You can define a polygon with simple `Vector2[]` array, but for sake of simplicity, test scenes uses some polygon sourcing helper classes those take simple GameObject transforms as input. They also keep the polygon models updated on `GameObject` changes.
+You can define a polygon with simple `Vector2[]` array, but for sake of simplicity, test scenes uses some **polygon sourcing helper classes** those take simple GameObject transforms as input. They also keep the polygon models updated on `GameObject` changes.
 
-Another helper objects are polygon debug renderers. They draw simple lines in Game View (using `GL_LINES`) after main camera finished rendering, also draws debug lines in scene view (using `Debug.DrawLine`).
+Another helper objects are **polygon debug renderers**. They draw simple lines in Game View (using `GL_LINES`) after main camera finished rendering, also draws debug lines in scene view (using `Debug.DrawLine`).
 
 Beside these helper classes, you can easily construct `Polygon` / `Segment` instances using simple `Vector2` inputs as well.
 
@@ -46,11 +48,11 @@ Having these test scenes, you can easily provision the mechanism of each EPPZGeo
 
 The star polygon draw yellow when it contains all three points.
 
-	+ When points appear to be on a polygon edge, test will return false
-	+ When point is at a polygon vertex, test will return false
++ When points appear to be on a polygon edge, test will return false
++ When point is at a polygon vertex, test will return false
 
 Usage:
-```
+```C#
 bool test = polygon.ContainsPoint(point);
 ```
 See `TestScene_00_Controller.cs` for the full context.
@@ -61,11 +63,11 @@ See `TestScene_00_Controller.cs` for the full context.
 
 The star polygon drawn yellow when any of the two segments intersects any polygon edge.
 
-	+ Returns false when a segment endpoint appears to be on a polygon edge
-	+ Returns false when a segment endpoint is at a polygon vertex
++ Returns false when a segment endpoint appears to be on a polygon edge
++ Returns false when a segment endpoint is at a polygon vertex
 
 Usage:
-```
+```C#
 bool test = polygon.IsIntersectingWithSegment(segment);
 ```
 See `TestScene_01_Controller.cs` for the full context.
@@ -77,11 +79,11 @@ See `TestScene_01_Controller.cs` for the full context.
 
 The star polygon drawn yellow when the point is contained by the polygon permiter. Accuracy means the line width of the polygon permiter (is `1.0f` by default).
 
-	+ Returns true even if the point appears to be on a polygon edge
-	+ Returns true even if the point is at a polygon vertex
++ Returns true even if the point appears to be on a polygon edge
++ Returns true even if the point is at a polygon vertex
 
 Usage:
-```
+```C#
 bool test = polygon.PermiterContainsPoint(point, accuracy, Segment.ContainmentMethod.Precise);
 ```
 See `TestScene_02_Controller.cs` for the full context.
@@ -94,11 +96,11 @@ TODO: Explaination of Segment.ContainmentMethod.
 
 Actually the same as before, but a smaller accuracy is given (`0.1f`). The star polygon drawn yellow when the point appears to be on any polygon edge of at a polygon vertex.
 
-	+ Returns true even if the point appears to be on a polygon edge
-	+ Returns true even if the point is at a polygon vertex
++ Returns true even if the point appears to be on a polygon edge
++ Returns true even if the point is at a polygon vertex
 
 Usage:
-```
+```C#
 float accuracy = 0.1f;	
 bool test = polygon.PermiterContainsPoint(point, accuracy);
 ```
@@ -110,8 +112,8 @@ See `TestScene_03_Controller.cs` for the full context.
 
 The star drawn yellow when it contains both edge. This is a compund test of polygon-point containment, polygon permiter-point containment, polygon-segment intersection.
 
-	+ Returns true even if the point appears to be on a polygon edge (thanks to permiter test)
-	+ Returns true even if the point is at a polygon vertex (thanks to permiter test)
++ Returns true even if the point appears to be on a polygon edge (thanks to permiter test)
++ Returns true even if the point is at a polygon vertex (thanks to permiter test)
 
 See `TestScene_04_Controller.cs` for the full context.
 
@@ -122,9 +124,9 @@ See `TestScene_04_Controller.cs` for the full context.
 The star drawn yellow when it contain the rectangular polygon.  This is also a compund test of polygon-point containment, polygon-segment intersection, polygon permiter-point containment.
 
 A polygon contains a foreign polygon, when
-	+ foreign polygon vertices are contained by polygon
-	+ foreign polygon segments are not intersecting with polygon
-	+ foreign polygon vertices are not contained by polygon permiter
++ foreign polygon vertices are contained by polygon
++ foreign polygon segments are not intersecting with polygon
++ foreign polygon vertices are not contained by polygon permiter
 
 See `TestScene_05_Controller.cs` for the full context.
 
@@ -141,16 +143,16 @@ The segments here are imaginary polygon edges with CW winding direction. The nor
 It uses a nice little `Segment` method `public bool IsPointLeft(Vector2 point)` to create a compund test with both segments. It goes like below.
 
 The two segments encompasses an acute angle if
-	+ the endpoint of the second segment lies on the left of the first segment
++ the endpoint of the second segment lies on the left of the first segment
 
 The normal facing outward if
-	+ the neighbouring segment encompasses an acute angle
-		+ and the normal point lies on the left of both segments
-	+ or the neighbouring segments encompass an obtuse angle
-		+ and the normal point lies on the left of one of the segments
++ the neighbouring segment encompasses an acute angle
+++ and the normal point lies on the left of both segments
++ or the neighbouring segments encompass an obtuse angle
+++ and the normal point lies on the left of one of the segments
 
 Implemented like:
-```
+```C#
 bool NormalFacingTest()
 {
 	Vector2 point = normal.b;
@@ -174,7 +176,7 @@ The winding direction of a polygon comes to a good use when you want to validate
 Here basically you can see how area and winding direction of a polygon gets calculated. Just hit play and nudge some points around.
 
 Usage:
-```
+```C#
 // After a polygon constructed, you can simply access values.
 float area = polygon.area;
 bool isCW = polygon.isCW;
