@@ -46,7 +46,7 @@ Having these test scenes, you can easily provision the mechanism of each EPPZGeo
 00 Polygon-point containment
 ----------------------------
 
-The star polygon draw yellow when it contains all three points.
+The star polygon drawn yellow when it contains all three points.
 
 + When points appear to be on a polygon edge, test will return false
 + When point is at a polygon vertex, test will return false
@@ -147,9 +147,9 @@ The two segments encompasses an acute angle if
 
 The normal facing outward if
 + the neighbouring segment encompasses an acute angle
-++ and the normal point lies on the left of both segments
+	+ and the normal point lies on the left of both segments
 + or the neighbouring segments encompass an obtuse angle
-++ and the normal point lies on the left of one of the segments
+	+ and the normal point lies on the left of one of the segments
 
 Implemented like:
 ```C#
