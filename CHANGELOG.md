@@ -16,6 +16,15 @@
 			+ Segment intersection
 			+ Polygon inside test
 
+* 0.1.53
+
+	+ Implemented `08 Segment-segment intersection point` test scene
+	+ Hooked in segment intersection algorithm to `Geometry`
+
+* 0.1.52
+
+	+ Createdtest scene 
+
 * 0.1.51
 
 	+ GitHub deploy

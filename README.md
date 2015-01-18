@@ -2,11 +2,12 @@ Unity.EPPZKit
 -------------
 
 Unity.EPPZGeometry
-------------------
+==================
 
 2D geometry for everyday polygon hassle. Made for tangram! so production proof (yet not complete).
 
 Core features
+
 + .. Segment-segment intersection
 + .. Segment-point intersection
 + 00 Polygon-point containment
@@ -176,6 +177,7 @@ The winding direction of a polygon comes to a good use when you want to validate
 Here basically you can see how area and winding direction of a polygon gets calculated. Just hit play and nudge some points around.
 
 Usage:
+
 ```C#
 // After a polygon constructed, you can simply access values.
 float area = polygon.area;

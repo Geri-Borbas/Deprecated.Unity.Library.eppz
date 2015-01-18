@@ -68,6 +68,34 @@ namespace EPPZGeometry
 				);
 		}
 
+		public static Vector2 IntersectionOfSegments(Vector2 AA, Vector2 AB, Vector2 BA, Vector2 BB)
+		{
+			double BBXMinusBAX = BB.x - BA.x;
+			double AAXMinusABX = AA.x - AB.x;
+			double Denominator = (AB.y - AA.y) * BBXMinusBAX - AAXMinusABX * (BA.y - BB.y);
+			if (Denominator == 0)
+				return Vector2.zero;
+			double X = ((AA.x * AB.y - AA.y * AB.x) * BBXMinusBAX + (BA.x * BB.y - BA.y * BB.x) * AAXMinusABX) /
+				Denominator;
+			double Y;
+			if (AA.x == AB.x)
+			{
+				Y = (X * BB.y - X * BA.y - BA.x * BB.y + BA.y * BB.x) / (BB.x - BA.x);
+			}
+			else
+			{
+				Y = (X * AB.y - X * AA.y - AA.x * AB.y + AA.y * AB.x) / (AB.x - AA.x);
+			}
+			
+			if ((X < AA.x && X < AB.x) ||
+			    (X < BA.x && X < BB.x) ||
+			    (Y < AA.y && Y < AB.y) ||
+			    (Y < BA.y && Y < BB.y))
+				return Vector2.zero;
+			
+			return new Vector2((float)X, (float)Y);
+		}
+
 		// Determine point distance from line (not segment) defined by endpoints.
 		public static float PointDistanceFromLine(Vector2 point, Vector2 a, Vector2 b)
 		{
