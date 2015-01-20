@@ -95,20 +95,17 @@ namespace EPPZGeometry
 			}
 		}
 
-		/**
-		 * True when the two segments are intersecting. Not true when endpoints
-		 * are equal, nor when a point is contained by other segment.
-		 */
-		public bool IsIntersectingWithSegment(Segment segment)
+		public Rect ExpandedBounds(float accuracy)
 		{
-			// No intersecting if bounds don't even overlap (slight optimization).
-			bool boundsOverlaps = this.bounds.Overlaps(segment.bounds);
-			if (boundsOverlaps == false) return false;
-
-			// Do the Bryce Boe test.
-			return Geometry.AreSegmentsIntersecting(this.a, this.b, segment.a, segment.b);
+			float treshold = accuracy / 2.0f;
+			Rect bounds_ = this.bounds;
+			return Rect.MinMaxRect(
+				bounds_.xMin - treshold,
+				bounds_.yMin - treshold,
+				bounds_.xMax + treshold,
+				bounds_.yMax + treshold);
 		}
-		
+
 		public bool ContainsPoint(Vector2 point)
 		{ return ContainsPoint(point, defaultAccuracy); }
 
@@ -123,12 +120,7 @@ namespace EPPZGeometry
 			float treshold = accuracy / 2.0f;
 
 			// Expanded bounds containment test.
-			Rect bounds_ = this.bounds;
-			Rect expandedBounds = Rect.MinMaxRect(
-				bounds_.xMin - treshold,
-				bounds_.yMin - treshold,
-				bounds_.xMax + treshold,
-				bounds_.yMax + treshold);
+			Rect expandedBounds = this.ExpandedBounds(accuracy);
 			bool expandedBoundsContainment = expandedBounds.Contains(point);
 			if (expandedBoundsContainment == false) return false; // Only if passed
 
@@ -161,6 +153,85 @@ namespace EPPZGeometry
 
 			// All passed.
 			return true;
+		}
+
+
+		/**
+		 * True when the two segments are intersecting. Not true when endpoints
+		 * are equal, nor when a point is contained by other segment.
+		 * Can say this algorithm has infinite precision.
+		 */
+		public bool IsIntersectingWithSegment(Segment segment)
+		{
+			// No intersecting if bounds don't even overlap (slight optimization).
+			bool boundsOverlaps = this.bounds.Overlaps(segment.bounds);
+			if (boundsOverlaps == false) return false;
+
+			// Do the Bryce Boe test.
+			return Geometry.AreSegmentsIntersecting(this.a, this.b, segment.a, segment.b);
+		}
+
+		public bool IntersectionWithSegment(Segment segment, out Vector2 intersectionPoint)
+		{ return IntersectionWithSegment(segment, defaultAccuracy, out intersectionPoint); }
+		
+		public bool IntersectionWithSegment(Segment segment, float accuracy, out Vector2 intersectionPoint)
+		{ return IntersectionWithSegment(segment, accuracy, defaultContainmentMethod, out intersectionPoint); }
+
+		public bool IntersectionWithSegment(Segment segment, ContainmentMethod containmentMethod, out Vector2 intersectionPoint)
+		{ return IntersectionWithSegment(segment, defaultAccuracy, containmentMethod, out intersectionPoint); }
+
+		public bool IntersectionWithSegment(Segment segment, float accuracy, ContainmentMethod containmentMethod, out Vector2 intersectionPoint)
+		{
+			intersectionPoint = Vector2.zero; // Default
+
+			// No intersecting if bounds don't even overlap.
+			Rect expandedBounds = this.ExpandedBounds(accuracy);
+			Rect otherExpandedBounds = segment.ExpandedBounds(accuracy);
+			bool boundsOverlaps = expandedBounds.Overlaps(otherExpandedBounds);
+			if (boundsOverlaps == false)
+			{
+				return false; // No intersection
+			}
+
+			// Look up point containments.
+			bool containsA = this.ContainsPoint(segment.a, accuracy, containmentMethod);
+			if (containsA)
+			{
+				intersectionPoint = segment.a;
+				return true; // Intersecting
+			}
+
+			bool containsB = this.ContainsPoint(segment.b, accuracy, containmentMethod);
+			if (containsB)
+			{
+				intersectionPoint = segment.b;
+				return true; // Intersecting
+			}
+
+			bool otherContainsA = segment.ContainsPoint(this.a, accuracy, containmentMethod);
+			if (otherContainsA)
+			{
+				intersectionPoint = this.a;
+				return true; // Intersecting
+			}
+			
+			bool otherContainsB = segment.ContainsPoint(this.b, accuracy, containmentMethod);
+			if (otherContainsB)
+			{
+				intersectionPoint = this.b;
+				return true; // Intersecting
+			}
+
+			// Do the Bryce Boe test.
+			bool isIntersecting = Geometry.AreSegmentsIntersecting(this.a, this.b, segment.a, segment.b);
+			if (isIntersecting == false)
+			{
+				return false; // No intersection
+			}
+
+			// All fine, intersection point can be determined.
+			intersectionPoint = Geometry.IntersectionOfSegments (this.a, this.b, segment.a, segment.b); // Actually the intersection of lines defined by segments
+			return true; // Intersecting
 		}
 
 		public float DistanceToPoint(Vector2 point_)

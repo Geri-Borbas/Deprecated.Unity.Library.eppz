@@ -32,25 +32,18 @@ public class TestScene_08_Controller : MonoBehaviour
 
 	bool SegmentIntersectionTest()
 	{
-		bool areIntersecting = segment_a.IsIntersectingWithSegment(segment_b);
-		// if (areIntersecting)
+		Vector2 intersectionPoint;
+		bool isIntersecting = segment_a.IntersectionWithSegment(segment_b, out intersectionPoint);
+		if (isIntersecting)
 		{
-			Vector2 intersectionPoint = 
-				Geometry.IntersectionOfSegments(
-					segment_a.a,
-					segment_a.b,
-					segment_b.a,
-					segment_b.b
-					);
-
 			intersectionPointObject.transform.position = new Vector3(
 				intersectionPoint.x,
 				intersectionPoint.y,
-				0.0f
+				intersectionPointObject.transform.position.z
 				); // Align point
 		}
 
-		return areIntersecting;
+		return isIntersecting;
 	}
 
 	void RenderTestResult(bool testResult)
@@ -59,6 +52,8 @@ public class TestScene_08_Controller : MonoBehaviour
 		Material currentMaterial = (testResult) ? passingMaterial : polygonMaterial;
 		segmentRendererA.lineMaterial = currentMaterial;
 		segmentRendererB.lineMaterial = currentMaterial;
-		intersectionPointObject.renderer.material = currentMaterial;
+
+		// Show / hide intersection point.
+		intersectionPointObject.renderer.enabled = testResult;
 	}
 }

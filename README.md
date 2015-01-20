@@ -196,6 +196,45 @@ polygon.UpdateCalculations();
 See `EPPZGeometry_Polygon.cs` source for the details.
 
 
+08 Segment-segment intersection point
+-------------------------------------
+
+Segment intersection has two parts actually. Get the intersection point of the lines defined by the segment, then look up if the point resides on the segments.
+
+The first part has implemented as a generic `Geometry` feature, `Vector2 IntersectionOfSegments(Vector2 a1, Vector2 b1, Vector2 a2, Vector2 b2)`.
+
+The second part gets more tricky, uses `accuracy` like many tests above. Checks if bounds are even overlap, after that it uses the segment-point containment tests described above) for the endpoints, checks if the segments has intersection point at all (using winding tests described above), then returns with the intersection point of lines.
+
+Having this, the method will return with a valid intersection point even if the segments are touching each other, which I really like from a practical standpoint.
+
+To avoid redundant test method calls, the method follows API style of `Physics.Raycast`, where you can query if there is intersection at all, then use point only if any.
+
+Usage:
+
+```C#
+// Output will have non-zero value only on having a valid intersection.
+Vector2 intersectionPoint;
+bool isIntersecting = segment_a.IntersectionWithSegment(segment_b, out intersectionPoint);
+```
+
+See `TestScene_08_Controller.cs` for the full context.
+
+
+09 Polygon offset
+-----------------
+
+My favourite, yet work-in-progress, though. Raw offset polygon just created fine, only cleanup self intersections is to go.
+
+Usage:
+
+```C#
+	float offset = 0.5f;
+	Polygon offsetPolygon = polygon.OffsetPolygon(offset);
+```
+
+See `TestScene_09_Controller.cs` for the full context.
+
+
 Extras
 ------
 

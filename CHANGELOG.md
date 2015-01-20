@@ -3,11 +3,6 @@
 	+ `EPPZGeometry_Polygon` / `EPPZGeometry_IntersectionVertex`
 		+ Create Offset polygon from raw offset polygon
 			+ Created `IntersectionVertex` soley for this
-			+ Segmen-Segment intersection
-				+ After intersection test
-				+ After point containment test
-				+ Get intersection point (!)
-					+ Create distinct test scene for this
 
 	+ Sub polygons within polygons
 		+ Test
@@ -16,6 +11,17 @@
 			+ Segment intersection
 			+ Polygon inside test
 
+* 0.1.6 (01:00)
+
+	+ Intersection point and intersection test has merged
+		+ Uses `Physics.Raycast` API style (bool return, output parameter as result)
+		+ Can use accuracy, containment method
+		+ Some documentation
+
+* 0.1.54
+
+	+ Replaced intersection algorithm
+
 * 0.1.53
 
 	+ Implemented `08 Segment-segment intersection point` test scene
@@ -23,7 +29,7 @@
 
 * 0.1.52
 
-	+ Createdtest scene 
+	+ Created `08 Segment-segment intersection point` test scene
 
 * 0.1.51
 

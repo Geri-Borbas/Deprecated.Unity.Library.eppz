@@ -58,7 +58,7 @@ namespace EPPZGeometry
 		 * True when the two segments are intersecting. Not true when endpoints
 		 * are equal, nor when a point is contained by other segment.
 		 * 
-		 * From http://bryceboe.com/2006/10/23/line-segment-intersection-algorithm/* 
+		 * From http://bryceboe.com/2006/10/23/line-segment-intersection-algorithm/ 
 		 */
 		public static bool AreSegmentsIntersecting(Vector2 a1, Vector2 b1, Vector2 a2, Vector2 b2)
 		{
@@ -68,32 +68,27 @@ namespace EPPZGeometry
 				);
 		}
 
-		public static Vector2 IntersectionOfSegments(Vector2 AA, Vector2 AB, Vector2 BA, Vector2 BB)
+		// 
+		
+		
+		/**
+		 * Returns intersection point of two lines (defined by segment endpoints).
+		 * 
+		 * Returns zero, when segments have common points,
+		 * or when a segment point lies on other.
+		 */
+		public static Vector2 IntersectionOfSegments(Vector2 a1, Vector2 b1, Vector2 a2, Vector2 b2)
 		{
-			double BBXMinusBAX = BB.x - BA.x;
-			double AAXMinusABX = AA.x - AB.x;
-			double Denominator = (AB.y - AA.y) * BBXMinusBAX - AAXMinusABX * (BA.y - BB.y);
-			if (Denominator == 0)
-				return Vector2.zero;
-			double X = ((AA.x * AB.y - AA.y * AB.x) * BBXMinusBAX + (BA.x * BB.y - BA.y * BB.x) * AAXMinusABX) /
-				Denominator;
-			double Y;
-			if (AA.x == AB.x)
-			{
-				Y = (X * BB.y - X * BA.y - BA.x * BB.y + BA.y * BB.x) / (BB.x - BA.x);
-			}
-			else
-			{
-				Y = (X * AB.y - X * AA.y - AA.x * AB.y + AA.y * AB.x) / (AB.x - AA.x);
-			}
-			
-			if ((X < AA.x && X < AB.x) ||
-			    (X < BA.x && X < BB.x) ||
-			    (Y < AA.y && Y < AB.y) ||
-			    (Y < BA.y && Y < BB.y))
-				return Vector2.zero;
-			
-			return new Vector2((float)X, (float)Y);
+			float d = (a1.x - b1.x) * (a2.y - b2.y) - (a1.y - b1.y) * (a2.x - b2.x);
+			// if (d == 0.0f) return Vector2.zero;
+
+			float x = ((a2.x - b2.x) * (a1.x * b1.y - a1.y * b1.x) - (a1.x - b1.x) * (a2.x * b2.y - a2.y * b2.x)) / d;
+			float y = ((a2.y - b2.y) * (a1.x * b1.y - a1.y * b1.x) - (a1.y - b1.y) * (a2.x * b2.y - a2.y * b2.x)) / d;
+
+			// if (x < Mathf.Min(a1.x, b1.x) || x > Mathf.Max(a1.x, b1.x)) return Vector2.zero;
+			// if (x < Mathf.Min(a2.x, b2.x) || x > Mathf.Max(a2.x, b2.x)) return Vector2.zero;
+
+			return new Vector2(x, y);
 		}
 
 		// Determine point distance from line (not segment) defined by endpoints.
