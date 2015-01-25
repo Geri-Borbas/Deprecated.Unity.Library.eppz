@@ -23,11 +23,12 @@ namespace EPPZGeometry
 		 * 
 		 */
 		
-		public static IntersectionVertex IntersectionVertexOfEdges(Edge edgeA, Edge edgeB)
+		public static IntersectionVertex IntersectionVertexOfEdges(Edge edgeA, Edge edgeB, Vector2 intersectionPoint)
 		{
 			IntersectionVertex instance = new IntersectionVertex();
 			instance._edgeA = edgeA;
 			instance._edgeB = edgeB;
+			instance._point = intersectionPoint;
 			instance.CalculateIntersection();
 			return instance;
 		}
@@ -56,7 +57,7 @@ namespace EPPZGeometry
 		}
 
 		private Vector2 _point;
-		public virtual Vector2 point // Has own point until not participating in a polygon
+		public override Vector2 point // Has own point as not participating in a polygon
 		{
 			get { return _point; }
 		}
@@ -66,26 +67,10 @@ namespace EPPZGeometry
 		 * 
 		 * Features
 		 * 
-		 */ 
+		 */ 	
 
 		void CalculateIntersection()
 		{
-			// Containment (endpoint or segment itself).
-			bool containsA = nextEdge.ContainsPoint(edge.a);
-			if (containsA)
-			{ _point = edge.a; }
-
-			bool containsB = nextEdge.ContainsPoint(edge.b);
-			if (containsB)
-			{ _point = edge.b; }
-
-			// Arbitrary intersection point.
-			bool containsEndpoint = (containsA || containsB);
-			if (containsEndpoint == false)
-			{
-
-			}
-
 			alwaysCalculate = false; // Do not recalculate bisector / normal on access
 			CalculateBisector();
 			CalculateNormal();

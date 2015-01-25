@@ -112,7 +112,7 @@ namespace EPPZGeometry
 		{
 			get
 			{
-				int _edgeIndex = (index < polygon.edgeCount) ? index : 0;
+				int _edgeIndex = (index < polygon.edgeCount - 1) ? index + 1 : 0;
 				return polygon.edges[_edgeIndex];
 			}
 		}

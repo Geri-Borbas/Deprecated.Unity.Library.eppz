@@ -2,7 +2,11 @@
 
 	+ `EPPZGeometry_Polygon` / `EPPZGeometry_IntersectionVertex`
 		+ Create Offset polygon from raw offset polygon
-			+ Created `IntersectionVertex` soley for this
+			+ Intersections are determined
+				+ Construct offset polygon
+					+ First without loop polygons
+					+ Then safely with a single loop polygon
+					+ Then full loop polygon validating
 
 	+ Sub polygons within polygons
 		+ Test
@@ -10,6 +14,16 @@
 			+ Permiter point containment
 			+ Segment intersection
 			+ Polygon inside test
+
+* 0.1.7 (02:20)
+
+	+ Polygon offset algorithm
+		+ Fixed `Edge.nextEdge` calculations
+		+ Loop polygon tests implemented
+		+ Fixed `IntersectionVertex.CalculateIntersection` calculations
+		+ Test scene
+			+ Created intersection vertex renderers (really custom only for this)
+			+ Intersection vertices can be inspected
 
 * 0.1.6 (01:00)
 

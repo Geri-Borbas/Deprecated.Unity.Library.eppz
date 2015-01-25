@@ -310,7 +310,7 @@ namespace EPPZGeometry
 		 * 
 		 */ 
 
-		public Polygon OffsetPolygon(float offset)
+		public Polygon OffsetPolygon(float offset, List<IntersectionVertex> intersectionVertices)
 		{
 			// Allocate.
 			int offsetPolygonPointCount = pointCount * (3);
@@ -325,24 +325,37 @@ namespace EPPZGeometry
 			}
 
 			Polygon rawOffsetPolygon = Polygon.PolygonWithPoints(offsetPolygonPoints);
-			return CleanedUpOffsetPolygon(rawOffsetPolygon);
+			return CleanedUpOffsetPolygon(rawOffsetPolygon, intersectionVertices);
 		}
 
-		public Polygon CleanedUpOffsetPolygon(Polygon rawOffsetPolygon)
+		public Polygon CleanedUpOffsetPolygon(Polygon rawOffsetPolygon, List<IntersectionVertex> intersectionVertices)
 		{
+			if (rawOffsetPolygon.edgeCount <= 3) return rawOffsetPolygon; // Only with 4 edges at least
+
 			// Loop polygon mode.
 			foreach (Edge eachEdge in rawOffsetPolygon.edges)
 			{
-				// Forward intersection text.
-				Edge eachNextEdge = eachEdge.nextEdge;
-				bool isIntersecting = eachEdge.IsIntersectingWithSegment(eachNextEdge);
-				if (isIntersecting)
+				bool isIntersecting;
+				Vector2 intersectionPoint;
+				Edge intersectingEdge = eachEdge.nextEdge.nextEdge; 
+				
+				// Forward intersection test.
+				while (true)
 				{
-					// Get intersection vertex.
-					IntersectionVertex eachIntersectionVertex = IntersectionVertex.IntersectionVertexOfEdges(eachEdge, eachNextEdge);
+					isIntersecting = eachEdge.IntersectionWithSegment(intersectingEdge, out intersectionPoint);
+					if (isIntersecting)
+					{
+						// Create intersection vertex.
+						IntersectionVertex eachIntersectionVertex = IntersectionVertex.IntersectionVertexOfEdges(eachEdge, intersectingEdge, intersectionPoint);
+						
+						// Debug.
+						if (intersectionVertices != null) intersectionVertices.Add(eachIntersectionVertex);
+					}
+
+					intersectingEdge = intersectingEdge.nextEdge; // Step to the next edge
+					if (intersectingEdge == eachEdge.previousEdge) break; // Every edge checked
 				}
 			}
-
 
 			return rawOffsetPolygon;
 		}
