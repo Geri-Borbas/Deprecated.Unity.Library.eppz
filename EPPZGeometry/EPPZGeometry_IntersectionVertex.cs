@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 
 
 namespace EPPZGeometry
 {
 	
 	
-	public class IntersectionVertex : Vertex
+	public class IntersectionVertex : Vertex, IEquatable<IntersectionVertex>
 	{
 
 
@@ -77,12 +79,15 @@ namespace EPPZGeometry
 
 		}
 
-		bool isEqual(IntersectionVertex intersectionVertex)
+		public bool Equals(IntersectionVertex intersectionVertex)
 		{
 			float distance = Vector3.Distance(this.point, intersectionVertex.point);
 			bool positionMatch = (distance < defaultAccuracy);
-			bool intersectingEdgeMatch = (this.nextEdge == intersectionVertex.nextEdge);
-			return (positionMatch && intersectingEdgeMatch);
+			bool edgeMatches = (
+				((this._edgeA == intersectionVertex._edgeA) && (this._edgeB == intersectionVertex._edgeB)) || 
+				((this._edgeA == intersectionVertex._edgeB) && (this._edgeB == intersectionVertex._edgeA))
+				);
+			return (positionMatch && edgeMatches);
 		}
 	}
 }

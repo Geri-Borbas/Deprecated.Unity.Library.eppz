@@ -332,11 +332,24 @@ namespace EPPZGeometry
 		{
 			if (rawOffsetPolygon.edgeCount <= 3) return rawOffsetPolygon; // Only with 4 edges at least
 
-			// Loop polygon mode.
+			List<Vector2> offsetPolygonPoints = new List<Vector2>();
+
+			// Select starting edge.
+			Edge firstEdge = rawOffsetPolygon.edges[0];
+
+			// -------------------
+			// Offset polygon mode
+			// -------------------
+
+			bool loopMode = false;
+
 			foreach (Edge eachEdge in rawOffsetPolygon.edges)
 			{
 				bool isIntersecting;
 				Vector2 intersectionPoint;
+				List<IntersectionVertex> pool = new List<IntersectionVertex>();
+
+				// Select next edge to test with.
 				Edge intersectingEdge = eachEdge.nextEdge.nextEdge; 
 				
 				// Forward intersection test.
@@ -345,15 +358,61 @@ namespace EPPZGeometry
 					isIntersecting = eachEdge.IntersectionWithSegment(intersectingEdge, out intersectionPoint);
 					if (isIntersecting)
 					{
+						// ---------
+						// Loop mode
+						// ---------
+
 						// Create intersection vertex.
-						IntersectionVertex eachIntersectionVertex = IntersectionVertex.IntersectionVertexOfEdges(eachEdge, intersectingEdge, intersectionPoint);
+						IntersectionVertex intersectionVertex = IntersectionVertex.IntersectionVertexOfEdges(eachEdge, intersectingEdge, intersectionPoint);
+
+
+						// End.
+						int index = pool.IndexOf(intersectionVertex);
+						bool alreadyPooled = (index != -1);
+
+						// Close a loop.
+						if (alreadyPooled)
+						{
+							// Splice.
+							int count = pool.Count - index;
+							List<IntersectionVertex> loopPoints = pool.GetRange(index, count);
+							pool.RemoveRange(index, count);
+
+							// Add sub-polygon.
+							if (count > 1)
+							{
+								// HEY, BUT HOW?
+							}
+
+							// Or add offset polygon point.
+							else
+							{
+								offsetPolygonPoints.Add(intersectionVertex.point);
+								offsetPolygonPoints.Add(intersectionVertex.point);
+							}
+						}
+
+						// Pool points.
+						else
+						{
+							pool.Add (intersectionVertex);
+						}
 						
 						// Debug.
-						if (intersectionVertices != null) intersectionVertices.Add(eachIntersectionVertex);
+						// if (intersectionVertices != null) intersectionVertices.Add(eachIntersectionVertex);
 					}
 
-					intersectingEdge = intersectingEdge.nextEdge; // Step to the next edge
-					if (intersectingEdge == eachEdge.previousEdge) break; // Every edge checked
+					// Step forward (to the next edge).
+					intersectingEdge = intersectingEdge.nextEdge;
+
+					// Every edge checked.
+					if (intersectingEdge == eachEdge.previousEdge) break;
+				}
+
+				{
+					// Collect endpoint.
+					offsetPolygonPoints.Add(eachEdge.b);
+					
 				}
 			}
 

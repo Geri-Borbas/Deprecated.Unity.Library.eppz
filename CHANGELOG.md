@@ -15,6 +15,13 @@
 			+ Segment intersection
 			+ Polygon inside test
 
+* 0.1.8 (00:40)
+
+	+ Start collecting `Edge.b` points
+	+ Loop mode outlined, needs to be more recursive
+		+ Something like, "Pool points here until this point"
+		+ `IntersectionVertex` implements `IEquatable`
+
 * 0.1.7 (02:20)
 
 	+ Polygon offset algorithm
