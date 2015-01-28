@@ -9,11 +9,46 @@
 					+ Then full loop polygon validating
 
 	+ Sub polygons within polygons
+
+		+ raw points should be private
+			+ Only access through point accessors (using sub polygons)
+
+		+ Sub-polygons can be added with method (inheriting parent winding direction)
+		+ Every (!) public accessor now treats them as part of the internal polygon structure
+			+ bounds
+			+ area
+			+ signed area
+
+			+ pointCount
+			+ vertexcount
+			+ edgeCount
+
+			+ PointForIndex(int index);
+			+ public Vector2 NextPointForIndex(int index);
+			+ public Vector2 PreviousPointForIndex(int index);
+		
+			+ public Vertex VertexForIndex(int index);
+			+ public Vertex NextVertexForIndex(int index);
+			+ public Vertex PreviousVertexForIndex(int index)
+
+			+ Create with edges
+				+ public Vertex VertexForIndex(int index);
+				+ public Vertex NextVertexForIndex(int index);
+				+ public Vertex PreviousVertexForIndex(int index)
+
+			+ Create enumerators
+				+ polygon.EnumerateEdges({ });
+
 		+ Test
 			+ Point containment
 			+ Permiter point containment
 			+ Segment intersection
 			+ Polygon inside test
+
+* 0.1.9 (00:30)
+
+	+ EPPZGeometry refactor (namings / method order)
+	+ Outlined sub-polygon behaviour
 
 * 0.1.8 (00:40)
 

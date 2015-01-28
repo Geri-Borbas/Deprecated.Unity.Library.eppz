@@ -23,13 +23,13 @@ namespace EPPZGeometry
 
 		public Vector2[] points; // Access raw points (TODO: Make it internal later on).
 
-		public Vertex[] vertices;
-		public Edge[] edges;
+		public Vertex[] vertices; // Vertices of this polygon (excluding sub polygon vertices)
+		public Edge[] edges; // Edges of this polygon (excluding sub polygon edges)
+		private Polygon[] polygons; // Sub-polygons (if any)
 
 		private Rect _bounds;
 		public Rect bounds { get { return _bounds; } }
 
-		
 		private float _area;
 		public float area { get { return _area; } }
 
