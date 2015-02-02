@@ -99,23 +99,13 @@ namespace EPPZGeometry
 		 * 
 		 */
 		
-		public virtual Edge previousEdge // Readonly
-		{
-			get
-			{
-				int _edgeIndex = (index > 0) ? index - 1 : polygon.edgeCount - 1;
-				return polygon.edges[_edgeIndex];
-			}
-		}
+		private Edge _previousEdge;
+		public virtual Edge previousEdge { get { return _previousEdge; } } // Readonly
+		public void SetPreviousEdge(Edge edge) { _previousEdge = edge; } // Explicit setter (injected at creation time)
 		
-		public virtual Edge nextEdge // Readonly
-		{
-			get
-			{
-				int _edgeIndex = (index < polygon.edgeCount - 1) ? index + 1 : 0;
-				return polygon.edges[_edgeIndex];
-			}
-		}
+		private Edge _nextEdge;
+		public virtual Edge nextEdge  { get { return _nextEdge; } } // Readonly
+		public void SetNextEdge(Edge edge) { _nextEdge = edge; } // Explicit setter (injected at creation time)
 
 	}
 }

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 
@@ -11,6 +11,7 @@ namespace EPPZGeometry
 
 
 		public Transform[] pointTransforms;
+		public Polygon.WindingDirection windingDirection = Polygon.WindingDirection.Unknown;
 		public bool updateModel = false;
 
 		public Polygon polygon;
@@ -27,7 +28,7 @@ namespace EPPZGeometry
 			if (updateModel)
 			{
 				// Update polygon model with transforms, also update calculations.
-				polygon.UpdateWithSource(this);
+				polygon.UpdatePointPositionsWithSource(this);
 			}
 		}
 	}

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -14,18 +15,24 @@ namespace EPPZGeometry
 		// Identifiers.
 		public int index;
 		public string name;
-		
+
+		// Windings.
 		public enum WindingDirection { Unknown, CCW, CW };
 		private WindingDirection _windingDirection = WindingDirection.Unknown;
 		public WindingDirection windingDirection { get { return _windingDirection; } }
 		public bool isCW { get { return (_windingDirection == WindingDirection.CW); } }
 		public bool isCCW { get { return (_windingDirection == WindingDirection.CCW); } }
 
-		public Vector2[] points; // Access raw points (TODO: Make it internal later on).
+		// For internal use.
+		// Edge, Vertex class can read from this directly
+		// Debug renderers can access raw points during development
+		// From the outside, use vertices, edges only, or enumerators
+		private Vector2[] _points;
+		public Vector2[] points { get { return _points; } } // Readonly
 
 		public Vertex[] vertices; // Vertices of this polygon (excluding sub polygon vertices)
 		public Edge[] edges; // Edges of this polygon (excluding sub polygon edges)
-		private Polygon[] polygons; // Sub-polygons (if any)
+		private List<Polygon> polygons = new List<Polygon>(); // Sub-polygons (if any)
 
 		private Rect _bounds;
 		public Rect bounds { get { return _bounds; } }
@@ -44,16 +51,15 @@ namespace EPPZGeometry
 		 */ 
 		
 		public static Polygon PolygonWithPointList(List<Vector2> pointList)
-		{
-			return Polygon.PolygonWithPoints(pointList.ToArray());
-		}
+		{ return Polygon.PolygonWithPoints(pointList.ToArray()); }
 
 		public static Polygon PolygonWithSource(EPPZGeometry_PolygonSource polygonSource)
-		{
-			return Polygon.PolygonWithPointTransforms(polygonSource.pointTransforms);
-		}
+		{ return Polygon.PolygonWithPointTransforms(polygonSource.pointTransforms, polygonSource.windingDirection); }
 
-		public static Polygon PolygonWithPointTransforms(Transform[] pointTransforms) // Uses Transform.localPosition.xy()
+		public static Polygon PolygonWithPointTransforms(Transform[] pointTransforms)
+		{ return PolygonWithPointTransforms(pointTransforms, WindingDirection.Unknown); }
+
+		public static Polygon PolygonWithPointTransforms(Transform[] pointTransforms, WindingDirection windingDirection) // Uses Transform.localPosition.xy()
 		{
 			// Create points array.
 			Vector2[] points = new Vector2[pointTransforms.Length];
@@ -63,31 +69,36 @@ namespace EPPZGeometry
 				points[index] = eachPointTransform.localPosition.xy();
 			}
 			
-			return Polygon.PolygonWithPoints(points);
+			return Polygon.PolygonWithPoints(points, windingDirection);
 		}
-		
+
 		public static Polygon PolygonWithPoints(Vector2[] points)
+		{ return PolygonWithPoints(points, WindingDirection.Unknown); }
+
+		public static Polygon PolygonWithPoints(Vector2[] points, WindingDirection windingDirection)
 		{
 			Polygon polygon = new Polygon();
 			
 			// Allocate points.
-			polygon.points = new Vector2[points.Length];
+			polygon._points = new Vector2[points.Length];
 			polygon.vertices = new Vertex[points.Length];
 			polygon.edges = new Edge[points.Length];
 			
 			// Create points (copy actually).
 			for (int index = 0; index < points.Length; index++)
 			{
-				polygon.points[index] = points[index];
+				polygon._points[index] = points[index];
 			}
 			
 			// Polygon calculations.
-			polygon.UpdateCalculations();
+			polygon.CalculateBounds();
+			polygon.CalculateArea();
+			polygon.CalculateWindingDirectionIfNeeded();
 
 			// Create members.
-			polygon.CreateVertices();
-			polygon.CreateEdges();
-			
+			polygon.CreateVerticesFromPoints();
+			polygon.CreateEdgesConnectingPoints();
+
 			return polygon;
 		}
 
@@ -97,21 +108,31 @@ namespace EPPZGeometry
 		 * 
 		 */ 
 
-		public void UpdateWithSource(EPPZGeometry_PolygonSource polygonSource) // Assuming unchanged point count
+		public void UpdatePointPositionsWithSource(EPPZGeometry_PolygonSource polygonSource) // Assuming unchanged point count
 		{
-			UpdateWithTransforms(polygonSource.pointTransforms);
+			UpdatePointPositionsWithTransforms(polygonSource.pointTransforms);
 		}
 
-		public void UpdateWithTransforms(Transform[] pointTransforms) // Assuming unchanged point count
+		public void UpdatePointPositionsWithTransforms(Transform[] pointTransforms) // Assuming unchanged point count
 		{
 			for (int index = 0; index < pointTransforms.Length; index++)
 			{
 				Transform eachPointTransform = pointTransforms[index];
-				points[index] = eachPointTransform.localPosition.xy();
+				_points[index] = eachPointTransform.localPosition.xy();
 			}
 
 			// Polygon calculations.
-			UpdateCalculations();
+			CalculateBounds();
+			CalculateArea();
+			CalculateWindingDirectionIfNeeded();
+		}
+
+		public void AddPolygon(Polygon polygon)
+		{
+			polygons.Add(polygon);
+
+			// Polygon calculations.
+			CalculateBounds();
 		}
 		
 		/*
@@ -120,57 +141,115 @@ namespace EPPZGeometry
 		 * 
 		 */ 
 		
-		public int pointCount { get { return points.Length; } } // Readonly
-		public int vertexCount { get { return vertices.Length; } } // Readonly
-		public int edgeCount { get { return edges.Length; } } // Readonly
-		
-		public Vector2 PointForIndex(int index)
+		private int pointCount { get { return _points.Length; } } // Readonly
+		private int vertexCount { get { return vertices.Length; } } // Readonly
+		private int edgeCount { get { return edges.Length; } } // Readonly
+
+		public int pointCountRecursive
 		{
-			return points[index];
+			get
+			{
+				int pointCountRecursive = pointCount;
+				foreach (Polygon eachPolygon in polygons)
+				{
+					pointCountRecursive += eachPolygon.pointCount;
+				}
+				return pointCountRecursive;
+			}
+		}
+
+		/*
+		 * 
+		 * Enumerators
+		 * 
+		 */
+		
+		public void EnumeratePoints(Action<Vector2> action)
+		{
+			// Enumerate local points.
+			foreach (Vector2 eachPoint in _points)
+			{
+				action(eachPoint);
+			}
 		}
 		
-		public Vector2 NextPointForIndex(int index)
+		public void EnumerateVertices(Action<Vertex> action)
 		{
-			int nextIndex = (index < pointCount - 1) ? index + 1 : 0;
-			return points[nextIndex];
+			// Enumerate local points.
+			foreach (Vertex eachVertex in vertices)
+			{
+				action(eachVertex);
+			}
 		}
 		
-		public Vector2 PreviousPointForIndex(int index)
+		public void EnumerateEdges(Action<Edge> action)
 		{
-			int previousIndex = (index > 0) ? index - 1 : pointCount - 1;
-			return points[previousIndex];
+			// Enumerate local points.
+			foreach (Edge eachEdge in edges)
+			{
+				action(eachEdge);
+			}
+		}
+
+		public void EnumeratePointsRecursive(Action<Vector2> action)
+		{
+			// Enumerate local points.
+			foreach (Vector2 eachPoint in _points)
+			{
+				action(eachPoint);
+			}
+			
+			// Enumerate each sub-polygon points.
+			foreach (Polygon eachPolygon in polygons)
+			{
+				eachPolygon.EnumeratePointsRecursive((Vector2 eachPoint_) =>
+				{
+					action(eachPoint_);
+				});
+			}
 		}
 		
-		public Vertex VertexForIndex(int index)
+		public void EnumerateVerticesRecursive(Action<Vertex> action)
 		{
-			return vertices[index];
+			// Enumerate local points.
+			foreach (Vertex eachVertex in vertices)
+			{
+				action(eachVertex);
+			}
+			
+			// Enumerate each sub-polygon points.
+			foreach (Polygon eachPolygon in polygons)
+			{
+				eachPolygon.EnumerateVerticesRecursive((Vertex eachVertex_) =>
+				{
+					action(eachVertex_);
+				});
+			}
 		}
 		
-		public Vertex NextVertexForIndex(int index)
+		public void EnumerateEdgesRecursive(Action<Edge> action)
 		{
-			int nextIndex = (index < vertexCount - 1) ? index + 1 : 0;
-			return vertices[nextIndex];
+			// Enumerate local points.
+			foreach (Edge eachEdge in edges)
+			{
+				action(eachEdge);
+			}
+			
+			// Enumerate each sub-polygon points.
+			foreach (Polygon eachPolygon in polygons)
+			{
+				eachPolygon.EnumerateEdgesRecursive((Edge eachEdge_) =>
+				{
+					action(eachEdge_);
+				});
+			}
 		}
-		
-		public Vertex PreviousVertexForIndex(int index)
-		{
-			int previousIndex = (index > 0) ? index - 1 : vertexCount - 1;
-			return vertices[previousIndex];
-		}
-		
-		
+
 		/*
 		 * 
 		 * Polygon calculations
 		 * 
 		 */
-
-		// To be called manually upon polygon point data has changed.
-		public void UpdateCalculations()
-		{
-			CalculateBounds();
-			CalculateArea();
-		}
 
 		private void CalculateBounds()
 		{
@@ -180,16 +259,14 @@ namespace EPPZGeometry
 			float bottom = float.MaxValue; // Out in the top
 			
 			// Enumerate points.
-			for (int index = 0; index < points.Length; index++)
-			{
-				Vector2 eachPoint = points[index];
-				
+			EnumeratePointsRecursive((Vector2 eachPoint) =>
+			{				
 				// Track bounds.
 				if (eachPoint.x < left) left = eachPoint.x; // Seek leftmost
 				if (eachPoint.x > right) right = eachPoint.x; // Seek rightmost
 				if (eachPoint.y < bottom) bottom = eachPoint.y; // Seek bottommost
 				if (eachPoint.y > top) top = eachPoint.y; // Seek topmost
-			}
+			});
 			
 			// Set bounds.
 			_bounds.xMin = left;
@@ -201,20 +278,20 @@ namespace EPPZGeometry
 		private void CalculateArea()
 		{
 			// From https://en.wikipedia.org/wiki/Shoelace_formula
-			Vector2[] points_ = new Vector2[points.Length + 1];
+			Vector2[] points_ = new Vector2[_points.Length + 1];
 			
 			// Create point list for calculations.
 			if (windingDirection == WindingDirection.CW)
 			{
-				Vector2[] reversed = new Vector2[points.Length];
-				System.Array.Copy(points, reversed, points.Length);
-				System.Array.Copy(reversed, points_, points.Length);
+				Vector2[] reversed = new Vector2[_points.Length];
+				System.Array.Copy(_points, reversed, _points.Length);
+				System.Array.Copy(reversed, points_, _points.Length);
 			}
 			
 			if (windingDirection == WindingDirection.CCW)
-			{ System.Array.Copy(points, points_, points.Length); }
+			{ System.Array.Copy(_points, points_, _points.Length); }
 			
-			points_[points.Length] = points[0];
+			points_[_points.Length] = _points[0];
 			
 			// Calculations.
 			float firstProducts = 0.0f;
@@ -229,40 +306,94 @@ namespace EPPZGeometry
 			}
 			float area_ = (firstProducts - secondProducts) / 2.0f;
 			
-			// Set.
+			// Set signed area.
 			_signedArea = area_;
-			_windingDirection = (Mathf.Sign(_signedArea) > 0.0f) ? WindingDirection.CCW : WindingDirection.CW;
+
+			// Set area.
 			_area = Mathf.Abs(area_);
+
+			// Add / Subtract sub-polygon areas.
+			foreach (Polygon eachPolygon in polygons)
+			{
+				_area += (eachPolygon.windingDirection == windingDirection) ? eachPolygon.area : -eachPolygon.area;
+			}
+		}
+
+		private void CalculateWindingDirectionIfNeeded()
+		{
+			if (_windingDirection == WindingDirection.Unknown) // Only if unknown
+			{
+				_windingDirection = (Mathf.Sign (_signedArea) > 0.0f) ? WindingDirection.CCW : WindingDirection.CW;
+			}
 		}
 
 		
-		private void CreateVertices()
+		private void CreateVerticesFromPoints()
 		{
-			// Enumerate points.
-			for (int index = 0; index < points.Length; index++)
+			Debug.Log("CreateVerticesFromPoints()");
+
+			// Enumerate points (only for index).
+			Vertex eachVertex = null;
+			Vertex eachPreviousVertex = null;
+			for (int index = 0; index < _points.Length; index++)
 			{
-				Vertex eachVertex = Vertex.VertexAtIndexInPolygon(index, this);
-				
+				eachVertex = Vertex.VertexAtIndexInPolygon(index, this);
+
+				// Inject references.
+				if (eachPreviousVertex != null)
+				{
+					eachPreviousVertex.SetNextVertex(eachVertex);
+					eachVertex.SetPreviousVertex(eachPreviousVertex);
+				}
+
 				// Collect.
 				vertices[index] = eachVertex;
+
+				// Track.
+				eachPreviousVertex = eachVertex;
 			}
+
+			// Inject last references.
+			Vertex firstVertex = vertices[0];
+			eachVertex.SetNextVertex(firstVertex);
+			firstVertex.SetPreviousVertex(eachVertex);
 		}
 		
-		private void CreateEdges()
+		private void CreateEdgesConnectingPoints()
 		{
-			for (int index = 0; index < edgeCount; index++)
+			// Enumerate vertices.
+			Edge eachEdge = null;
+			Edge eachPreviousEdge = null;
+			EnumerateVertices((Vertex eachVertex) =>
 			{
-				Vertex eachVertex = VertexForIndex(index);
-				Vertex eachNextVertex = NextVertexForIndex(index);
-				Edge eachEdge = Edge.EdgeAtIndexWithVertices(index, eachVertex, eachNextVertex);
+				int index = eachVertex.index;
+				eachEdge = Edge.EdgeAtIndexWithVertices(index, eachVertex, eachVertex.nextVertex);
+
+				// Inject references.
+				if (eachPreviousEdge != null)
+				{
+					eachPreviousEdge.SetNextEdge(eachEdge);
+					eachEdge.SetPreviousEdge(eachPreviousEdge);
+				}
 
 				// Collect.
 				edges[index] = eachEdge;
+				
+				// Track.
+				eachPreviousEdge = eachEdge;
+			});
 
-				// Vertex references.
-				eachVertex.AssignToEdge(eachEdge);
-				eachNextVertex.AssignToEdge(eachEdge);
-			}
+			// Inject last references.
+			Edge firstEdge = edges[0];
+			eachEdge.SetNextEdge(firstEdge);
+			firstEdge.SetPreviousEdge(eachEdge);
+
+			// Inject vertex edge references.
+			EnumerateEdges((Edge eachEdge_) =>
+			{
+				eachEdge_.vertexA.SetPreviousEdge(eachEdge_.previousEdge);
+				eachEdge_.vertexA.SetNextEdge(eachEdge_);
+			});
 		}
 
 
@@ -315,14 +446,14 @@ namespace EPPZGeometry
 			// Allocate.
 			int offsetPolygonPointCount = pointCount * (3);
 			Vector2[] offsetPolygonPoints = new Vector2[offsetPolygonPointCount];
-			
-			for (int index = 0; index < vertexCount; index++)
+
+			// Extrude each vertex in 3 ways.
+			EnumerateVertices((Vertex eachVertex) =>
 			{
-				Vertex eachVertex = VertexForIndex(index);
-				offsetPolygonPoints[index * 3] = eachVertex.point + eachVertex.previousEdge.normal * offset;
-				offsetPolygonPoints[index * 3 + 1] = eachVertex.point + eachVertex.normal * offset;
-				offsetPolygonPoints[index * 3 + 2] = eachVertex.point + eachVertex.nextEdge.normal * offset;
-			}
+				offsetPolygonPoints[eachVertex.index * 3] = eachVertex.point + eachVertex.previousEdge.normal * offset;
+				offsetPolygonPoints[eachVertex.index * 3 + 1] = eachVertex.point + eachVertex.normal * offset;
+				offsetPolygonPoints[eachVertex.index * 3 + 2] = eachVertex.point + eachVertex.nextEdge.normal * offset;
+			});
 
 			Polygon rawOffsetPolygon = Polygon.PolygonWithPoints(offsetPolygonPoints);
 			return CleanedUpOffsetPolygon(rawOffsetPolygon, intersectionVertices);
@@ -423,19 +554,30 @@ namespace EPPZGeometry
 		// --
 
 		
-		public void AlignCentered()
+		public void ConvertCorneredToCentered()
 		{
 			Vector2 originalCenter = bounds.center;
 			Vector2 offset = -originalCenter;
-			
+
+			TranslatePoints(offset);
+		}
+
+		public void TranslatePoints(Vector2 translation)
+		{
 			// Apply to each point.
-			for (int index = 0; index < points.Length; index++)
+			for (int index = 0; index < _points.Length; index++)
 			{
-				points[index] += offset;
+				_points[index] += translation;
+			}
+
+			// Apply to each sub-polygon.
+			foreach (Polygon eachPolygon in polygons)
+			{
+				eachPolygon.TranslatePoints(translation);
 			}
 			
 			// Apply to bounds.
-			_bounds.position += offset;
+			_bounds.position += translation;
 		}
 	}
 

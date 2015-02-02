@@ -29,10 +29,10 @@ public class EPPZPolygon_2_Controller : MonoBehaviour
 	{
 		// Point containment.
 		bool pointContainment = true;
-		foreach (Vector2 eachPoint in square.points)
+		square.EnumeratePoints((Vector2 eachPoint) =>
 		{
 			pointContainment &= star.ContainsPoint(eachPoint);
-		}
+		});
 
 		// Segment-Polygon intersecion, Segment endpoint-permiter contaimnent.
 		bool segmentIntersecting = false;

@@ -148,7 +148,7 @@ namespace EPPZGeometry
 			
 		#region Polygon
 			
-			// Test if a polygon contains the given point.
+			// Test if a polygon contains the given point (checks for sub-polygons recursive).
 			// Uses the same Bryce boe algorythm, so considerations are the same.
 			// From https://en.wikipedia.org/wiki/Point_in_polygon#Ray_casting_algorithm
 			public static bool IsPolygonContainsPoint(Polygon polygon, Vector2 point)
@@ -158,16 +158,12 @@ namespace EPPZGeometry
 				
 				// Enumerate polygon segments.
 				int windingNumber = 0;
-				for (int pointIndex = 0; pointIndex < polygon.pointCount; pointIndex++)
+				polygon.EnumerateEdgesRecursive((Edge eachEdge) =>
 				{
-					// Segment points.
-					Vector2 eachPoint = polygon.PointForIndex(pointIndex);
-					Vector2 eachNextPoint = polygon.NextPointForIndex(pointIndex);
-					
 					// Test winding ray against each polygon segment.
-					if (AreSegmentsIntersecting(left, point, eachPoint, eachNextPoint)) 
+				 	if (AreSegmentsIntersecting(left, point, eachEdge.a, eachEdge.b)) 
 					{ windingNumber++; }
-				}
+				});
 				
 				bool isOdd = (windingNumber % 2 != 0); // Odd winding number means point falls outside
 				return isOdd;

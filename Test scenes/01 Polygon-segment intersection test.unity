@@ -569,7 +569,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ed7e198b82d846d1b8c00cb88780181, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  windingDirection: 2
   pointTransforms:
   - {fileID: 1574754916}
   - {fileID: 1176374578}
@@ -581,6 +580,7 @@ MonoBehaviour:
   - {fileID: 1865730598}
   - {fileID: 1560035262}
   - {fileID: 1287782386}
+  windingDirection: 2
   updateModel: 1
 --- !u!114 &793244243
 MonoBehaviour:
@@ -596,6 +596,8 @@ MonoBehaviour:
   debugMode: 1
   lineMaterial: {fileID: 2100000, guid: 7c061e9fd66494953b8c6f5e8551732f, type: 2}
   boundsMaterial: {fileID: 2100000, guid: ff5c72e3a51bc4271ac0cb1ec4a82616, type: 2}
+  windingDirectionObject: {fileID: 0}
+  areaTextMesh: {fileID: 0}
 --- !u!1 &1025815004
 GameObject:
   m_ObjectHideFlags: 0
@@ -1529,7 +1531,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   polygonMaterial: {fileID: 2100000, guid: ff5c72e3a51bc4271ac0cb1ec4a82616, type: 2}
-  passingMaterial: {fileID: 0}
+  passingMaterial: {fileID: 2100000, guid: 7c061e9fd66494953b8c6f5e8551732f, type: 2}
   starSource: {fileID: 793244242}
   segmentSourceA: {fileID: 1178574444}
   segmentSourceB: {fileID: 1454322898}

@@ -26,14 +26,16 @@ public class TestScene_05_Controller : MonoBehaviour
 	void Update()
 	{
 		RenderTestResult(IsPolygonInsideTest());
-	}
+	}åœ
 
 	bool IsPolygonInsideTest()
 	{
 		// Point containment.
 		bool pointContainment = true;
-		foreach (Vector2 eachPoint in square.points)
-		{ pointContainment &= star.ContainsPoint(eachPoint); }
+		square.EnumeratePoints((Vector2 eachPoint) =>
+		{
+			pointContainment &= star.ContainsPoint(eachPoint);
+		});
 
 		// Segment-Polygon intersecion, Segment endpoint-permiter contaimnent.
 		bool segmentIntersecting = false;

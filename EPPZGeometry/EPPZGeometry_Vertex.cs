@@ -15,9 +15,6 @@ namespace EPPZGeometry
 		private Polygon _polygon;
 		public Polygon polygon { get { return _polygon; } } // Readonly
 
-		private Edge _edge;
-		public Edge edge { get { return _edge; } } // Readonly
-
 		// If `alwaysCalculate` is on, every `normal` and `bisector` property access invokes recalculation of values based on actual topology.
 		public bool alwaysCalculate = true;
 		
@@ -69,51 +66,30 @@ namespace EPPZGeometry
 			return instance;
 		}
 
-		internal void AssignToEdge(Edge edge)
-		{
-			_edge = edge; 
-		}
-
-
 		/*
 		 * 
 		 * Accessors
 		 * 
 		 */
 
-		public virtual Edge previousEdge // Readonly
-		{
-			get
-			{
-				int _edgeIndex = (index > 0) ? index - 1 : polygon.edgeCount - 1;
-				return polygon.edges[_edgeIndex];
-			}
-		}
+		private Vertex _previousVertex;
+		public virtual Vertex previousVertex { get { return _previousVertex; } } // Readonly
+		public void SetPreviousVertex(Vertex vertex) { _previousVertex = vertex; } // Explicit setter (injected at creation time)
 
-		public virtual Edge nextEdge // Readonly
-		{
-			get
-			{
-				int _edgeIndex = (index < polygon.edgeCount) ? index : 0;
-				return polygon.edges[_edgeIndex];
-			}
-		}
+		private Vertex _nextVertex;
+		public virtual Vertex nextVertex  { get { return _nextVertex; } } // Readonly
+		public void SetNextVertex(Vertex vertex) { _nextVertex = vertex; } // Explicit setter (injected at creation time)
 
-		public virtual Vector2 point
-		{
-			get { return polygon.points[index]; }
-		}
+		private Edge _previousEdge;
+		public virtual Edge previousEdge { get { return _previousEdge; } } // Readonly
+		public void SetPreviousEdge(Edge edge) { _previousEdge = edge; } // Explicit setter (injected at creation time)
+		
+		private Edge _nextEdge;
+		public virtual Edge nextEdge  { get { return _nextEdge; } } // Readonly
+		public void SetNextEdge(Edge edge) { _nextEdge = edge; } // Explicit setter (injected at creation time)
 
-		public float x // Operate on `Polygon.Vector2` directly
-		{
-			get { return point.x; }
-			// set { polygon.points[index].x = value; }
-		}
-
-		public float y // Operate on `Polygon.Vector2` directly
-		{
-			get { return point.y; }
-			// set { polygon.points[index].y = value; }
-		}
+		public virtual Vector2 point { get { return polygon.points[index]; } } // Readonly
+		public float x { get { return point.x; } } // Readonly
+		public float y { get { return point.y; } } // Readonly
 	}
 }
