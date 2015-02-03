@@ -1532,10 +1532,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   polygonMaterial: {fileID: 2100000, guid: ff5c72e3a51bc4271ac0cb1ec4a82616, type: 2}
   passingMaterial: {fileID: 2100000, guid: 7c061e9fd66494953b8c6f5e8551732f, type: 2}
-  starSource: {fileID: 793244242}
+  polygonSource: {fileID: 793244242}
   segmentSourceA: {fileID: 1178574444}
   segmentSourceB: {fileID: 1454322898}
-  starRenderer: {fileID: 793244243}
+  polygonRenderer: {fileID: 793244243}
   segmentRendererA: {fileID: 1178574443}
   segmentRendererB: {fileID: 1454322897}
 --- !u!1 &1860556609

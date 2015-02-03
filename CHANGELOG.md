@@ -8,14 +8,35 @@
 					+ Then safely with a single loop polygon
 					+ Then full loop polygon validating
 
-	+ Sub polygons within polygons
+	+ Implement `Segment` intersection point without (!) accuracy
+	+ Multi-polygon test
+		+ Area
+		+ Winding
+		+ Test scenes
+			+ 07
+			+ 08
+			+ 09
 
-		+ Test
-			+ Create Polygon Source with sub polygons
-			+ Point containment
-			+ Permiter point containment
-			+ Segment intersection
-			+ Polygon inside test
+* 0.2.2 (01:00)
+
+	+ `Polygon`
+		+ Look for sub polygons in `EPPZGeometry_PolygonSource` objects
+		+ Create bus polygons recursively
+		+ `EPPZ_DebugRenderer.DrawPolygon()` updated using edge enumerator
+		+ `IsIntersectingWithSegment` now recursive
+		+ `PermiterContainsPoint` now recursive
+	+ Updating test scenes for multi-polygon
+		+ `TestScene_00_Controller`
+		+ `TestScene_01_Controller`
+		+ `TestScene_02_Controller` (stayed simple)
+		+ `TestScene_03_Controller`
+		+ `TestScene_04_Controller` (updated references only)
+		+ `TestScene_05_Controller`
+		+ `TestScene_051_Controller`
+			+ Permiter containment is actually useless test here
+		+ `TestScene_052_Controller`
+		+ `TestScene_06_Controller` (unchanged actually)
+
 
 * 0.2.1 (02:40)
 

@@ -1486,6 +1486,7 @@ MonoBehaviour:
   - {fileID: 864619659}
   - {fileID: 186265497}
   - {fileID: 165384128}
+  windingDirection: 0
   updateModel: 1
 --- !u!114 &793244243
 MonoBehaviour:
@@ -1639,6 +1640,7 @@ MonoBehaviour:
   - {fileID: 1816926322}
   - {fileID: 710688539}
   - {fileID: 1615103737}
+  windingDirection: 0
   updateModel: 1
 --- !u!1 &837190841
 GameObject:
@@ -2681,6 +2683,7 @@ MonoBehaviour:
   - {fileID: 454978296}
   - {fileID: 1837003264}
   - {fileID: 732680454}
+  windingDirection: 0
   updateModel: 1
 --- !u!1 &1706093512
 GameObject:
@@ -2749,6 +2752,7 @@ MonoBehaviour:
   - {fileID: 813745698}
   - {fileID: 645969066}
   - {fileID: 569801652}
+  windingDirection: 0
   updateModel: 1
 --- !u!1 &1729721414
 GameObject:

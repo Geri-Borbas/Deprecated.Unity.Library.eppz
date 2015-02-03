@@ -14,14 +14,14 @@ public class TestScene_01_Controller : MonoBehaviour
 	public Material polygonMaterial;
 	public Material passingMaterial;
 
-	public EPPZGeometry_PolygonSource starSource;
+	public EPPZGeometry_PolygonSource polygonSource;
 	public EPPZGeometry_SegmentSource segmentSourceA;
 	public EPPZGeometry_SegmentSource segmentSourceB;
-	public EPPZDebug_PolygonDebugRenderer starRenderer;
+	public EPPZDebug_PolygonDebugRenderer polygonRenderer;
 	public EPPZDebug_SegmentDebugRenderer segmentRendererA;
 	public EPPZDebug_SegmentDebugRenderer segmentRendererB;
 
-	private Polygon star { get { return starSource.polygon; } }
+	private Polygon polygon { get { return polygonSource.polygon; } }
 	private Segment segment_a { get { return segmentSourceA.segment; } }
 	private Segment segment_b { get { return segmentSourceB.segment; } }
 		
@@ -34,8 +34,8 @@ public class TestScene_01_Controller : MonoBehaviour
 	bool SegmentIntersectingTest()
 	{
 		return (
-			star.IsIntersectingWithSegment(segment_a) ||
-			star.IsIntersectingWithSegment(segment_b)
+			polygon.IsIntersectingWithSegment(segment_a) ||
+			polygon.IsIntersectingWithSegment(segment_b)
 			);
 	}
 
@@ -43,7 +43,7 @@ public class TestScene_01_Controller : MonoBehaviour
 	{
 		// Set corresponding materials.
 		Material currentMaterial = (testResult) ? passingMaterial : polygonMaterial;
-		starRenderer.lineMaterial = currentMaterial;
+		polygonRenderer.lineMaterial = currentMaterial;
 		segmentRendererA.lineMaterial = currentMaterial;
 		segmentRendererB.lineMaterial = currentMaterial;
 	}

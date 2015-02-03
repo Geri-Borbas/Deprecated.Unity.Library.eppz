@@ -230,7 +230,7 @@ namespace EPPZGeometry
 			}
 
 			// All fine, intersection point can be determined.
-			intersectionPoint = Geometry.IntersectionPointOfLines (this.a, this.b, segment.a, segment.b); // Actually the intersection of lines defined by segments
+			intersectionPoint = Geometry.IntersectionPointOfLines(this.a, this.b, segment.a, segment.b); // Actually the intersection of lines defined by segments
 			return true; // Intersecting
 		}
 

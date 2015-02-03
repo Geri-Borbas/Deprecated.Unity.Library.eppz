@@ -14,11 +14,11 @@ public class TestScene_03_Controller : MonoBehaviour
 	public Material polygonMaterial;
 	public Material intersectingMaterial;
 
-	public EPPZGeometry_PolygonSource starSource;
+	public EPPZGeometry_PolygonSource polygonSource;
 	public GameObject pointSource;
-	public EPPZDebug_PolygonDebugRenderer starRenderer;
+	public EPPZDebug_PolygonDebugRenderer polygonRenderer;
 
-	private Polygon star { get { return starSource.polygon; } }
+	private Polygon polygon { get { return polygonSource.polygon; } }
 	private Vector2 point  { get { return pointSource.transform.position.xy(); } }
 
 	void Update()
@@ -29,14 +29,14 @@ public class TestScene_03_Controller : MonoBehaviour
 	bool PointContainmentTest()
 	{
 		float accuracy = 0.1f;
-		return star.PermiterContainsPoint(point, accuracy);
+		return polygon.PermiterContainsPoint(point, accuracy);
 	}
 
 	void RenderTestResult(bool testResult)
 	{
 		// Set corresponding materials.
 		Material renderMaterial = (testResult) ? intersectingMaterial : polygonMaterial;
-		starRenderer.lineMaterial = renderMaterial;
+		polygonRenderer.lineMaterial = renderMaterial;
 		pointSource.renderer.material = renderMaterial;
 	}
 }

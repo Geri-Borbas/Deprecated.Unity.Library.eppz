@@ -4,7 +4,7 @@ using EPPZGeometry;
 using EPPZDebug;
 
 
-public class TestScene_05_Controller : MonoBehaviour
+public class TestScene_051_Controller : MonoBehaviour
 {
 
 
@@ -39,21 +39,17 @@ public class TestScene_05_Controller : MonoBehaviour
 
 		// Segment-Polygon intersecion, Segment endpoint-permiter contaimnent.
 		bool segmentIntersecting = false;
-		bool permiterContainsSegment = false;
 		foreach (Edge eachEdge in square.edges)
 		{
-			permiterContainsSegment |= star.PermiterContainsPoint(eachEdge.a) || star.PermiterContainsPoint(eachEdge.b);
 			segmentIntersecting |= star.IsIntersectingWithSegment(eachEdge);
 		}
 
 		// A polygon contains a foreign polygon, when
 		// + foreign polygon vertices are contained by polygon
 		// + foreign polygon segments are not intersecting with polygon
-		// + foreign polygon vertices are not contained by polygon permiter
 		bool polygonInside = (
 			pointContainment &&
-			segmentIntersecting == false &&
-			permiterContainsSegment == false
+			segmentIntersecting == false
 			);
 
 		return polygonInside;

@@ -14,11 +14,11 @@ public class TestScene_00_Controller : MonoBehaviour
 	public Material polygonMaterial;
 	public Material passingMaterial;
 
-	public EPPZGeometry_PolygonSource starSource;
+	public EPPZGeometry_PolygonSource polygonSource;
 	public GameObject[] pointObjects;
-	public EPPZDebug_PolygonDebugRenderer starRenderer;
+	public EPPZDebug_PolygonDebugRenderer polygonRenderer;
 
-	private Polygon star { get { return starSource.polygon; } }
+	private Polygon polygon { get { return polygonSource.polygon; } }
 		
 
 	void Update()
@@ -32,7 +32,7 @@ public class TestScene_00_Controller : MonoBehaviour
 		foreach (GameObject eachPointObject in pointObjects)
 		{
 			Vector2 eachPoint = eachPointObject.transform.position.xy();
-			containsAllPoints &= star.ContainsPoint(eachPoint);
+			containsAllPoints &= polygon.ContainsPoint(eachPoint);
 		}
 		return containsAllPoints;
 	}
@@ -41,7 +41,7 @@ public class TestScene_00_Controller : MonoBehaviour
 	{
 		// Set corresponding materials.
 		Material currentMaterial = (testResult) ? passingMaterial : polygonMaterial;
-		starRenderer.lineMaterial = currentMaterial;
+		polygonRenderer.lineMaterial = currentMaterial;
 		foreach (GameObject eachPointObject in pointObjects)
 		{ eachPointObject.renderer.material = currentMaterial; }
 	}

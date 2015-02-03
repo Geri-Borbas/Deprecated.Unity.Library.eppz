@@ -69,7 +69,13 @@ namespace EPPZDebug
 		{ DrawLine(segment.a, segment.b, material); }
 
 		protected void DrawPolygon(Polygon polygon, Material material)
-		{ DrawPoints(polygon.points, material); }
+		{ 
+			polygon.EnumerateEdgesRecursive ((Edge eachEdge) => 
+			{	
+				// Draw.
+				DrawLine(eachEdge.a, eachEdge.b, material);
+			});
+		}
 
 		protected void DrawPoints(Vector2[] points, Material material)
 		{ DrawPointsWithTransform(points, material, this.transform); }

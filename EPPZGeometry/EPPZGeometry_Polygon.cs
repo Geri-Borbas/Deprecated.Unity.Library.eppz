@@ -54,7 +54,24 @@ namespace EPPZGeometry
 		{ return Polygon.PolygonWithPoints(pointList.ToArray()); }
 
 		public static Polygon PolygonWithSource(EPPZGeometry_PolygonSource polygonSource)
-		{ return Polygon.PolygonWithPointTransforms(polygonSource.pointTransforms, polygonSource.windingDirection); }
+		{
+			Polygon rootPolygon = Polygon.PolygonWithPointTransforms (polygonSource.pointTransforms, polygonSource.windingDirection);
+
+			// Collect sub-olygons if any.
+			foreach (Transform eachChildTransform in polygonSource.gameObject.transform)
+			{
+				GameObject eachChildGameObject = eachChildTransform.gameObject;
+				EPPZGeometry_PolygonSource eachChildPolygonSource = eachChildGameObject.GetComponent<EPPZGeometry_PolygonSource>();
+				if (eachChildPolygonSource != null)
+				{
+					Polygon eachSubPolygon = Polygon.PolygonWithSource(eachChildPolygonSource);
+					eachChildPolygonSource.polygon = eachSubPolygon; // Inject into source
+					rootPolygon.AddPolygon(eachSubPolygon);
+				}
+			}
+
+			return rootPolygon;
+		}
 
 		public static Polygon PolygonWithPointTransforms(Transform[] pointTransforms)
 		{ return PolygonWithPointTransforms(pointTransforms, WindingDirection.Unknown); }
@@ -330,8 +347,6 @@ namespace EPPZGeometry
 		
 		private void CreateVerticesFromPoints()
 		{
-			Debug.Log("CreateVerticesFromPoints()");
-
 			// Enumerate points (only for index).
 			Vertex eachVertex = null;
 			Vertex eachPreviousVertex = null;
@@ -417,20 +432,22 @@ namespace EPPZGeometry
 		public bool PermiterContainsPoint(Vector2 point, float accuracy, Segment.ContainmentMethod containmentMethod)
 		{
 			bool contains = false;
-			foreach (Edge eachEdge in edges)
+			EnumerateEdgesRecursive ((Edge eachEdge) =>
 			{
 				contains |= eachEdge.ContainsPoint(point, accuracy, containmentMethod);
-			}
+			});
+
 			return contains;
 		}
 
 		public bool IsIntersectingWithSegment(Segment segment)
 		{
 			bool isIntersecting = false;
-			foreach (Edge eachEdge in edges)
+			EnumerateEdgesRecursive ((Edge eachEdge) =>
 			{
 				isIntersecting |= segment.IsIntersectingWithSegment(eachEdge);
-			}
+			});
+
 			return isIntersecting;
 		}
 		
