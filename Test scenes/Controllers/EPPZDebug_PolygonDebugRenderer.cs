@@ -12,6 +12,7 @@ public class EPPZDebug_PolygonDebugRenderer : EPPZ_DebugRenderer
 	public Material boundsMaterial;
 	public GameObject windingDirectionObject;
 	public TextMesh areaTextMesh;
+	public bool normals = false;
 
 	private float _previousArea;
 	private Polygon.WindingDirection _previousWindingDirection;
@@ -58,6 +59,6 @@ public class EPPZDebug_PolygonDebugRenderer : EPPZ_DebugRenderer
 		if (polygon == null) return; // Only having polygon
 
 		DrawRect(polygon.bounds, boundsMaterial);
-		DrawPolygonWithTransform(polygon, lineMaterial, transform);
+		DrawPolygonWithTransform(polygon, lineMaterial, transform, normals);
 	}
 }

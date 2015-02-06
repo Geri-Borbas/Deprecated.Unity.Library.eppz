@@ -72,7 +72,20 @@ namespace EPPZDebug
 		{ polygon.EnumerateEdgesRecursive((Edge eachEdge) => DrawLine(eachEdge.a, eachEdge.b, material)); }
 
 		protected void DrawPolygonWithTransform(Polygon polygon, Material material, Transform transform_)
-		{ polygon.EnumerateEdgesRecursive((Edge eachEdge) => DrawLineWithTransform(eachEdge.a, eachEdge.b, material, transform)); }
+		{ DrawPolygonWithTransform (polygon, material, transform_, false); }
+
+		protected void DrawPolygonWithTransform(Polygon polygon, Material material, Transform transform_, bool drawNormals)
+		{
+			polygon.EnumerateEdgesRecursive((Edge eachEdge) =>
+			{
+				DrawLineWithTransform(eachEdge.a, eachEdge.b, material, transform);
+				if (drawNormals)
+				{
+					Vector2 halfie = eachEdge.a + ((eachEdge.b - eachEdge.a) / 2.0f);
+					DrawLineWithTransform(halfie, halfie + eachEdge.normal * 0.1f, material, transform);
+				}
+			});
+		}
 
 		protected void DrawPoints(Vector2[] points, Material material)
 		{ DrawPointsWithTransform(points, material, this.transform); }

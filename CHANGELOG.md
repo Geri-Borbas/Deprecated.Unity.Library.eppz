@@ -10,12 +10,13 @@
 
 	+ Implement `Segment` intersection point without (!) accuracy
 
-* 0.2.3 (01:00)
+* 0.2.3 - 0.2.35 (01:00)
 
 	+ `Polygon`
 		+ `CalculateAreaRecursive()`
 			+ Area calcuations can consider sub-polygons (based on facing)
 		+ Winding test still local
+		+ Debug Renderer can now draw edge normals
 
 * 0.2.2 (01:00)
 
