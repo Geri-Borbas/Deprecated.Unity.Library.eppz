@@ -9,13 +9,13 @@
 					+ Then full loop polygon validating
 
 	+ Implement `Segment` intersection point without (!) accuracy
-	+ Multi-polygon test
-		+ Area
-		+ Winding
-		+ Test scenes
-			+ 07
-			+ 08
-			+ 09
+
+* 0.2.3 (01:00)
+
+	+ `Polygon`
+		+ `CalculateAreaRecursive()`
+			+ Area calcuations can consider sub-polygons (based on facing)
+		+ Winding test still local
 
 * 0.2.2 (01:00)
 

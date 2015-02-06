@@ -141,6 +141,7 @@ namespace EPPZGeometry
 			// Polygon calculations.
 			CalculateBounds();
 			CalculateArea();
+			_windingDirection = WindingDirection.Unknown;
 			CalculateWindingDirectionIfNeeded();
 		}
 
@@ -291,9 +292,10 @@ namespace EPPZGeometry
 			_bounds.xMax = right;
 			_bounds.yMax = top;
 		}
-		
+
 		private void CalculateArea()
 		{
+
 			// From https://en.wikipedia.org/wiki/Shoelace_formula
 			Vector2[] points_ = new Vector2[_points.Length + 1];
 			
@@ -330,10 +332,25 @@ namespace EPPZGeometry
 			_area = Mathf.Abs(area_);
 
 			// Add / Subtract sub-polygon areas.
+			float addie = 0.0f;
 			foreach (Polygon eachPolygon in polygons)
 			{
-				_area += (eachPolygon.windingDirection == windingDirection) ? eachPolygon.area : -eachPolygon.area;
+				Debug.Log("Pollielinisyk.");
+
+				// Outer or inner polygon (supposing there is no self-intersection).
+				float subPolygonArea = eachPolygon.CalculatedArea();
+				addie += (eachPolygon.windingDirection == windingDirection) ? subPolygonArea : -subPolygonArea;
 			}
+
+			Debug.Log(name+": subpoly ("+polygons.Count+") addie ("+addie+") _area ("+_area+")");
+
+			_area = _area + addie;
+		}
+		
+		private float CalculatedArea()
+		{
+			CalculateArea();
+			return _area;
 		}
 
 		private void CalculateWindingDirectionIfNeeded()

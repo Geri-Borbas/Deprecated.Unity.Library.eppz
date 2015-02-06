@@ -69,19 +69,13 @@ namespace EPPZDebug
 		{ DrawLine(segment.a, segment.b, material); }
 
 		protected void DrawPolygon(Polygon polygon, Material material)
-		{ 
-			polygon.EnumerateEdgesRecursive ((Edge eachEdge) => 
-			{	
-				// Draw.
-				DrawLine(eachEdge.a, eachEdge.b, material);
-			});
-		}
+		{ polygon.EnumerateEdgesRecursive((Edge eachEdge) => DrawLine(eachEdge.a, eachEdge.b, material)); }
+
+		protected void DrawPolygonWithTransform(Polygon polygon, Material material, Transform transform_)
+		{ polygon.EnumerateEdgesRecursive((Edge eachEdge) => DrawLineWithTransform(eachEdge.a, eachEdge.b, material, transform)); }
 
 		protected void DrawPoints(Vector2[] points, Material material)
 		{ DrawPointsWithTransform(points, material, this.transform); }
-
-		protected void DrawPolygonWithTransform(Polygon polygon, Material material, Transform transform_)
-		{ DrawPointsWithTransform(polygon.points, material, transform_); }
 
 		protected void DrawPointsWithTransform(Vector2[] points, Material material, Transform transform_)
 		{
@@ -129,7 +123,14 @@ namespace EPPZDebug
 				leftBottom,
 				material);
 		}
-		
+
+		private void DrawLineWithTransform(Vector2 from, Vector2 to, Material material, Transform transform_)
+		{
+			Vector2 from_ = transform_.TransformPoint(from);
+			Vector2 to_ = transform_.TransformPoint(to);
+			DrawLine (from_, to_, material);
+		}
+
 		protected void DrawLine(Vector2 from, Vector2 to, Material material)
 		{
 			if (Application.isPlaying)

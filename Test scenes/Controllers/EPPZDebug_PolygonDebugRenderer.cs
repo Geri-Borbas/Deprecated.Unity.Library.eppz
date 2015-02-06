@@ -45,7 +45,7 @@ public class EPPZDebug_PolygonDebugRenderer : EPPZ_DebugRenderer
 		bool areaChanged = (polygon.area != _previousArea);
 		if (hasAreaTextMesh && areaChanged)
 		{
-			areaTextMesh.text = polygon.signedArea.ToString();
+			areaTextMesh.text = polygon.area.ToString();
 		}
 
 		// Track.
@@ -58,6 +58,6 @@ public class EPPZDebug_PolygonDebugRenderer : EPPZ_DebugRenderer
 		if (polygon == null) return; // Only having polygon
 
 		DrawRect(polygon.bounds, boundsMaterial);
-		DrawPolygon(polygon, lineMaterial);		
+		DrawPolygonWithTransform(polygon, lineMaterial, transform);
 	}
 }
