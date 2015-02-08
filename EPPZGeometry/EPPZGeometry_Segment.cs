@@ -171,16 +171,21 @@ namespace EPPZGeometry
 			return Geometry.AreSegmentsIntersecting(this.a, this.b, segment.a, segment.b);
 		}
 
+		/**
+		 * Returns intersection when the two segments are intersecting. Not returns anything when endpoints
+		 * are equal, nor when a point is contained by other segment.
+		 * Can say this algorithm has infinite precision.
+		 */
 		public bool IntersectionWithSegment(Segment segment, out Vector2 intersectionPoint)
-		{ return IntersectionWithSegment(segment, defaultAccuracy, out intersectionPoint); }
+		{ return IntersectionWithSegmentWithAccuracy(segment, 0.0f, out intersectionPoint); }
 		
-		public bool IntersectionWithSegment(Segment segment, float accuracy, out Vector2 intersectionPoint)
-		{ return IntersectionWithSegment(segment, accuracy, defaultContainmentMethod, out intersectionPoint); }
+		public bool IntersectionWithSegmentWithAccuracy(Segment segment, float accuracy, out Vector2 intersectionPoint)
+		{ return IntersectionWithSegmentWithAccuracy(segment, accuracy, defaultContainmentMethod, out intersectionPoint); }
 
-		public bool IntersectionWithSegment(Segment segment, ContainmentMethod containmentMethod, out Vector2 intersectionPoint)
-		{ return IntersectionWithSegment(segment, defaultAccuracy, containmentMethod, out intersectionPoint); }
+		public bool IntersectionWithSegmentWithAccuracy(Segment segment, ContainmentMethod containmentMethod, out Vector2 intersectionPoint)
+		{ return IntersectionWithSegmentWithAccuracy(segment, defaultAccuracy, containmentMethod, out intersectionPoint); }
 
-		public bool IntersectionWithSegment(Segment segment, float accuracy, ContainmentMethod containmentMethod, out Vector2 intersectionPoint)
+		public bool IntersectionWithSegmentWithAccuracy(Segment segment, float accuracy, ContainmentMethod containmentMethod, out Vector2 intersectionPoint)
 		{
 			intersectionPoint = Vector2.zero; // Default
 
@@ -193,33 +198,36 @@ namespace EPPZGeometry
 				return false; // No intersection
 			}
 
-			// Look up point containments.
-			bool containsA = this.ContainsPoint(segment.a, accuracy, containmentMethod);
-			if (containsA)
+			if (accuracy > 0.0f) // Only any accuracy is given
 			{
-				intersectionPoint = segment.a;
-				return true; // Intersecting
-			}
+				// Look up point containments.
+				bool containsA = this.ContainsPoint (segment.a, accuracy, containmentMethod);
+				if (containsA)
+				{
+						intersectionPoint = segment.a;
+						return true; // Intersecting
+				}
 
-			bool containsB = this.ContainsPoint(segment.b, accuracy, containmentMethod);
-			if (containsB)
-			{
-				intersectionPoint = segment.b;
-				return true; // Intersecting
-			}
+				bool containsB = this.ContainsPoint (segment.b, accuracy, containmentMethod);
+				if (containsB)
+				{
+						intersectionPoint = segment.b;
+						return true; // Intersecting
+				}
 
-			bool otherContainsA = segment.ContainsPoint(this.a, accuracy, containmentMethod);
-			if (otherContainsA)
-			{
-				intersectionPoint = this.a;
-				return true; // Intersecting
-			}
-			
-			bool otherContainsB = segment.ContainsPoint(this.b, accuracy, containmentMethod);
-			if (otherContainsB)
-			{
-				intersectionPoint = this.b;
-				return true; // Intersecting
+				bool otherContainsA = segment.ContainsPoint (this.a, accuracy, containmentMethod);
+				if (otherContainsA)
+				{
+						intersectionPoint = this.a;
+						return true; // Intersecting
+				}
+
+				bool otherContainsB = segment.ContainsPoint (this.b, accuracy, containmentMethod);
+				if (otherContainsB)
+				{
+						intersectionPoint = this.b;
+						return true; // Intersecting
+				}
 			}
 
 			// Do the Bryce Boe test.

@@ -13,6 +13,7 @@ public class TestScene_08_Controller : MonoBehaviour
 
 	public Material polygonMaterial;
 	public Material passingMaterial;
+	public float accuracy = 0.0f;
 
 	public EPPZGeometry_SegmentSource segmentSourceA;
 	public EPPZGeometry_SegmentSource segmentSourceB;
@@ -33,7 +34,7 @@ public class TestScene_08_Controller : MonoBehaviour
 	bool SegmentIntersectionTest()
 	{
 		Vector2 intersectionPoint;
-		bool isIntersecting = segment_a.IntersectionWithSegment(segment_b, out intersectionPoint);
+		bool isIntersecting = segment_a.IntersectionWithSegmentWithAccuracy(segment_b, accuracy, out intersectionPoint);
 		if (isIntersecting)
 		{
 			intersectionPointObject.transform.position = new Vector3(

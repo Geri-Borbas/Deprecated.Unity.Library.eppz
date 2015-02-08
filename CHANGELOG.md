@@ -8,7 +8,12 @@
 					+ Then safely with a single loop polygon
 					+ Then full loop polygon validating
 
-	+ Implement `Segment` intersection point without (!) accuracy
+* 0.2.4 (00:10)
+
+	+ `Segment`
+		+ Implement `Segment` intersection point without (!) accuracy
+		+ Updated test scene
+			+ `TestScene_08_Controller`
 
 * 0.2.3 - 0.2.35 (01:00)
 
@@ -16,7 +21,9 @@
 		+ `CalculateAreaRecursive()`
 			+ Area calcuations can consider sub-polygons (based on facing)
 		+ Winding test still local
-		+ Debug Renderer can now draw edge normals
+		+ Debug Renderer can now draw edge normals (!)
+	+ Updating test scenes for multi-polygon	
+		+ `07 Polygon area, winding direction`
 
 * 0.2.2 (01:00)
 
