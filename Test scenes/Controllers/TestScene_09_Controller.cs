@@ -13,6 +13,7 @@ public class TestScene_09_Controller : MonoBehaviour
 	public float offset = 0.5f;
 
 	public EPPZGeometry_PolygonSource polygonSource;
+	public EPPZDebug_PolygonDebugRenderer rawOffsetPolygonRenderer;
 	public EPPZDebug_PolygonDebugRenderer offsetPolygonRenderer;
 	public GameObject intersectionVertexRenderer; // Prototype reference
 
@@ -30,8 +31,12 @@ public class TestScene_09_Controller : MonoBehaviour
 
 		List<IntersectionVertex> intersectionVertices = new List<IntersectionVertex>();
 
-		offsetPolygon = polygon.OffsetPolygon(offset, intersectionVertices); // Create an offset polygon around
-		offsetPolygonRenderer.polygon = offsetPolygon; // Pass to renderer
+		Polygon rawOffsetPolygon = null;
+		offsetPolygon = polygon.OffsetPolygon(offset, out rawOffsetPolygon, intersectionVertices); // Create an offset polygon around
+
+		// Pass to renderers.
+		rawOffsetPolygonRenderer.polygon = rawOffsetPolygon;
+		offsetPolygonRenderer.polygon = offsetPolygon; 
 
 		foreach (IntersectionVertex each in intersectionVertices)
 		{

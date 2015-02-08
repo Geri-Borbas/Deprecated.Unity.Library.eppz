@@ -332,19 +332,15 @@ namespace EPPZGeometry
 			_area = Mathf.Abs(area_);
 
 			// Add / Subtract sub-polygon areas.
-			float addie = 0.0f;
+			float subPolygonAreas = 0.0f;
 			foreach (Polygon eachPolygon in polygons)
 			{
-				Debug.Log("Pollielinisyk.");
-
 				// Outer or inner polygon (supposing there is no self-intersection).
 				float subPolygonArea = eachPolygon.CalculatedArea();
-				addie += (eachPolygon.windingDirection == windingDirection) ? subPolygonArea : -subPolygonArea;
+				subPolygonAreas += (eachPolygon.windingDirection == windingDirection) ? subPolygonArea : -subPolygonArea;
 			}
 
-			Debug.Log(name+": subpoly ("+polygons.Count+") addie ("+addie+") _area ("+_area+")");
-
-			_area = _area + addie;
+			_area = _area + subPolygonAreas;
 		}
 		
 		private float CalculatedArea()
@@ -475,7 +471,7 @@ namespace EPPZGeometry
 		 * 
 		 */ 
 
-		public Polygon OffsetPolygon(float offset, List<IntersectionVertex> intersectionVertices)
+		public Polygon OffsetPolygon(float offset, out Polygon rawOffsetPolygon, List<IntersectionVertex> intersectionVertices)
 		{
 			// Allocate.
 			int offsetPolygonPointCount = pointCount * (3);
@@ -489,12 +485,16 @@ namespace EPPZGeometry
 				offsetPolygonPoints[eachVertex.index * 3 + 2] = eachVertex.point + eachVertex.nextEdge.normal * offset;
 			});
 
-			Polygon rawOffsetPolygon = Polygon.PolygonWithPoints(offsetPolygonPoints);
+			rawOffsetPolygon = Polygon.PolygonWithPoints(offsetPolygonPoints);
 			return CleanedUpOffsetPolygon(rawOffsetPolygon, intersectionVertices);
 		}
 
 		public Polygon CleanedUpOffsetPolygon(Polygon rawOffsetPolygon, List<IntersectionVertex> intersectionVertices)
 		{
+			// Debug.
+			int whileCount = 0;
+			int whileGuard = 1000;
+
 			if (rawOffsetPolygon.edgeCount <= 3) return rawOffsetPolygon; // Only with 4 edges at least
 
 			// The lovely cleaned up polygon.
@@ -577,7 +577,9 @@ namespace EPPZGeometry
 					intersectingEdge = intersectingEdge.nextEdge;
 
 					// Every edge checked (for having loop).
-					if (intersectingEdge == eachEdge.previousEdge) break;
+					if (intersectingEdge == eachEdge) break;
+					if (whileCount > whileGuard) { Debug.LogError("Stack overflow."); break; }
+					whileCount++;
 				}
 
 				if (loopOpened)
@@ -596,6 +598,8 @@ namespace EPPZGeometry
 
 				// Every edge checked (for cleanup).
 				if (eachEdge == firstEdge) break;
+				if (whileCount > whileGuard) { Debug.LogError("Stack overflow."); break; }
+				whileCount++;
 			}
 
 			// Construct cleaned up olygon.

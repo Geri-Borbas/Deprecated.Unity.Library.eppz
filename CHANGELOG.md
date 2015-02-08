@@ -1,16 +1,21 @@
 * Doin'
 
 	+ Construct offset polygon
-		+ First without loop polygons
 		+ Then safely with a single loop polygon
 		+ Then full loop polygon validating
+	+ Issues
+		+ Gets into infinite loop (?) with too many (self?) intersections
+		+ Negative value should flip normals (edge order when creating raw offset)
+		+ Intersections can be valuated by distance as well
 
-* 0.2.5 (00:10)
+* 0.2.5 - 0.2.51 (01:20)
 
 	+ Cleaning up offset polygon
 		+ Collection, pooling just fine
-		+ Works fine without loop polygons (star shape at least)
-		+ Gets into infinite loop with too many intersections
+		+ Works fine without loop polygons
+		+ Testbed shows both raw and cleaned up polygon
+	+ `IntersectionVertex`
+		+ Evaluated to be equal when edges are the same (no distance check)
 
 * 0.2.4 (00:10)
 

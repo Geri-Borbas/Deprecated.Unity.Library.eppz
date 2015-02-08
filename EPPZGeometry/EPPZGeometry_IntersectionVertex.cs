@@ -81,13 +81,9 @@ namespace EPPZGeometry
 
 		public bool Equals(IntersectionVertex intersectionVertex)
 		{
-			float distance = Vector3.Distance(this.point, intersectionVertex.point);
-			bool positionMatch = (distance < defaultAccuracy);
-			bool edgeMatches = (
-				((this._edgeA == intersectionVertex._edgeA) && (this._edgeB == intersectionVertex._edgeB)) || 
-				((this._edgeA == intersectionVertex._edgeB) && (this._edgeB == intersectionVertex._edgeA))
-				);
-			return (positionMatch && edgeMatches);
+			bool edgesMatch = ((this._edgeA == intersectionVertex._edgeA) && (this._edgeB == intersectionVertex._edgeB)) || 
+							  ((this._edgeA == intersectionVertex._edgeB) && (this._edgeB == intersectionVertex._edgeA));
+			return edgesMatch;
 		}
 	}
 }

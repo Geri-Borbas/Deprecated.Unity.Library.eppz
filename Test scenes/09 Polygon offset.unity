@@ -487,6 +487,7 @@ MonoBehaviour:
   boundsMaterial: {fileID: 2100000, guid: ff5c72e3a51bc4271ac0cb1ec4a82616, type: 2}
   windingDirectionObject: {fileID: 0}
   areaTextMesh: {fileID: 0}
+  normals: 0
 --- !u!114 &281625732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -502,6 +503,7 @@ MonoBehaviour:
     type: 2}
   offset: .5
   polygonSource: {fileID: 885419180}
+  rawOffsetPolygonRenderer: {fileID: 0}
   offsetPolygonRenderer: {fileID: 281625731}
   intersectionVertexRenderer: {fileID: 1221847600}
 --- !u!1 &504159864
@@ -513,7 +515,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 504159865}
   - 114: {fileID: 504159867}
-  - 114: {fileID: 504159866}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -533,22 +534,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1122431464}
   m_RootOrder: 0
---- !u!114 &504159866
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 504159864}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42437c3c184ed4f6981586767b6e2d1b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debugMode: 1
-  lineMaterial: {fileID: 2100000, guid: 46225a949e219457e9362aef2648453b, type: 2}
-  boundsMaterial: {fileID: 2100000, guid: ff5c72e3a51bc4271ac0cb1ec4a82616, type: 2}
-  windingDirectionObject: {fileID: 0}
-  areaTextMesh: {fileID: 0}
 --- !u!114 &504159867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -564,7 +549,8 @@ MonoBehaviour:
     type: 2}
   offset: .5
   polygonSource: {fileID: 1223225824}
-  offsetPolygonRenderer: {fileID: 504159866}
+  rawOffsetPolygonRenderer: {fileID: 1715188196}
+  offsetPolygonRenderer: {fileID: 856678029}
   intersectionVertexRenderer: {fileID: 1221847600}
 --- !u!1 &512277649
 GameObject:
@@ -1107,6 +1093,51 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 813745697}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &856678027
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 856678028}
+  - 114: {fileID: 856678029}
+  m_Layer: 0
+  m_Name: Offset polygon renderer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &856678028
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 856678027}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1122431464}
+  m_RootOrder: 1
+--- !u!114 &856678029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 856678027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42437c3c184ed4f6981586767b6e2d1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugMode: 1
+  lineMaterial: {fileID: 2100000, guid: 46225a949e219457e9362aef2648453b, type: 2}
+  boundsMaterial: {fileID: 2100000, guid: ff5c72e3a51bc4271ac0cb1ec4a82616, type: 2}
+  windingDirectionObject: {fileID: 0}
+  areaTextMesh: {fileID: 0}
+  normals: 1
 --- !u!1 &885419177
 GameObject:
   m_ObjectHideFlags: 0
@@ -1162,6 +1193,7 @@ MonoBehaviour:
   boundsMaterial: {fileID: 2100000, guid: ff5c72e3a51bc4271ac0cb1ec4a82616, type: 2}
   windingDirectionObject: {fileID: 0}
   areaTextMesh: {fileID: 0}
+  normals: 0
 --- !u!114 &885419180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1488,6 +1520,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 504159865}
+  - {fileID: 856678028}
+  - {fileID: 1715188195}
   - {fileID: 1223225823}
   m_Father: {fileID: 1860556610}
   m_RootOrder: 3
@@ -1605,6 +1639,7 @@ MonoBehaviour:
   boundsMaterial: {fileID: 2100000, guid: ff5c72e3a51bc4271ac0cb1ec4a82616, type: 2}
   windingDirectionObject: {fileID: 0}
   areaTextMesh: {fileID: 0}
+  normals: 0
 --- !u!114 &1178031142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1619,6 +1654,7 @@ MonoBehaviour:
   offsetPolygonMaterial: {fileID: 0}
   offset: .5
   polygonSource: {fileID: 1706093515}
+  rawOffsetPolygonRenderer: {fileID: 0}
   offsetPolygonRenderer: {fileID: 1178031141}
   intersectionVertexRenderer: {fileID: 1221847600}
 --- !u!1 &1221847600
@@ -1744,7 +1780,7 @@ Transform:
   - {fileID: 1368956256}
   - {fileID: 1756691827}
   m_Father: {fileID: 1122431464}
-  m_RootOrder: 1
+  m_RootOrder: 3
 --- !u!114 &1223225824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1785,6 +1821,7 @@ MonoBehaviour:
   boundsMaterial: {fileID: 2100000, guid: ff5c72e3a51bc4271ac0cb1ec4a82616, type: 2}
   windingDirectionObject: {fileID: 0}
   areaTextMesh: {fileID: 0}
+  normals: 0
 --- !u!1 &1224595057
 GameObject:
   m_ObjectHideFlags: 0
@@ -2373,6 +2410,7 @@ MonoBehaviour:
   boundsMaterial: {fileID: 2100000, guid: ff5c72e3a51bc4271ac0cb1ec4a82616, type: 2}
   windingDirectionObject: {fileID: 0}
   areaTextMesh: {fileID: 0}
+  normals: 0
 --- !u!114 &1706093515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2391,6 +2429,51 @@ MonoBehaviour:
   - {fileID: 569801652}
   windingDirection: 0
   updateModel: 0
+--- !u!1 &1715188194
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1715188195}
+  - 114: {fileID: 1715188196}
+  m_Layer: 0
+  m_Name: Raw offset polygon renderer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1715188195
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1715188194}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1122431464}
+  m_RootOrder: 2
+--- !u!114 &1715188196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1715188194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42437c3c184ed4f6981586767b6e2d1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugMode: 1
+  lineMaterial: {fileID: 2100000, guid: ff5c72e3a51bc4271ac0cb1ec4a82616, type: 2}
+  boundsMaterial: {fileID: 2100000, guid: ff5c72e3a51bc4271ac0cb1ec4a82616, type: 2}
+  windingDirectionObject: {fileID: 0}
+  areaTextMesh: {fileID: 0}
+  normals: 1
 --- !u!1 &1726650547
 GameObject:
   m_ObjectHideFlags: 0
