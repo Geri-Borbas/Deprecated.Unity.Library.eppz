@@ -30,7 +30,7 @@ public class TestScene_09_Controller : MonoBehaviour
 
 		List<IntersectionVertex> intersectionVertices = new List<IntersectionVertex>();
 
-		offsetPolygon = polygon.OffsetPolygon (offset, intersectionVertices); // Create an offset polygon around
+		offsetPolygon = polygon.OffsetPolygon(offset, intersectionVertices); // Create an offset polygon around
 		offsetPolygonRenderer.polygon = offsetPolygon; // Pass to renderer
 
 		foreach (IntersectionVertex each in intersectionVertices)

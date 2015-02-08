@@ -1,12 +1,16 @@
 * Doin'
 
-	+ `EPPZGeometry_Polygon` / `EPPZGeometry_IntersectionVertex`
-		+ Create Offset polygon from raw offset polygon
-			+ Intersections are determined
-				+ Construct offset polygon
-					+ First without loop polygons
-					+ Then safely with a single loop polygon
-					+ Then full loop polygon validating
+	+ Construct offset polygon
+		+ First without loop polygons
+		+ Then safely with a single loop polygon
+		+ Then full loop polygon validating
+
+* 0.2.5 (00:10)
+
+	+ Cleaning up offset polygon
+		+ Collection, pooling just fine
+		+ Works fine without loop polygons (star shape at least)
+		+ Gets into infinite loop with too many intersections
 
 * 0.2.4 (00:10)
 

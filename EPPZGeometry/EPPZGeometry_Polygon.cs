@@ -497,56 +497,62 @@ namespace EPPZGeometry
 		{
 			if (rawOffsetPolygon.edgeCount <= 3) return rawOffsetPolygon; // Only with 4 edges at least
 
+			// The lovely cleaned up polygon.
 			List<Vector2> offsetPolygonPoints = new List<Vector2>();
+			List<Polygon> loopPolygons = new List<Polygon>();
 
-			// Select starting edge.
-			Edge firstEdge = rawOffsetPolygon.edges[0];
-
-			// -------------------
-			// Offset polygon mode
-			// -------------------
-
-			bool loopMode = false;
-
-			foreach (Edge eachEdge in rawOffsetPolygon.edges)
+			// Offset polygon mode.
+			Edge firstEdge = rawOffsetPolygon.edges[0]; 
+			Edge eachEdge = firstEdge;
+			while(true)
 			{
 				bool isIntersecting;
 				Vector2 intersectionPoint;
 				List<IntersectionVertex> pool = new List<IntersectionVertex>();
 
-				// Select next edge to test with.
+				// Select next edge to test with (probably wont intersect with neighbouring edge).
 				Edge intersectingEdge = eachEdge.nextEdge.nextEdge; 
-				
+
+				// Reset loop stuff.
+				bool loopOpened = false;
+				IntersectionVertex loopOpeningIntersectionVertex = null;
+				Edge loopOpeningEdge = null;
+
 				// Forward intersection test.
 				while (true)
 				{
 					isIntersecting = eachEdge.IntersectionWithSegment(intersectingEdge, out intersectionPoint);
 					if (isIntersecting)
 					{
-						// ---------
-						// Loop mode
-						// ---------
+						// Loop mode.
+						loopOpened = true;
 
 						// Create intersection vertex.
-						IntersectionVertex intersectionVertex = IntersectionVertex.IntersectionVertexOfEdges(eachEdge, intersectingEdge, intersectionPoint);
+						IntersectionVertex intersectionVertex = IntersectionVertex.IntersectionVertexOfEdges(eachEdge, intersectingEdge, intersectionPoint); 
+						if (loopOpeningIntersectionVertex == null) loopOpeningIntersectionVertex = intersectionVertex; // Store loop opening intersection vertex
+						if (loopOpeningEdge == null) loopOpeningEdge = intersectingEdge; // Store loop opening edge
 
-
-						// End.
+						// Check if intersection point has pooled already.
 						int index = pool.IndexOf(intersectionVertex);
 						bool alreadyPooled = (index != -1);
 
 						// Close a loop.
 						if (alreadyPooled)
 						{
-							// Splice.
+							// Splice loop points from pool.
 							int count = pool.Count - index;
-							List<IntersectionVertex> loopPoints = pool.GetRange(index, count);
+							List<IntersectionVertex> loopIntersectionVertices = pool.GetRange(index, count);
 							pool.RemoveRange(index, count);
 
-							// Add sub-polygon.
+							// Store sub-polygon.
 							if (count > 1)
 							{
-								// HEY, BUT HOW?
+								// Create raw points from intersection vertices.
+								Vector2[] loopPoints = new Vector2[loopIntersectionVertices.Count];
+								for (int index_ = 0; index_ < loopIntersectionVertices.Count; index_++)
+								{ loopPoints[index_] = loopIntersectionVertices[index_].point; }
+								Polygon loopPolygon = Polygon.PolygonWithPoints(loopPoints);
+								loopPolygons.Add(loopPolygon);
 							}
 
 							// Or add offset polygon point.
@@ -560,7 +566,7 @@ namespace EPPZGeometry
 						// Pool points.
 						else
 						{
-							pool.Add (intersectionVertex);
+							pool.Add(intersectionVertex);
 						}
 						
 						// Debug.
@@ -570,18 +576,37 @@ namespace EPPZGeometry
 					// Step forward (to the next edge).
 					intersectingEdge = intersectingEdge.nextEdge;
 
-					// Every edge checked.
+					// Every edge checked (for having loop).
 					if (intersectingEdge == eachEdge.previousEdge) break;
 				}
 
+				if (loopOpened)
 				{
-					// Collect endpoint.
-					offsetPolygonPoints.Add(eachEdge.b);
-					
+					// Collect loop opening-, loop endpoint if a loop has opened.
+					offsetPolygonPoints.Add(loopOpeningIntersectionVertex.point);
+					offsetPolygonPoints.Add(loopOpeningEdge.b);
+					eachEdge = loopOpeningEdge.nextEdge; // Step loop
 				}
+				else
+				{
+					// Or simply collect endpoint if no any loop.
+					offsetPolygonPoints.Add(eachEdge.b);
+					eachEdge = eachEdge.nextEdge; // Step loop
+				}
+
+				// Every edge checked (for cleanup).
+				if (eachEdge == firstEdge) break;
 			}
 
-			return rawOffsetPolygon;
+			// Construct cleaned up olygon.
+			Polygon cleanedUpOffsetPolygon = Polygon.PolygonWithPointList(offsetPolygonPoints);
+			foreach (Polygon eachLoopPolygon in loopPolygons)
+			{
+				// Validate.
+				// Add if needed.
+			}
+
+			return cleanedUpOffsetPolygon;
 		}
 
 
