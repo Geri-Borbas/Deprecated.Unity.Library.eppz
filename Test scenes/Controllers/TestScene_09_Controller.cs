@@ -22,6 +22,16 @@ public class TestScene_09_Controller : MonoBehaviour
 	private Polygon offsetPolygon;
 	private Polygon polygon { get { return polygonSource.polygon; } }
 
+	public EPPZGeometry_Polygon_Inspector polygonInspector;
+	public EPPZGeometry_Polygon_Inspector rawOffsetPolygonInspector;
+	public EPPZGeometry_Polygon_Inspector offsetPolygonInspector;
+
+
+	void Start()
+	{
+		// Debug.
+		polygonInspector.polygon = polygonSource.polygon;
+	}
 
 	void Update()
 	{
@@ -37,6 +47,10 @@ public class TestScene_09_Controller : MonoBehaviour
 		// Pass to renderers.
 		rawOffsetPolygonRenderer.polygon = rawOffsetPolygon;
 		offsetPolygonRenderer.polygon = offsetPolygon; 
+
+		// Debug.
+		rawOffsetPolygonInspector.polygon = rawOffsetPolygon;
+		offsetPolygonInspector.polygon = offsetPolygon;
 
 		foreach (IntersectionVertex each in intersectionVertices)
 		{

@@ -8,6 +8,13 @@
 		+ Negative value should flip normals (edge order when creating raw offset)
 		+ Intersections can be valuated by distance as well
 
+* 0.2.6 (00:40)
+
+	+ Polygon inspector
+		+ Debug tool for inspecting edge graph of polygon
+	+ `Polygon`
+		+ Offset polygon cleaning fixes
+
 * 0.2.5 - 0.2.51 (01:20)
 
 	+ Cleaning up offset polygon

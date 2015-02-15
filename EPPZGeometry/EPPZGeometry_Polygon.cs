@@ -17,7 +17,7 @@ namespace EPPZGeometry
 		public string name;
 
 		// Windings.
-		public enum WindingDirection { Unknown, CCW, CW };
+		[HideInInspector] public enum WindingDirection { Unknown, CCW, CW };
 		private WindingDirection _windingDirection = WindingDirection.Unknown;
 		public WindingDirection windingDirection { get { return _windingDirection; } }
 		public bool isCW { get { return (_windingDirection == WindingDirection.CW); } }
@@ -94,12 +94,7 @@ namespace EPPZGeometry
 
 		public static Polygon PolygonWithPoints(Vector2[] points, WindingDirection windingDirection)
 		{
-			Polygon polygon = new Polygon();
-			
-			// Allocate points.
-			polygon._points = new Vector2[points.Length];
-			polygon.vertices = new Vertex[points.Length];
-			polygon.edges = new Edge[points.Length];
+			Polygon polygon = new Polygon(points.Length);
 			
 			// Create points (copy actually).
 			for (int index = 0; index < points.Length; index++)
@@ -117,6 +112,13 @@ namespace EPPZGeometry
 			polygon.CreateEdgesConnectingPoints();
 
 			return polygon;
+		}
+
+		public Polygon(int pointCount = 1)
+		{
+			this._points = new Vector2[pointCount];
+			this.vertices = new Vertex[pointCount];
+			this.edges = new Edge[pointCount];
 		}
 
 		/*
@@ -500,6 +502,7 @@ namespace EPPZGeometry
 			// The lovely cleaned up polygon.
 			List<Vector2> offsetPolygonPoints = new List<Vector2>();
 			List<Polygon> loopPolygons = new List<Polygon>();
+			List<IntersectionVertex> pool = new List<IntersectionVertex>();
 
 			// Offset polygon mode.
 			Edge firstEdge = rawOffsetPolygon.edges[0]; 
@@ -508,7 +511,7 @@ namespace EPPZGeometry
 			{
 				bool isIntersecting;
 				Vector2 intersectionPoint;
-				List<IntersectionVertex> pool = new List<IntersectionVertex>();
+				pool.Clear();
 
 				// Select next edge to test with (probably wont intersect with neighbouring edge).
 				Edge intersectingEdge = eachEdge.nextEdge.nextEdge; 
@@ -544,6 +547,13 @@ namespace EPPZGeometry
 							List<IntersectionVertex> loopIntersectionVertices = pool.GetRange(index, count);
 							pool.RemoveRange(index, count);
 
+							// Back to the loop opening intersection.
+							if (index == 0)
+							{
+								break;
+							}
+
+
 							// Store sub-polygon.
 							if (count > 1)
 							{
@@ -578,7 +588,7 @@ namespace EPPZGeometry
 
 					// Every edge checked (for having loop).
 					if (intersectingEdge == eachEdge) break;
-					if (whileCount > whileGuard) { Debug.LogError("Stack overflow."); break; }
+					if (whileCount > whileGuard) { Debug.LogError("Loop polygon mode: Stack overflow."); break; }
 					whileCount++;
 				}
 
@@ -586,8 +596,8 @@ namespace EPPZGeometry
 				{
 					// Collect loop opening-, loop endpoint if a loop has opened.
 					offsetPolygonPoints.Add(loopOpeningIntersectionVertex.point);
-					offsetPolygonPoints.Add(loopOpeningEdge.b);
-					eachEdge = loopOpeningEdge.nextEdge; // Step loop
+					// offsetPolygonPoints.Add(loopOpeningEdge.b);
+					eachEdge = loopOpeningEdge; // Continue offset polygon mode
 				}
 				else
 				{
@@ -598,7 +608,7 @@ namespace EPPZGeometry
 
 				// Every edge checked (for cleanup).
 				if (eachEdge == firstEdge) break;
-				if (whileCount > whileGuard) { Debug.LogError("Stack overflow."); break; }
+				if (whileCount > whileGuard) { Debug.LogError("Offset polygon mode: Stack overflow."); break; }
 				whileCount++;
 			}
 

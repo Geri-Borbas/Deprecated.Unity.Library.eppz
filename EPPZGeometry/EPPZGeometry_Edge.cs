@@ -99,11 +99,11 @@ namespace EPPZGeometry
 		 * 
 		 */
 		
-		private Edge _previousEdge;
+		public Edge _previousEdge;
 		public virtual Edge previousEdge { get { return _previousEdge; } } // Readonly
 		public void SetPreviousEdge(Edge edge) { _previousEdge = edge; } // Explicit setter (injected at creation time)
 		
-		private Edge _nextEdge;
+		public Edge _nextEdge;
 		public virtual Edge nextEdge  { get { return _nextEdge; } } // Readonly
 		public void SetNextEdge(Edge edge) { _nextEdge = edge; } // Explicit setter (injected at creation time)
 
