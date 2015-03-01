@@ -4,9 +4,15 @@
 		+ Then safely with a single loop polygon
 		+ Then full loop polygon validating
 	+ Issues
-		+ Gets into infinite loop (?) with too many (self?) intersections
+		+ Gets into infinite loop
 		+ Negative value should flip normals (edge order when creating raw offset)
-		+ Intersections can be valuated by distance as well
+		+ Intersections can be valuated by distance as well (again)
+
+* 0.2.7 (01:30)
+
+	+ Attempts to debug offset polygon cleanin up
+		+ Ended up with a clickable enumerator architecture
+		+ Still broken, but debuggable!
 
 * 0.2.6 (00:40)
 

@@ -8,7 +8,7 @@ namespace EPPZGeometry
 {
 	
 	
-	public class IntersectionVertex : Vertex, IEquatable<IntersectionVertex>
+	 public class IntersectionVertex : Vertex, IEquatable<IntersectionVertex>
 	{
 
 
@@ -62,6 +62,12 @@ namespace EPPZGeometry
 		public override Vector2 point // Has own point as not participating in a polygon
 		{
 			get { return _point; }
+		}
+
+		// Debug.
+		public string name
+		{
+			get { return "("+_edgeA.index+")-("+_edgeB.index+")"; }
 		}
 
 
