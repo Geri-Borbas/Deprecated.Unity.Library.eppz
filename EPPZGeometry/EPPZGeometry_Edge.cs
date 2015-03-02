@@ -107,5 +107,55 @@ namespace EPPZGeometry
 		public virtual Edge nextEdge  { get { return _nextEdge; } } // Readonly
 		public void SetNextEdge(Edge edge) { _nextEdge = edge; } // Explicit setter (injected at creation time)
 
+		/*
+		 * *
+		 * *
+		 * *
+		 */
+
+		#region Polygon features
+
+		public bool ForwardIntersection(out Edge intersectingEdge, out Vector2 intersectionPoint, bool checkEntirePolygonLoop)
+		{
+			// Default.
+			intersectingEdge = null;
+			intersectionPoint = Vector2.zero;
+			bool intersecting = false;
+
+			// Only if there are edges enough to test.
+			if (this.polygon.edges.Length <= 3) return false;
+
+			Edge testEdge = this.nextEdge.nextEdge; // Skip next neighbour
+			while(true)
+			{
+				intersecting = this.IntersectionWithSegment(testEdge, out intersectionPoint);
+				if (intersecting)
+				{
+					intersectingEdge = testEdge;
+					break;
+				}
+
+				// Step.
+				testEdge = testEdge.nextEdge;
+
+				// End conditions.
+				bool end;
+				if (checkEntirePolygonLoop)
+				{
+					end = (testEdge == this.previousEdge.previousEdge); // Only up till the previous neighbour
+				}
+				else
+				{
+					end = (testEdge == this.polygon.edges[0].previousEdge); // Only up till the end of the polygon loop
+				}
+				if (end) break;
+			}
+
+			return intersecting;
+		}
+
+		#endregion
+
+
 	}
 }

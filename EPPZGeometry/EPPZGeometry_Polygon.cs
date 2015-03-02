@@ -473,8 +473,19 @@ namespace EPPZGeometry
 		 * 
 		 */ 
 
+
+		
 		public Polygon rawOffsetPolygon;
 		public Polygon offsetPolygon;
+		
+		[System.Serializable]
+		public class Algorithm
+		{
+			public bool loopOpened = false;
+			public bool loopClosed = false;
+		}
+		public Algorithm algorithm = new Algorithm();
+
 
 		public IEnumerator OffsetPolygon(float offset, List<IntersectionVertex> intersectionVertices)
 		{
@@ -492,149 +503,177 @@ namespace EPPZGeometry
 
 			rawOffsetPolygon = Polygon.PolygonWithPoints(offsetPolygonPoints);
 
-			Debug.Log("Offset polygon created.");
-
+			// Enumerate cleanup algorithm.
 			IEnumerator cleanedUpOffsetPolygonEnumerator = CleanedUpOffsetPolygon(intersectionVertices);
-			while(true)
-			{
-				cleanedUpOffsetPolygonEnumerator.MoveNext();
-				yield return null;
-			}
+			while(cleanedUpOffsetPolygonEnumerator.MoveNext()) yield return null;
 		}
 
 		IEnumerator CleanedUpOffsetPolygon(List<IntersectionVertex> intersectionVertices)
 		{
-			// Debug.
-			int whileCount = 0;
-			int whileGuard = 10000;
-
 			if (rawOffsetPolygon.edgeCount <= 3) yield break; // Only with 4 edges at least
 
 			// The lovely cleaned up polygon.
 			List<Vector2> offsetPolygonPoints = new List<Vector2>();
 			List<Polygon> loopPolygons = new List<Polygon>();
 			List<IntersectionVertex> pool = new List<IntersectionVertex>();
-			// pool.Clear();
 
-			
 			// Reset loop stuff.
-			bool loopOpened = false;
-			bool loopClosed = false;
+			algorithm.loopClosed = false;
+			algorithm.loopOpened = false;
 			IntersectionVertex loopOpeningIntersectionVertex = null;
 			Edge loopOpeningEdge = null;
+			Edge loopOpeningIntersectingEdge = null;
 
 			Debug.Log ("Clean up offset polygon.");
 			yield return null;
 			
-			// Offset polygon mode.
+			// OFFSET (default) MODE.
 			Edge firstEdge = rawOffsetPolygon.edges[0]; 
 			Edge eachEdge = firstEdge;
 			while(true)
 			{
-				bool isIntersecting;
-				Vector2 intersectionPoint;
-
-				// Select next edge to test with (probably wont intersect with neighbouring edge).
-				Edge intersectingEdge = eachEdge.nextEdge.nextEdge; 
-
-
 				Debug.Log ("Offset mode edge ("+eachEdge.index+")");
-				Debug.DrawLine(eachEdge.a, eachEdge.b, Color.red, 1.0f);
+				Debug.DrawLine(eachEdge.a, eachEdge.b, Color.red, 3.0f);
 				yield return null;
 
-				// Forward intersection test.
-				while (true)
+				// Tests.
+				Edge intersectingEdge = null;
+				Vector2 intersectionPoint = Vector2.zero;
+				bool hasLoopOpeningIntersection = false;
+				bool hasForwardIntersection = false;
+
+				// Loop opening edge test.
+				if (loopOpeningEdge != null)
 				{
+					hasLoopOpeningIntersection = eachEdge.IntersectionWithSegment(loopOpeningEdge, out intersectionPoint);
+					intersectingEdge = loopOpeningEdge;
+				}
 
-					isIntersecting = eachEdge.IntersectionWithSegment(intersectingEdge, out intersectionPoint);
-					if (isIntersecting)
+				// Forward intersection test (if needed).
+				if (hasLoopOpeningIntersection == false)
+				{
+					hasForwardIntersection = eachEdge.ForwardIntersection(out intersectingEdge, out intersectionPoint, true); // Check entire polygon loop
+				}
+
+				// On having intersection.
+				if (hasForwardIntersection || hasLoopOpeningIntersection)
+				{
+					// Create intersection vertex.
+					IntersectionVertex intersectionVertex = IntersectionVertex.IntersectionVertexOfEdges(eachEdge, intersectingEdge, intersectionPoint); 
+
+					Debug.Log ("Has forward intersection ("+eachEdge.index+")-("+intersectingEdge.index+")");
+					Debug.DrawLine(intersectingEdge.a, intersectingEdge.b, Color.green, 3.0f);
+					yield return null;
+					
+					// In LOOP MODE.
+					if (algorithm.loopOpened)
 					{
-						Debug.Log ("Test ("+eachEdge.index+")-("+intersectingEdge.index+")");
-						Debug.Log("Is intersecting.");
-
-						// Open loop.
-						loopOpened = true;
-						
-						// Create intersection vertex.
-						IntersectionVertex intersectionVertex = IntersectionVertex.IntersectionVertexOfEdges(eachEdge, intersectingEdge, intersectionPoint); 
-						if (loopOpeningIntersectionVertex == null) loopOpeningIntersectionVertex = intersectionVertex; // Store loop opening intersection vertex
-						if (loopOpeningEdge == null)
-						{
-							loopOpeningEdge = intersectingEdge; // Store loop opening edge
-						}
-
 						// Check if intersection point has pooled already.
 						int index = pool.IndexOf(intersectionVertex);
 						bool alreadyPooled = (index != -1);
 
-						// Close a loop.
+						// If point already pooled.
 						if (alreadyPooled)
 						{
 							Debug.Log(intersectionVertex.name+" already pooled.");
+							yield return null;
 
-							loopClosed = true;
-							break;
+							bool poolDepleted = true;
+							// Add loop polygon if there are points remaining in pool.
+
+							// Close loop.
+							if (poolDepleted)
+							{
+								algorithm.loopClosed = true;
+							}
 						}
-
+						
 						// Pool points.
 						else
 						{
 							Debug.Log("Pool ("+pool.Count+") ("+eachEdge.index+")-("+intersectingEdge.index+")");
+							yield return null;
+
 							pool.Add(intersectionVertex);
 						}
-						
-						// Debug.
-						// if (intersectionVertices != null) intersectionVertices.Add(eachIntersectionVertex);
 					}
 
-					// Step forward (to the next edge).
-					intersectingEdge = intersectingEdge.nextEdge;
-
-					// Every edge checked (for having loop).
-					if (intersectingEdge == eachEdge || intersectingEdge == loopOpeningEdge) break;
-					if (whileCount > whileGuard)
+					// In OFFSET (default) MODE.
+					else
 					{
-						Debug.LogError("Loop polygon mode: Stack overflow.");
-						break;
+						bool isIntersectionAhead = (intersectingEdge.index > eachEdge.index);
+						if (isIntersectionAhead)
+						{
+							// Open loop mode.
+							algorithm.loopOpened = true;
+							loopOpeningIntersectionVertex = intersectionVertex; // Store loop opening intersection vertex
+							loopOpeningEdge = eachEdge;
+							loopOpeningIntersectingEdge = intersectingEdge; // Store loop opening edge
+							pool.Clear();
+
+							// Pool first point.
+							Debug.Log("Pool ("+pool.Count+") ("+eachEdge.index+")-("+intersectingEdge.index+")");
+							yield return null;
+							
+							pool.Add(intersectionVertex);
+
+							Debug.Log("Open loop.");
+							Debug.DrawLine(loopOpeningIntersectingEdge.a, loopOpeningIntersectingEdge.b, Color.yellow, 3.0f);
+							yield return null;
+						}
 					}
-					whileCount++;
 				}
 
-				if (loopOpened)
+				// WHAT POINT TO COLLECT.
+
+				// If loop opened.
+				if (algorithm.loopOpened)
 				{
-					if (loopClosed)
+					// And appears to be just closed.
+					if (algorithm.loopClosed)
 					{
 						// Collect loop opening-, loop endpoint if a loop has opened.
 						offsetPolygonPoints.Add(loopOpeningIntersectionVertex.point);
-						// offsetPolygonPoints.Add(loopOpeningEdge.b);
-						eachEdge = loopOpeningEdge; // Continue offset polygon mode
-
-						
-						Debug.Log("Closie loopie.");
+						eachEdge = loopOpeningIntersectingEdge; // Continue offset polygon mode
 
 						// Reset loop stuff.
-						loopOpened = false;
-						loopClosed = false;
+						algorithm.loopOpened = false;
+						algorithm.loopClosed = false;
 						loopOpeningIntersectionVertex = null;
 						loopOpeningEdge = null;
+						loopOpeningIntersectingEdge = null;
+
+						// Debug.
+						Debug.Log("Close loop (add loop opening intersection vertex).");
+						offsetPolygon = Polygon.PolygonWithPointList(offsetPolygonPoints);
+						yield return null;
+					}
+
+					// If still in loop, don't collect anything.
+					else
+					{
+						// Only step loop.
+						eachEdge = eachEdge.nextEdge;
 					}
 				}
 
+				// Or simply collect endpoint if no any loop.
 				else
 				{
-					// Or simply collect endpoint if no any loop.
+					// Collect edge endpoint.
 					offsetPolygonPoints.Add(eachEdge.b);
-					eachEdge = eachEdge.nextEdge; // Step loop
+
+					// Step loop.
+					eachEdge = eachEdge.nextEdge; 
+
+					// Debug.
+					Debug.Log("Add vertex.");
+					offsetPolygon = Polygon.PolygonWithPointList(offsetPolygonPoints);
+					yield return null;
 				}
 
 				// Every edge checked (for cleanup).
 				if (eachEdge == firstEdge) break;
-				if (whileCount > whileGuard)
-				{
-					Debug.LogError("Offset polygon mode: Stack overflow.");
-					break;
-				}
-				whileCount++;
 			}
 
 			// Construct cleaned up olygon.
@@ -645,6 +684,7 @@ namespace EPPZGeometry
 				// Add if needed.
 			}
 
+			Debug.Log("Done.");
 			yield break;
 		}
 

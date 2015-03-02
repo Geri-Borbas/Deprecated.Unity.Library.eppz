@@ -3,14 +3,16 @@
 	+ Construct offset polygon
 		+ Then safely with a single loop polygon
 		+ Then full loop polygon validating
-	+ Issues
-		+ Gets into infinite loop
-		+ Negative value should flip normals (edge order when creating raw offset)
-		+ Intersections can be valuated by distance as well (again)
+	+ Negative value should flip normals (edge order when creating raw offset)
+
+* 0.2.8 (01:10)
+
+	+ Offset polygon cleanup refactor
+		+ Only works (tested) with non-polygonal loops
 
 * 0.2.7 (01:30)
 
-	+ Attempts to debug offset polygon cleanin up
+	+ Attempts to debug offset polygon cleaning
 		+ Ended up with a clickable enumerator architecture
 		+ Still broken, but debuggable!
 
