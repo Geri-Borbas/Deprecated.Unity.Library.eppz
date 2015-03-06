@@ -1,9 +1,8 @@
 * Doin'
 
-	+ Construct offset polygon
-		+ Then safely with a single loop polygon
-		+ Then full loop polygon validating
-	+ Negative value should flip normals (edge order when creating raw offset)
+* 0.3.0 (00:50)
+
+	+ Hooked in Clipper library for offsetting
 
 * 0.2.8 (01:10)
 

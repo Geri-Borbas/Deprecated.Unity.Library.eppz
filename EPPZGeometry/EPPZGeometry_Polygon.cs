@@ -3,9 +3,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+using System.Linq;
+using ClipperLib;
+
 
 namespace EPPZGeometry
 {
+
+
+	// Clipper definitions.
+	using Path = List<IntPoint>;
+	using Paths = List<List<IntPoint>>;
 
 
 	public class Polygon
@@ -474,20 +482,7 @@ namespace EPPZGeometry
 		 */ 
 
 
-		
-		public Polygon rawOffsetPolygon;
-		public Polygon offsetPolygon;
-		
-		[System.Serializable]
-		public class Algorithm
-		{
-			public bool loopOpened = false;
-			public bool loopClosed = false;
-		}
-		public Algorithm algorithm = new Algorithm();
-
-
-		public IEnumerator OffsetPolygon(float offset, List<IntersectionVertex> intersectionVertices)
+		public Polygon OffsetPolygon(float offset)
 		{
 			// Allocate.
 			int offsetPolygonPointCount = pointCount * (3);
@@ -501,191 +496,43 @@ namespace EPPZGeometry
 				offsetPolygonPoints[eachVertex.index * 3 + 2] = eachVertex.point + eachVertex.nextEdge.normal * offset;
 			});
 
-			rawOffsetPolygon = Polygon.PolygonWithPoints(offsetPolygonPoints);
-
-			// Enumerate cleanup algorithm.
-			IEnumerator cleanedUpOffsetPolygonEnumerator = CleanedUpOffsetPolygon(intersectionVertices);
-			while(cleanedUpOffsetPolygonEnumerator.MoveNext()) yield return null;
+			Polygon rawOffsetPolygon = Polygon.PolygonWithPoints(offsetPolygonPoints);
+			return rawOffsetPolygon;
 		}
 
-		IEnumerator CleanedUpOffsetPolygon(List<IntersectionVertex> intersectionVertices)
+		public Polygon OffsetPolygonUsingClipper(float offset)
 		{
-			if (rawOffsetPolygon.edgeCount <= 3) yield break; // Only with 4 edges at least
+			// Clipper representation.
+			Paths paths = new Paths();
+			Path path = new Path();
 
-			// The lovely cleaned up polygon.
-			List<Vector2> offsetPolygonPoints = new List<Vector2>();
-			List<Polygon> loopPolygons = new List<Polygon>();
-			List<IntersectionVertex> pool = new List<IntersectionVertex>();
+			// Calculate Polygon-Clipper scale.
+			float maximum = Mathf.Max(bounds.width, bounds.height) + offset * 2.0f + offset; // 50 
+			float scale = (float)Int32.MaxValue / maximum; // 10000 / 50
 
-			// Reset loop stuff.
-			algorithm.loopClosed = false;
-			algorithm.loopOpened = false;
-			IntersectionVertex loopOpeningIntersectionVertex = null;
-			Edge loopOpeningEdge = null;
-			Edge loopOpeningIntersectingEdge = null;
-
-			Debug.Log ("Clean up offset polygon.");
-			yield return null;
-			
-			// OFFSET (default) MODE.
-			Edge firstEdge = rawOffsetPolygon.edges[0]; 
-			Edge eachEdge = firstEdge;
-			while(true)
+			// Convert to Clipper.
+			EnumeratePoints((Vector2 eachPoint) =>
 			{
-				Debug.Log ("Offset mode edge ("+eachEdge.index+")");
-				Debug.DrawLine(eachEdge.a, eachEdge.b, Color.red, 3.0f);
-				yield return null;
+				path.Add(new IntPoint(eachPoint.x * scale, eachPoint.y * scale));
+			});
+			paths.Add(path);
 
-				// Tests.
-				Edge intersectingEdge = null;
-				Vector2 intersectionPoint = Vector2.zero;
-				bool hasLoopOpeningIntersection = false;
-				bool hasForwardIntersection = false;
+			// Clipper offset.
+			Paths solution = new Paths();
+			ClipperOffset clipperOffset = new ClipperOffset();
+			clipperOffset.AddPaths(paths, JoinType.jtMiter, EndType.etClosedPolygon); 
+			clipperOffset.Execute(ref solution, (double)offset * scale);
 
-				// Loop opening edge test.
-				if (loopOpeningEdge != null)
-				{
-					hasLoopOpeningIntersection = eachEdge.IntersectionWithSegment(loopOpeningEdge, out intersectionPoint);
-					intersectingEdge = loopOpeningEdge;
-				}
-
-				// Forward intersection test (if needed).
-				if (hasLoopOpeningIntersection == false)
-				{
-					hasForwardIntersection = eachEdge.ForwardIntersection(out intersectingEdge, out intersectionPoint, true); // Check entire polygon loop
-				}
-
-				// On having intersection.
-				if (hasForwardIntersection || hasLoopOpeningIntersection)
-				{
-					// Create intersection vertex.
-					IntersectionVertex intersectionVertex = IntersectionVertex.IntersectionVertexOfEdges(eachEdge, intersectingEdge, intersectionPoint); 
-
-					Debug.Log ("Has forward intersection ("+eachEdge.index+")-("+intersectingEdge.index+")");
-					Debug.DrawLine(intersectingEdge.a, intersectingEdge.b, Color.green, 3.0f);
-					yield return null;
-					
-					// In LOOP MODE.
-					if (algorithm.loopOpened)
-					{
-						// Check if intersection point has pooled already.
-						int index = pool.IndexOf(intersectionVertex);
-						bool alreadyPooled = (index != -1);
-
-						// If point already pooled.
-						if (alreadyPooled)
-						{
-							Debug.Log(intersectionVertex.name+" already pooled.");
-							yield return null;
-
-							bool poolDepleted = true;
-							// Add loop polygon if there are points remaining in pool.
-
-							// Close loop.
-							if (poolDepleted)
-							{
-								algorithm.loopClosed = true;
-							}
-						}
-						
-						// Pool points.
-						else
-						{
-							Debug.Log("Pool ("+pool.Count+") ("+eachEdge.index+")-("+intersectingEdge.index+")");
-							yield return null;
-
-							pool.Add(intersectionVertex);
-						}
-					}
-
-					// In OFFSET (default) MODE.
-					else
-					{
-						bool isIntersectionAhead = (intersectingEdge.index > eachEdge.index);
-						if (isIntersectionAhead)
-						{
-							// Open loop mode.
-							algorithm.loopOpened = true;
-							loopOpeningIntersectionVertex = intersectionVertex; // Store loop opening intersection vertex
-							loopOpeningEdge = eachEdge;
-							loopOpeningIntersectingEdge = intersectingEdge; // Store loop opening edge
-							pool.Clear();
-
-							// Pool first point.
-							Debug.Log("Pool ("+pool.Count+") ("+eachEdge.index+")-("+intersectingEdge.index+")");
-							yield return null;
-							
-							pool.Add(intersectionVertex);
-
-							Debug.Log("Open loop.");
-							Debug.DrawLine(loopOpeningIntersectingEdge.a, loopOpeningIntersectingEdge.b, Color.yellow, 3.0f);
-							yield return null;
-						}
-					}
-				}
-
-				// WHAT POINT TO COLLECT.
-
-				// If loop opened.
-				if (algorithm.loopOpened)
-				{
-					// And appears to be just closed.
-					if (algorithm.loopClosed)
-					{
-						// Collect loop opening-, loop endpoint if a loop has opened.
-						offsetPolygonPoints.Add(loopOpeningIntersectionVertex.point);
-						eachEdge = loopOpeningIntersectingEdge; // Continue offset polygon mode
-
-						// Reset loop stuff.
-						algorithm.loopOpened = false;
-						algorithm.loopClosed = false;
-						loopOpeningIntersectionVertex = null;
-						loopOpeningEdge = null;
-						loopOpeningIntersectingEdge = null;
-
-						// Debug.
-						Debug.Log("Close loop (add loop opening intersection vertex).");
-						offsetPolygon = Polygon.PolygonWithPointList(offsetPolygonPoints);
-						yield return null;
-					}
-
-					// If still in loop, don't collect anything.
-					else
-					{
-						// Only step loop.
-						eachEdge = eachEdge.nextEdge;
-					}
-				}
-
-				// Or simply collect endpoint if no any loop.
-				else
-				{
-					// Collect edge endpoint.
-					offsetPolygonPoints.Add(eachEdge.b);
-
-					// Step loop.
-					eachEdge = eachEdge.nextEdge; 
-
-					// Debug.
-					Debug.Log("Add vertex.");
-					offsetPolygon = Polygon.PolygonWithPointList(offsetPolygonPoints);
-					yield return null;
-				}
-
-				// Every edge checked (for cleanup).
-				if (eachEdge == firstEdge) break;
-			}
-
-			// Construct cleaned up olygon.
-			offsetPolygon = Polygon.PolygonWithPointList(offsetPolygonPoints);
-			foreach (Polygon eachLoopPolygon in loopPolygons)
+			// Convert from Cipper.
+			List<Vector2> points = new List<Vector2>();
+			foreach (IntPoint eachPoint in solution[0])
 			{
-				// Validate.
-				// Add if needed.
+				points.Add(new Vector2(eachPoint.X / scale, eachPoint.Y / scale));
 			}
+			Polygon offsetPolygon = Polygon.PolygonWithPointList(points);
 
-			Debug.Log("Done.");
-			yield break;
+			// Back to Polygon.
+			return offsetPolygon;
 		}
 
 
