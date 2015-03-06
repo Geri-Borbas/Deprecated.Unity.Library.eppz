@@ -502,37 +502,65 @@ namespace EPPZGeometry
 
 		public Polygon OffsetPolygonUsingClipper(float offset)
 		{
-			// Clipper representation.
-			Paths paths = new Paths();
-			Path path = new Path();
-
 			// Calculate Polygon-Clipper scale.
-			float maximum = Mathf.Max(bounds.width, bounds.height) + offset * 2.0f + offset; // 50 
-			float scale = (float)Int32.MaxValue / maximum; // 10000 / 50
+			float maximum = Mathf.Max(bounds.width, bounds.height) + offset * 2.0f + offset;
+			float scale = (float)Int32.MaxValue / maximum;
 
 			// Convert to Clipper.
-			EnumeratePoints((Vector2 eachPoint) =>
+			Paths paths = new Paths();
 			{
-				path.Add(new IntPoint(eachPoint.x * scale, eachPoint.y * scale));
-			});
-			paths.Add(path);
+				Path path = new Path();
+				EnumeratePoints((Vector2 eachPoint) =>
+				                {
+					path.Add(new IntPoint(eachPoint.x * scale, eachPoint.y * scale));
+				});
+				paths.Add(path);
+			}
+			foreach (Polygon eachPolygon in polygons)
+			{
+				Path path = new Path();
+				eachPolygon.EnumeratePoints((Vector2 eachPoint) =>
+				{
+					path.Add(new IntPoint(eachPoint.x * scale, eachPoint.y * scale));
+				});
+				paths.Add(path);
+			}
 
 			// Clipper offset.
-			Paths solution = new Paths();
+			Paths solutionPaths = new Paths();
 			ClipperOffset clipperOffset = new ClipperOffset();
 			clipperOffset.AddPaths(paths, JoinType.jtMiter, EndType.etClosedPolygon); 
-			clipperOffset.Execute(ref solution, (double)offset * scale);
+			clipperOffset.Execute(ref solutionPaths, (double)offset * scale);
 
 			// Convert from Cipper.
-			List<Vector2> points = new List<Vector2>();
-			foreach (IntPoint eachPoint in solution[0])
+			Polygon offsetPolygon = null;
+			for (int index = 0; index < solutionPaths.Count; index++)
 			{
-				points.Add(new Vector2(eachPoint.X / scale, eachPoint.Y / scale));
+				Path eachSolutionPath = solutionPaths[index];
+				Polygon eachSolutionPolygon = PolygonFromClipperPath(eachSolutionPath, scale);
+
+				if (index == 0)
+				{
+					offsetPolygon = Polygon.PolygonWithPoints(eachSolutionPolygon.points); // Copy
+				}
+				else
+				{
+					offsetPolygon.AddPolygon(eachSolutionPolygon);
+				}
 			}
-			Polygon offsetPolygon = Polygon.PolygonWithPointList(points);
 
 			// Back to Polygon.
 			return offsetPolygon;
+		}
+
+		private Polygon PolygonFromClipperPath(Path path, float scale)
+		{
+			List<Vector2> points = new List<Vector2>();
+			foreach (IntPoint eachPoint in path)
+			{
+				points.Add(new Vector2(eachPoint.X / scale, eachPoint.Y / scale));
+			}
+			return Polygon.PolygonWithPointList(points);
 		}
 
 

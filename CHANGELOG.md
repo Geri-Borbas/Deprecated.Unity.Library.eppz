@@ -1,5 +1,11 @@
 * Doin'
 
+	+ Flip normals of clipper paths (winding direction, a.k.a reverse enumeration)
+
+* 0.3.1 (00:20)
+
+	+ Added multi-polygon support
+
 * 0.3.0 (00:50)
 
 	+ Hooked in Clipper library for offsetting
