@@ -29,7 +29,7 @@ namespace EPPZDebug
 		{
 			foreach (EPPZ_DebugRenderer eachDebugRenderer in debugRenderers)
 			{
-				eachDebugRenderer.OnDebugCameraPostRender(this.camera);
+				eachDebugRenderer.OnDebugCameraPostRender(this.GetComponent<Camera>());
 			}
 		}
 	}

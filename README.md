@@ -4,30 +4,27 @@ Unity.EPPZKit
 Unity.EPPZGeometry
 ==================
 
-2D geometry for everyday polygon hassle. Made for tangram! so production proof (yet not complete).
+Production proof 2D geometry for everyday polygon hassle.
 
-Core features
-
-+ .. Segment-segment intersection
-+ .. Segment-point intersection
-+ 00 Polygon-point containment
-+ 01 Polygon-segment intersection test
-+ 02 Polygon permiter-point containment (precise)
-+ 03 Polygon permiter-point containment (default)
-+ 04 Polygon-segment containment
-+ 05 Polygon-polygon containment
-+ 06 Vertex normal facing	
-+ 07 Polygon area, winding direction
-+ 08 Segment-segment intersection point
-+ 09 Polygon offset
-
-+ Polygon outline / Polygon offset / polygon buffer (however you name it)
-+ Polygon triangulation (actually using a subset of Triangle.NET for now)
++ Segment-segment intersection
++ Segment-point intersection
++ [Polygon-point containment](#00)
++ [Polygon-segment intersection test](#01)
++ Polygon permiter-point containment (precise)
++ Polygon permiter-point containment (default)
++ Polygon-segment containment
++ Polygon-polygon containment
++ Vertex normal facing	
++ Polygon area, winding direction
++ Segment-segment intersection point
++ Polygon offset
++ Polygon outline / Polygon offset / polygon buffer (using [Clipper](http://www.angusj.com/delphi/clipper.php))
++ Polygon triangulation (using a subset of [Triangle.NET](http://triangle.codeplex.com/))
 + Polygon area / bounds calculations
 
-Prefixed files, namespaced classes, no collisions with other classes. Some core geometry features extracted to a static class so can easily fit into other point / vertex / segment/ edge / polygon implementations if needed.
+Prefixed files, namespaced classes, no collisions with other classes. Some core geometry features extracted to a static class so can easily fit into other point / vertex / segment / edge / polygon implementations if needed.
 
-All works with closed convex / concave even self-intersecting polygons. There is no such thing as trigonometric function call at all in this library. Only `+` and `*` (and some `Mathf.Sqrt` for distances sometimes). 
+All works with closed convex / concave even self-intersecting polygons. There is no such thing as trigonometric function call at all in this library (beside third party libraries mentioned above). Only `+` and `*` (and some `Mathf.Sqrt` for distances sometimes). 
 
 
 Test scenes
@@ -223,7 +220,7 @@ See `TestScene_08_Controller.cs` for the full context.
 09 Polygon offset
 -----------------
 
-My favourite, yet work-in-progress, though. Raw offset polygon just created fine, only cleanup self intersections is to go.
+Robust polygon offset solution using Angus Johnson's [`Clipper`](http://www.angusj.com/delphi/clipper.php) library.
 
 Usage:
 
@@ -238,6 +235,9 @@ See `TestScene_09_Controller.cs` for the full context.
 Extras
 ------
 
-	Extensions, like `Vector2.xy()`
-	Some `Mesh2D` component (circle and ring)
-	Debug renderes as a lovely debug tool
+	+ Extensions, like `Vector2.xy()`
+	+ Some `Mesh2D` component (circle and ring)
+	+ Debug tools (renders, inspector)
+
+#### License
+> Licensed under the [Open Source MIT license](http://en.wikipedia.org/wiki/MIT_License).	

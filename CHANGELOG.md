@@ -1,6 +1,8 @@
-* Doin'
+* 1.0.0 (00:10)
 
-	+ Flip normals of clipper paths (winding direction, a.k.a reverse enumeration)
+	+ Flip normals of clipper paths (reverse enumeration)
+	+ Removed legacy offset algorithm
+	+ Removed `IntersectionVertex` and its debugger
 
 * 0.3.1 (00:20)
 

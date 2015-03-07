@@ -23,12 +23,12 @@ public class Editor_Snap : ScriptableObject
 	{
 		foreach (Transform eachTransform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.OnlyUserModifiable))
 		{
-			if (eachTransform.gameObject.renderer == null) continue; // Only if any renderer
+			if (eachTransform.gameObject.GetComponent<Renderer>() == null) continue; // Only if any renderer
 
 			eachTransform.position = new Vector3(
-				eachTransform.position.x - eachTransform.gameObject.renderer.bounds.center.x,
-				eachTransform.position.y - eachTransform.gameObject.renderer.bounds.center.y,
-				eachTransform.position.z - eachTransform.gameObject.renderer.bounds.center.z
+				eachTransform.position.x - eachTransform.gameObject.GetComponent<Renderer>().bounds.center.x,
+				eachTransform.position.y - eachTransform.gameObject.GetComponent<Renderer>().bounds.center.y,
+				eachTransform.position.z - eachTransform.gameObject.GetComponent<Renderer>().bounds.center.z
 				);
 		}
 	}

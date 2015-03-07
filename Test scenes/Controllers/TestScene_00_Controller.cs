@@ -43,6 +43,6 @@ public class TestScene_00_Controller : MonoBehaviour
 		Material currentMaterial = (testResult) ? passingMaterial : polygonMaterial;
 		polygonRenderer.lineMaterial = currentMaterial;
 		foreach (GameObject eachPointObject in pointObjects)
-		{ eachPointObject.renderer.material = currentMaterial; }
+		{ eachPointObject.GetComponent<Renderer>().material = currentMaterial; }
 	}
 }

@@ -479,28 +479,9 @@ namespace EPPZGeometry
 		 * 
 		 * Geometry features (Offset)
 		 * 
-		 */ 
-
+		 */
 
 		public Polygon OffsetPolygon(float offset)
-		{
-			// Allocate.
-			int offsetPolygonPointCount = pointCount * (3);
-			Vector2[] offsetPolygonPoints = new Vector2[offsetPolygonPointCount];
-
-			// Extrude each vertex in 3 ways.
-			EnumerateVertices((Vertex eachVertex) =>
-			{
-				offsetPolygonPoints[eachVertex.index * 3] = eachVertex.point + eachVertex.previousEdge.normal * offset;
-				offsetPolygonPoints[eachVertex.index * 3 + 1] = eachVertex.point + eachVertex.normal * offset;
-				offsetPolygonPoints[eachVertex.index * 3 + 2] = eachVertex.point + eachVertex.nextEdge.normal * offset;
-			});
-
-			Polygon rawOffsetPolygon = Polygon.PolygonWithPoints(offsetPolygonPoints);
-			return rawOffsetPolygon;
-		}
-
-		public Polygon OffsetPolygonUsingClipper(float offset)
 		{
 			// Calculate Polygon-Clipper scale.
 			float maximum = Mathf.Max(bounds.width, bounds.height) + offset * 2.0f + offset;
@@ -556,8 +537,9 @@ namespace EPPZGeometry
 		private Polygon PolygonFromClipperPath(Path path, float scale)
 		{
 			List<Vector2> points = new List<Vector2>();
-			foreach (IntPoint eachPoint in path)
+			for (int index = path.Count - 1; index >= 0; index--) // Reverse enumeration (to flip normals)
 			{
+				IntPoint eachPoint = path[index];
 				points.Add(new Vector2(eachPoint.X / scale, eachPoint.Y / scale));
 			}
 			return Polygon.PolygonWithPointList(points);

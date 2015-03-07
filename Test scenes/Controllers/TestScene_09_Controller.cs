@@ -30,7 +30,7 @@ public class TestScene_09_Controller : MonoBehaviour
 
 	void Update()
 	{
-		offsetPolygon = polygon.OffsetPolygonUsingClipper(offset);
+		offsetPolygon = polygon.OffsetPolygon(offset);
 
 		// Render.
 		offsetPolygonRenderer.polygon = offsetPolygon; 

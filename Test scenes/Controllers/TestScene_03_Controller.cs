@@ -37,6 +37,6 @@ public class TestScene_03_Controller : MonoBehaviour
 		// Set corresponding materials.
 		Material renderMaterial = (testResult) ? intersectingMaterial : polygonMaterial;
 		polygonRenderer.lineMaterial = renderMaterial;
-		pointSource.renderer.material = renderMaterial;
+		pointSource.GetComponent<Renderer>().material = renderMaterial;
 	}
 }

@@ -55,6 +55,6 @@ public class TestScene_08_Controller : MonoBehaviour
 		segmentRendererB.lineMaterial = currentMaterial;
 
 		// Show / hide intersection point.
-		intersectionPointObject.renderer.enabled = testResult;
+		intersectionPointObject.GetComponent<Renderer>().enabled = testResult;
 	}
 }
