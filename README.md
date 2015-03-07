@@ -1,6 +1,3 @@
-Unity.EPPZKit
--------------
-
 Unity.EPPZGeometry
 ==================
 
@@ -8,18 +5,16 @@ Production proof 2D geometry for everyday polygon hassle.
 
 + Segment-segment intersection
 + Segment-point intersection
-+ [Polygon-point containment](#00)
-+ [Polygon-segment intersection test](#01)
-+ Polygon permiter-point containment (precise)
-+ Polygon permiter-point containment (default)
-+ Polygon-segment containment
-+ Polygon-polygon containment
-+ Vertex normal facing	
-+ Polygon area, winding direction
-+ Segment-segment intersection point
-+ Polygon offset
-+ Polygon outline / Polygon offset / polygon buffer (using [Clipper](http://www.angusj.com/delphi/clipper.php))
-+ Polygon triangulation (using a subset of [Triangle.NET](http://triangle.codeplex.com/))
++ [Polygon-point containment](#polygon-point-containment)
++ [Polygon-segment intersection test](#polygon-segment-intersection)
++ [Polygon permiter-point containment (precise)](#polygon-permiter-point-containment-(precise))
++ [Polygon permiter-point containment (default)](#polygon-permiter-point-containment-(default))
++ [Polygon-segment containment](#polygon-segment-containment)
++ [Polygon-polygon containment](#polygon-polygon-containment)
++ [Vertex normal facing](#vertex-normal-facing)
++ [Polygon area, winding direction](#polygon-area-winding-direction)
++ [Segment-segment intersection point](#segment-segment-intersection-point)
++ [Polygon outline / Polygon offset / polygon buffer](#polygon-offset) (using [Clipper](http://www.angusj.com/delphi/clipper.php))
 + Polygon area / bounds calculations
 
 Prefixed files, namespaced classes, no collisions with other classes. Some core geometry features extracted to a static class so can easily fit into other point / vertex / segment / edge / polygon implementations if needed.
@@ -56,8 +51,8 @@ bool test = polygon.ContainsPoint(point);
 See `TestScene_00_Controller.cs` for the full context.
 
 
-01 Polygon-segment intersection
--------------------------------
+Polygon-segment intersection
+----------------------------
 
 The star polygon drawn yellow when any of the two segments intersects any polygon edge.
 
@@ -72,8 +67,8 @@ See `TestScene_01_Controller.cs` for the full context.
 
 
 
-02 Polygon permiter-point containment 1
----------------------------------------
+Polygon permiter-point containment (precise)
+--------------------------------------------
 
 The star polygon drawn yellow when the point is contained by the polygon permiter. Accuracy means the line width of the polygon permiter (is `1.0f` by default).
 
@@ -89,8 +84,8 @@ See `TestScene_02_Controller.cs` for the full context.
 TODO: Explaination of Segment.ContainmentMethod.
 
 
-03 Polygon permiter-point containment 2
----------------------------------------
+Polygon permiter-point containment (default)
+--------------------------------------------
 
 Actually the same as before, but a smaller accuracy is given (`0.1f`). The star polygon drawn yellow when the point appears to be on any polygon edge of at a polygon vertex.
 
@@ -105,8 +100,8 @@ bool test = polygon.PermiterContainsPoint(point, accuracy);
 See `TestScene_03_Controller.cs` for the full context.
 
 
-04 Polygon-segment containment (TODO: unfinished test scene)
-------------------------------
+Polygon-segment containment
+---------------------------
 
 The star drawn yellow when it contains both edge. This is a compund test of polygon-point containment, polygon permiter-point containment, polygon-segment intersection.
 
@@ -116,7 +111,7 @@ The star drawn yellow when it contains both edge. This is a compund test of poly
 See `TestScene_04_Controller.cs` for the full context.
 
 
-05 Polygon-polygon containment
+Polygon-polygon containment
 ------------------------------
 
 The star drawn yellow when it contain the rectangular polygon.  This is also a compund test of polygon-point containment, polygon-segment intersection, polygon permiter-point containment.
@@ -131,8 +126,8 @@ See `TestScene_05_Controller.cs` for the full context.
 Among some other orientation normalizer stuff, this is the core of tangram! puzzle solving engine, so it is proven by millions of gameplay hours.
 
 
-06 Vertex normal facing	(TODO: Rename to something like "On which side of a segment a point resides")
------------------------
+Vertex normal facing
+--------------------
 
 I made `Vertex` / `Edge : Segment` classes to add some contextual features to points and segments when participating in a polygon. Further polygon calculations make a good use of these contextual stuff, like `normal`, `bisector`, `previousPoint` / `previousEdge` and such.
 
@@ -166,8 +161,8 @@ bool NormalFacingTest()
 See `TestScene_06_Controller.cs` for the full context.
 
 
-07 Polygon area, winding direction
-----------------------------------
+Polygon area, winding direction
+-------------------------------
 
 The winding direction of a polygon comes to a good use when you want to validate the result of further polygon operations. The winding direction of each `Polygon` instance gets calculated at construction time, and each time it's `CalculateArea()` method gets called (actually every frame in these example scenes).
 
@@ -193,8 +188,8 @@ polygon.UpdateCalculations();
 See `EPPZGeometry_Polygon.cs` source for the details.
 
 
-08 Segment-segment intersection point
--------------------------------------
+Segment-segment intersection point
+----------------------------------
 
 Segment intersection has two parts actually. Get the intersection point of the lines defined by the segment, then look up if the point resides on the segments.
 
@@ -217,10 +212,10 @@ bool isIntersecting = segment_a.IntersectionWithSegment(segment_b, out intersect
 See `TestScene_08_Controller.cs` for the full context.
 
 
-09 Polygon offset
------------------
+Polygon offset
+--------------
 
-Robust polygon offset solution using Angus Johnson's [`Clipper`](http://www.angusj.com/delphi/clipper.php) library.
+Robust polygon offset (or may call it polygon outline / polygon buffer) solution using Angus Johnson's [`Clipper`](http://www.angusj.com/delphi/clipper.php) library.
 
 Usage:
 
@@ -235,9 +230,9 @@ See `TestScene_09_Controller.cs` for the full context.
 Extras
 ------
 
-	+ Extensions, like `Vector2.xy()`
-	+ Some `Mesh2D` component (circle and ring)
-	+ Debug tools (renders, inspector)
++ Extensions, like `Vector2.xy()`
++ Some `Mesh2D` component (circle and ring)
++ Debug tools (renders, inspector)
 
 #### License
 > Licensed under the [Open Source MIT license](http://en.wikipedia.org/wiki/MIT_License).	
