@@ -20,7 +20,7 @@ namespace EPPZGeometry
 		void Awake()
 		{
 			// Construct a polygon model from transforms (if not created by a root polygon already).
-			if (polygon == null) polygon = Polygon.PolygonWithSource (this);
+			if (polygon == null) polygon = Polygon.PolygonWithSource(this);
 		}
 
 		void Update()

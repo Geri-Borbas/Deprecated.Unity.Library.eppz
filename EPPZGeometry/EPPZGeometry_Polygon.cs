@@ -63,7 +63,7 @@ namespace EPPZGeometry
 
 		public static Polygon PolygonWithSource(EPPZGeometry_PolygonSource polygonSource)
 		{
-			Polygon rootPolygon = Polygon.PolygonWithPointTransforms (polygonSource.pointTransforms, polygonSource.windingDirection);
+			Polygon rootPolygon = Polygon.PolygonWithPointTransforms(polygonSource.pointTransforms, polygonSource.windingDirection);
 
 			// Collect sub-olygons if any.
 			foreach (Transform eachChildTransform in polygonSource.gameObject.transform)
@@ -112,8 +112,8 @@ namespace EPPZGeometry
 			
 			// Polygon calculations.
 			polygon.CalculateBounds();
-			polygon.CalculateArea();
 			polygon.CalculateWindingDirectionIfNeeded();
+			polygon.CalculateArea();
 
 			// Create members.
 			polygon.CreateVerticesFromPoints();

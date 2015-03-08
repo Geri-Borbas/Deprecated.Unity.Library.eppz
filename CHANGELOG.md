@@ -1,7 +1,9 @@
 * 1.0.1 (00:00)
 
-	+ `Polygon.polygonCount` introduced
-	+ `count` properties public
+	+ `Polygon` fixes
+		+ Calculate winding number before area calculation on construction
+		+ `polygonCount` introduced
+		+ `count` properties public
 
 * 1.0.0 (00:10)
 

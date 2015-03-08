@@ -65,7 +65,7 @@ namespace EPPZDebug
 			debugLines.Add(debugLine);
 		}
 
-		protected void DrawSegment(Segment segment, Material material)
+		protected void DrawSegment(Segment segment, Material material)	
 		{ DrawLine(segment.a, segment.b, material); }
 
 		protected void DrawPolygon(Polygon polygon, Material material)
@@ -78,11 +78,11 @@ namespace EPPZDebug
 		{
 			polygon.EnumerateEdgesRecursive((Edge eachEdge) =>
 			{
-				DrawLineWithTransform(eachEdge.a, eachEdge.b, material, transform);
+				DrawLineWithTransform(eachEdge.a, eachEdge.b, material, transform_);
 				if (drawNormals)
 				{
 					Vector2 halfie = eachEdge.a + ((eachEdge.b - eachEdge.a) / 2.0f);
-					DrawLineWithTransform(halfie, halfie + eachEdge.normal * 0.1f, material, transform);
+					DrawLineWithTransform(halfie, halfie + eachEdge.normal * 0.1f, material, transform_);
 				}
 			});
 		}
