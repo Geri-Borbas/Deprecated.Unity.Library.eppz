@@ -1,4 +1,4 @@
-* 1.0.1 (00:00)
+* 1.0.1 - 1.0.2 (00:00)
 
 	+ `Polygon` fixes
 		+ Calculate winding number before area calculation on construction
