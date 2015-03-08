@@ -1,3 +1,8 @@
+* 1.0.1 (00:00)
+
+	+ `Polygon.polygonCount` introduced
+	+ `count` properties public
+
 * 1.0.0 (00:10)
 
 	+ Flip normals of clipper paths (reverse enumeration)

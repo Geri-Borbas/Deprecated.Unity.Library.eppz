@@ -169,9 +169,11 @@ namespace EPPZGeometry
 		 * 
 		 */ 
 		
-		private int pointCount { get { return _points.Length; } } // Readonly
-		private int vertexCount { get { return vertices.Length; } } // Readonly
-		private int edgeCount { get { return edges.Length; } } // Readonly
+		public int pointCount { get { return _points.Length; } } // Readonly
+		public int vertexCount { get { return vertices.Length; } } // Readonly
+		public int edgeCount { get { return edges.Length; } } // Readonly
+		public int polygonCount { get { return polygons.Count; } } // Readonly
+
 
 		public int pointCountRecursive
 		{
