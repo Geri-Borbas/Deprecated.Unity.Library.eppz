@@ -7,8 +7,8 @@ Production proof 2D geometry for everyday polygon hassle.
 + Segment-point intersection
 + [Polygon-point containment](#polygon-point-containment)
 + [Polygon-segment intersection test](#polygon-segment-intersection)
-+ [Polygon permiter-point containment (precise)](#polygon-permiter-point-containment-(precise))
-+ [Polygon permiter-point containment (default)](#polygon-permiter-point-containment-(default))
++ [Polygon permiter-point containment (precise)](#polygon-permiter-point-containment-precise)
++ [Polygon permiter-point containment (default)](#polygon-permiter-point-containment-default)
 + [Polygon-segment containment](#polygon-segment-containment)
 + [Polygon-polygon containment](#polygon-polygon-containment)
 + [Vertex normal facing](#vertex-normal-facing)
@@ -36,8 +36,8 @@ Beside these helper classes, you can easily construct `Polygon` / `Segment` inst
 Having these test scenes, you can easily provision the mechanism of each EPPZGeometry feature even with your own polygons.
 
 
-00 Polygon-point containment
-----------------------------
+Polygon-point containment
+-------------------------
 
 The star polygon drawn yellow when it contains all three points.
 
