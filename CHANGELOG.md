@@ -1,3 +1,15 @@
+* 1.1.0
+
+	+ `EPPZEditor_HandTool`
+		+ Hold space for pan
+	+ `EPPZTools_ActivateOnAwake` 
+		+ As it goes
+	+ `EPPZTools_RetinaCanvas`
+		+ Sets UI scale to 2 on retina (high DPI) devices
+	+ `EPPZUI_Draggable`
+		+ Draggable panel with top / bottom snapping
+		+ Base solution for paging scroll
+
 * 1.0.1 - 1.0.2 (00:00)
 
 	+ `Polygon` fixes
