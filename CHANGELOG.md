@@ -1,3 +1,8 @@
+* 1.1.1
+
+	+ `EPPZUI_SizeConstraint`
+		+ Bind Rect Transform values together (updates in editor as well)
+
 * 1.1.0
 
 	+ `EPPZEditor_HandTool`
