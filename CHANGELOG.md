@@ -1,3 +1,10 @@
+* 1.1.2
+
+	+ `EPPZUI_AspectConstraint`
+		+ Bind Rect Transform aspect together along customizable rules
+	+ EPPZUI_CellSizeConstraint`
+		+ `GridLayoutGroup` extension to control cell size with reference `rectTransform`
+
 * 1.1.1
 
 	+ `EPPZUI_SizeConstraint`

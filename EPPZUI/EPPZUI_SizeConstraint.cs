@@ -17,6 +17,9 @@ namespace EPPZ.UI
 	{
 
 
+		// To be used (tested) with stretch anchors (both direction).
+
+
 		private RectTransform _rectTransform;
 		private RectTransform rectTransform
 		{

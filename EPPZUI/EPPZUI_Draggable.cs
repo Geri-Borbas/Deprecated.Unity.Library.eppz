@@ -50,8 +50,6 @@ namespace EPPZ.UI
 			isDragged = true;
 			isDecelerating = false;
 			touchOffset = panel.anchoredPosition - eventData.position;
-
-			eventData.Use(); // Consume event
 		}
 
 		public void OnDrag(PointerEventData eventData)
@@ -63,8 +61,6 @@ namespace EPPZ.UI
 				case Direction.Horizontal: panel.anchoredPosition = new Vector2(draggedPosition.x, panel.anchoredPosition.y); break;
 				case Direction.Vertical: panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, draggedPosition.y); break;
 			}
-
-			eventData.Use(); // Consume event
 		}
 		
 		public void OnEndDrag(PointerEventData eventData)
@@ -76,8 +72,6 @@ namespace EPPZ.UI
 			float topDistance = Vector2.Distance(panel.anchoredPosition, topPosition);
 			float bottomDistance = Vector2.Distance(panel.anchoredPosition, bottomPosition);
 			targetPositionPanel = (topDistance < bottomDistance) ? topPositionPanel : bottomPositionPanel;
-
-			eventData.Use(); // Consume event
 		}
 
 		void Update()
