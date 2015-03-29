@@ -1,3 +1,10 @@
+* 1.1.4
+
+	+ `EPPZUI_ScrollRect`
+		+ A lovely class that resolves perpendicular ScrollRect issue
+			+ A vertical ScrollRect now won't block a horizontal ScrollRect from scrolling 
+			+ Same behaviour as embedded UIScrollView in iOS
+
 * 1.1.2
 
 	+ `EPPZUI_AspectConstraint`
