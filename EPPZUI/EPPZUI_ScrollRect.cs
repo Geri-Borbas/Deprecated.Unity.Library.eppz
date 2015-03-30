@@ -41,7 +41,7 @@ namespace EPPZ.UI
 		public override void OnBeginDrag(PointerEventData eventData)
 		{
 			// Look for any perpendicular ScrollRect behind.
-			perpendicularScrollRect = HighestPerpendicularScrollRectBehind(eventData);
+			perpendicularScrollRect = GetClosestPerpendicularScrollRectParent();
 
 			// Calculate drag horizontalness.
 			Vector2 offset = eventData.position - touchPosition;
@@ -94,46 +94,30 @@ namespace EPPZ.UI
 			}
 		}
 
-		private ScrollRect HighestPerpendicularScrollRectBehind(PointerEventData eventData)
+
+		private ScrollRect GetClosestPerpendicularScrollRectParent()
+		{ return GetClosestPerpendicularScrollRectParentOf(this.transform); }
+
+		private ScrollRect GetClosestPerpendicularScrollRectParentOf(Transform transform)
 		{
-			// Raycast with the pointer event.
-			List<RaycastResult> results = new  List<RaycastResult>();
-			EventSystem.current.RaycastAll(eventData, results);
+			// Only having parent.
+			Transform parentTransform = transform.parent;
+			if (parentTransform == null) return null;
 
-			// Look for ScrollRect.
-			ScrollRect scrollRect = null;
-			int eachDepth = 0;
-			int highestDepth = 0;
-			foreach (RaycastResult eachResult in results)
-			{
-				if (eachResult.isValid == false) continue; // Only having `GameObject` hit
-				
-				// Get object.
-				GameObject eachGameObject = eachResult.gameObject;
-				if (eachGameObject == this.gameObject) continue; // Skip this object
-				
-				// Get depth if any.
-				Graphic eachGraphic = eachGameObject.GetComponent<Graphic>();
-				if (eachGraphic != null) eachDepth = eachGraphic.depth;
-				
-				// Get ScrollRect if any.
-				ScrollRect eachScrollRect = eachGameObject.GetComponent<ScrollRect>();
-				if (eachScrollRect == null) continue;
+			// Only having GameObject parent.
+			GameObject parentObject = parentTransform.gameObject;
+			if (parentObject == null) return null;
 
-				// Look if perpendicular.
-				bool perpendicular = (this.horizontal && eachScrollRect.vertical) || (this.vertical && eachScrollRect.horizontal);
-				if (perpendicular == false) continue;
+			// Look for parent ScrollRect recursive.
+			ScrollRect parentScrollRect = parentObject.GetComponent<ScrollRect>();
+			if (parentScrollRect == null) return GetClosestPerpendicularScrollRectParentOf(parentTransform);
 
-				// Set search hit.
-				if (scrollRect == null || // If this is the first hit
-				    eachDepth >= highestDepth) // Or if it has higher hierarchy depth
-				{
-					scrollRect = eachScrollRect;
-					highestDepth = eachDepth; // Track depth
-				}
-			}
+			// Look for perpendicular parent ScrollRect recursive.
+			bool perpendicular = (this.horizontal && parentScrollRect.vertical) || (this.vertical && parentScrollRect.horizontal);
+			if (perpendicular == false) return GetClosestPerpendicularScrollRectParentOf(parentTransform);
 
-			return scrollRect;
+			// Got it.
+			return parentScrollRect;
 		}
 	}
 }

@@ -1,3 +1,9 @@
+* 1.1.5
+
+	+ `EPPZUI_ScrollRect`
+		+ Removed dependency on interactable content on ScrollRect
+		+ Perpendicular ScrollRect lookup now traverses hierarchy only (removed raycast based implementation)
+
 * 1.1.4
 
 	+ `EPPZUI_ScrollRect`
