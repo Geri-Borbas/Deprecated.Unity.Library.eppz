@@ -1,3 +1,9 @@
+* 1.1.6
+
+	+ `EPPZUI_ScrollRect`
+		+ Paging (both horizontal and vertical)
+		+ Flick gesture (to page for a brief drag)
+
 * 1.1.5
 
 	+ `EPPZUI_ScrollRect`

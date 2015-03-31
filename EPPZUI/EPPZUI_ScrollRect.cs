@@ -15,31 +15,46 @@ namespace EPPZ.UI
 	{
 
 
+		// Paging.
+		public bool paging = false;
+		[Range (0,1)] public float pagingStrength = 0.135f;
+
+		private float flickDistance = 10.0f;
+		private float flickTime = 0.3f;
+
+		[HideInInspector] public int horizontalPageIndex;
+		[HideInInspector] public int verticalPageIndex;
+		private bool isDecelerating;
+		private float normalizedPageWidth;
+		private float normalizedPageHeight;
+		private float horizontalPageCount;
+		private float verticalPageCount;
+		private Vector2 targetNormalizedPosition;
+
+		// Drag dispatching.
 		private Vector2 touchPosition;
+		private float touchTime;
 		private bool dispatched;
 		private ScrollRect perpendicularScrollRect;
 
 
-		public void Dispatch()
-		{
-			dispatched = true;
-		}
-
-		public void Undispatch()
-		{
-			dispatched = false;
-		}
+		#region Drag dispatching
 
 		public override void OnInitializePotentialDrag(PointerEventData eventData)
 		{
 			base.OnInitializePotentialDrag(eventData);
+			if (content == null) return; // Only having content
 
 			// Track touch position for drag direction measurement later on.
 			touchPosition = eventData.position;
+			touchTime = Time.time;
+			isDecelerating = false;
 		}
 
 		public override void OnBeginDrag(PointerEventData eventData)
 		{
+			if (content == null) return; // Only having content
+
 			// Look for any perpendicular ScrollRect behind.
 			perpendicularScrollRect = GetClosestPerpendicularScrollRectParent();
 
@@ -48,7 +63,6 @@ namespace EPPZ.UI
 			float angle = Mathf.Abs(Mathf.Atan2(offset.x, offset.y) * Mathf.Rad2Deg);
 			bool isHorizontalDrag = (angle > 45) && (angle < 135);
 			bool isDragInScrollDirection = (this.horizontal && isHorizontalDrag);
-			Debug.Log("angle ("+angle+") isHorizontalDrag("+isHorizontalDrag+")");
 
 			if (perpendicularScrollRect == null || // If no perpendicular ScrollRect...
 			    isDragInScrollDirection) // Or drag happens in the scroll direction of this ScrollRect...
@@ -67,6 +81,8 @@ namespace EPPZ.UI
 		
 		public override void OnDrag(PointerEventData eventData)
 		{
+			if (content == null) return; // Only having content
+
 			if (dispatched)
 			{
 				perpendicularScrollRect.OnDrag(eventData);
@@ -75,11 +91,14 @@ namespace EPPZ.UI
 			else
 			{
 				base.OnDrag(eventData);
+				CalculatePageIndices();
 			}
 		}
 		
 		public override void OnEndDrag(PointerEventData eventData)
 		{
+			if (content == null) return; // Only having content
+
 			if (dispatched)
 			{
 				perpendicularScrollRect.OnEndDrag(eventData);
@@ -91,14 +110,119 @@ namespace EPPZ.UI
 			else
 			{
 				base.OnEndDrag(eventData);
+				if (paging) ApplyPaging(eventData);
 			}
 		}
 
+		public override void OnScroll(PointerEventData eventData)
+		{
+			if (content == null) return; // Only having content
 
-		private ScrollRect GetClosestPerpendicularScrollRectParent()
+			base.OnScroll(eventData);
+			CalculatePageIndices();
+			ClampPageIndices();
+		}
+
+		#endregion
+
+
+		#region Paging
+
+		void ApplyPaging(PointerEventData eventData)
+		{
+			// Flick distance based on global drag treshold.
+			flickDistance = EventSystem.current.pixelDragThreshold * 2.0f;
+
+			// Lookup flick.
+			Vector2 offset = eventData.position - touchPosition;
+			float timeDistance = Time.time - touchTime;
+			bool isHorizontalFlick = (Mathf.Abs(offset.x) > flickDistance) && (timeDistance < flickTime);
+			bool isVerticalFlick = (Mathf.Abs(offset.x) > flickDistance) && (timeDistance < flickTime);
+			int horizontalPageFlick = (isHorizontalFlick) ? -(int)Mathf.Sign(offset.x) : 0;
+			int verticalPageFlick = (isVerticalFlick) ? -(int)Mathf.Sign(offset.y) : 0;
+
+			// Calculate desired page position.
+			CalculatePageIndices();
+			horizontalPageIndex += horizontalPageFlick;
+			verticalPageIndex += verticalPageFlick;
+			ClampPageIndices();
+			Vector2 normalizedPagedScrollPosition = NormalizedPositionForPageIndices(horizontalPageIndex, verticalPageIndex);
+			
+			// If `Clamped` ...
+			if (this.movementType == MovementType.Clamped)
+			{
+				// ...set immediately.
+				normalizedPosition = normalizedPagedScrollPosition;
+			}
+			
+			// Otherwise...
+			else
+			{
+				// ...set target position for now...
+				targetNormalizedPosition = normalizedPagedScrollPosition;
+				isDecelerating = true; // ...`Update` handles the rest.
+			}
+		}
+		
+		void CalculatePageIndices()
+		{
+			// Calculate page dimensions.
+			RectTransform rectTransform = this.transform as RectTransform;
+			float width = rectTransform.rect.width;
+			float height = rectTransform.rect.height;
+			float scrollWidth = content.rect.width - width;
+			float scrollHeight = content.rect.height - height;
+			normalizedPageWidth = (scrollWidth <= 0.0f) ? 0.0f : width / scrollWidth;
+			normalizedPageHeight = (scrollHeight <= 0.0f) ? 0.0f : height / scrollHeight;
+
+			// Determine page indices.
+			horizontalPageIndex = (scrollWidth <= 0.0f) ? 0 : Mathf.FloorToInt((horizontalNormalizedPosition + (normalizedPageWidth / 2.0f)) / normalizedPageWidth);
+			verticalPageIndex = (scrollHeight <= 0.0f) ? 0 : Mathf.FloorToInt((verticalNormalizedPosition + (normalizedPageHeight / 2.0f)) / normalizedPageHeight);
+			
+			// Calculate page counts.
+			horizontalPageCount = Mathf.Floor(scrollWidth / width);
+			verticalPageCount = Mathf.Floor(scrollWidth / width);
+		}
+
+		void ClampPageIndices()
+		{
+			
+			horizontalPageIndex = Mathf.FloorToInt(Mathf.Clamp((float)horizontalPageIndex, 0.0f, horizontalPageCount));
+			verticalPageIndex = Mathf.FloorToInt(Mathf.Clamp((float)verticalPageIndex, 0.0f, verticalPageCount));
+		}
+
+		Vector2 NormalizedPositionForPageIndices(int horizontalPageIndex_, int verticalPageIndex_)
+		{
+			return new Vector2(
+				normalizedPageWidth * (float)horizontalPageIndex_,
+				normalizedPageHeight * (float)verticalPageIndex_
+				);
+		}
+
+		void Update()
+		{
+			if (isDecelerating == false) return; // Only if decelerating
+
+			// Lerp towards target (using inherited elasticity value).
+			normalizedPosition = Vector2.Lerp(normalizedPosition, targetNormalizedPosition, pagingStrength);
+
+			// Arrival.
+			if (Vector2.Distance(normalizedPosition, targetNormalizedPosition) < 0.0001f)
+			{
+				normalizedPosition = targetNormalizedPosition;
+				isDecelerating = false;
+			}
+		}
+
+		#endregion
+
+
+		#region ScrollRect hierarchy lookup
+
+		ScrollRect GetClosestPerpendicularScrollRectParent()
 		{ return GetClosestPerpendicularScrollRectParentOf(this.transform); }
 
-		private ScrollRect GetClosestPerpendicularScrollRectParentOf(Transform transform)
+		ScrollRect GetClosestPerpendicularScrollRectParentOf(Transform transform)
 		{
 			// Only having parent.
 			Transform parentTransform = transform.parent;
@@ -119,5 +243,7 @@ namespace EPPZ.UI
 			// Got it.
 			return parentScrollRect;
 		}
+
+		#endregion
 	}
 }
