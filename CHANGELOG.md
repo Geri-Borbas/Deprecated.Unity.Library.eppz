@@ -1,3 +1,9 @@
+* 1.1.8
+
+	+ Utils
+		+ Refactored tools to utils (class naming and namespace)
+		+ `EPPZUtils_FPSLabel`
+
 * 1.1.7
 
 	+ `EPPZUI_ScrollRect`

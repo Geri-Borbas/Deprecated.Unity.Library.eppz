@@ -2,11 +2,11 @@
 using System.Collections;
 
 
-namespace EPPZ
+namespace EPPZ.Utils
 {
 
 
-	public class EPPZTools_ActivateOnAwake : MonoBehaviour
+	public class EPPZUtils_ActivateOnAwake : MonoBehaviour
 	{
 
 

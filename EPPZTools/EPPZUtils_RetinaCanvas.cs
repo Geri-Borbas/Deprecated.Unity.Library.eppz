@@ -3,11 +3,11 @@ using UnityEngine.UI;
 using System.Collections;
 
 
-namespace EPPZ
+namespace EPPZ.Utils
 {
 
 
-	public class EPPZTools_RetinaCanvas : MonoBehaviour
+	public class EPPZUtils_RetinaCanvas : MonoBehaviour
 	{
 
 
