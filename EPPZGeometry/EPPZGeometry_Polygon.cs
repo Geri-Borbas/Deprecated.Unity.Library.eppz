@@ -275,6 +275,17 @@ namespace EPPZGeometry
 			}
 		}
 
+		public void EnumeratePolygons(Action<Polygon> action)
+		{
+			action(this); // Including this (a bit unexpected)
+
+			// Enumerate sub-polygons.
+			foreach (Polygon eachPolygon in polygons)
+			{
+				action(eachPolygon);
+			}
+		}
+
 		/*
 		 * 
 		 * Polygon calculations

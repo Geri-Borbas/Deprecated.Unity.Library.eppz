@@ -1,3 +1,8 @@
+* 1.1.9
+
+	+ `EPPZGeometry_Polygon`
+		+ Polygon enumerator (mainly for TriangleNet connections)
+
 * 1.1.8
 
 	+ Utils
