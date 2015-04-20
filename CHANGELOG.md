@@ -1,3 +1,12 @@
+* 1.2.0
+
+	+ `EPPZGeometry_Polygon`
+		+ Some topology feature
+			+ `AlignCentered`
+			+ `Scale`
+			+ `Translate`
+			+ `RecalculateWindingDirection`		
+
 * 1.1.9
 
 	+ `EPPZGeometry_Polygon`

@@ -380,7 +380,6 @@ namespace EPPZGeometry
 			}
 		}
 
-		
 		private void CreateVerticesFromPoints()
 		{
 			// Enumerate points (only for index).
@@ -559,18 +558,22 @@ namespace EPPZGeometry
 		}
 
 
-		// --
+		// Centering
 
-		
-		public void ConvertCorneredToCentered()
+		public void RecalculateWindindDirection()
+		{
+			_windingDirection = WindingDirection.Unknown;
+			CalculateWindingDirectionIfNeeded();
+		}
+
+		public void AlignCentered()
 		{
 			Vector2 originalCenter = bounds.center;
 			Vector2 offset = -originalCenter;
-
-			TranslatePoints(offset);
+			Translate(offset);
 		}
 
-		public void TranslatePoints(Vector2 translation)
+		public void Translate(Vector2 translation)
 		{
 			// Apply to each point.
 			for (int index = 0; index < _points.Length; index++)
@@ -581,11 +584,31 @@ namespace EPPZGeometry
 			// Apply to each sub-polygon.
 			foreach (Polygon eachPolygon in polygons)
 			{
-				eachPolygon.TranslatePoints(translation);
+				eachPolygon.Translate(translation);
 			}
 			
-			// Apply to bounds.
+			// Update (bounds).
 			_bounds.position += translation;
+		}
+
+		public void Scale(Vector2 scale)
+		{
+			// Apply to each point.
+			for (int index = 0; index < _points.Length; index++)
+			{
+				_points[index].x *= scale.x;
+				_points[index].y *= scale.y;
+			}
+			
+			// Apply to each sub-polygon.
+			foreach (Polygon eachPolygon in polygons)
+			{
+				eachPolygon.Scale(scale);
+			}
+			
+			// Update (bounds, area).
+			CalculateBounds();
+			CalculateArea();
 		}
 	}
 
