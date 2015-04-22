@@ -1,5 +1,5 @@
 ﻿//
-//  EPPZ_Editor_HandTool.cs
+//  EPPZEditor_HandTool.cs
 //  Hold Spacebar for Hand Tool
 //
 //  Created by Borbás Geri on 19/03/15
@@ -64,5 +64,4 @@ namespace EPPZ.Editor
 		}
 	}
 }
-
 #endif

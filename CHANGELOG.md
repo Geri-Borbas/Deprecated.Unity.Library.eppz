@@ -1,3 +1,9 @@
+* 1.2.1
+
+	+ `EPPZEditor_SliceRenamer`
+	+ `EPPZEditor_HandTool`
+		+ Typo
+
 * 1.2.0
 
 	+ `EPPZGeometry_Polygon`
