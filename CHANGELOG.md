@@ -29,7 +29,7 @@
 	+ `EPPZUI_ScrollRect`
 		+ Added `snapDistance` (expressed in page size percentage) for easier paging UX
 		+ Perpendicuar `EPPZUI_ScrollRect` also flicking (dispatch initial touch data as well)
-		+ Refactor (marged types, naming)
+		+ Refactor (merged types, naming)
 
 * 1.1.6
 

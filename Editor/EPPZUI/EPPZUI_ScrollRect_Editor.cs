@@ -2,17 +2,21 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
-using EPPZ.UI;
 
 
-[CustomEditor(typeof(EPPZUI_ScrollRect))]
-public class EPPZUI_ScrollRect_Editor : Editor
+namespace EPPZ.UI
 {
 
 
-	public override void OnInspectorGUI()
+	[CustomEditor(typeof(EPPZUI_ScrollRect))]
+	public class EPPZUI_ScrollRect_Editor : UnityEditor.Editor
 	{
-		base.OnInspectorGUI();
+
+
+		public override void OnInspectorGUI()
+		{
+			base.OnInspectorGUI();
+		}
 	}
 }
 #endif
