@@ -1,3 +1,8 @@
+* 1.2.2
+
+	+ `EPPZEditor_SliceRenamer`
+		+ Lovely embedded header images right in the single script file
+
 * 1.2.1
 
 	+ `EPPZEditor_SliceRenamer`
@@ -29,7 +34,7 @@
 	+ `EPPZUI_ScrollRect`
 		+ Added `snapDistance` (expressed in page size percentage) for easier paging UX
 		+ Perpendicuar `EPPZUI_ScrollRect` also flicking (dispatch initial touch data as well)
-		+ Refactor (merged types, naming)
+		+ Refactor (marged types, naming)
 
 * 1.1.6
 
