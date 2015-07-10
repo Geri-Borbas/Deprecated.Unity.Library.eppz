@@ -1,3 +1,7 @@
+* 1.2.3
+
+	+ `EPPZUI_PositionConstraint`
+
 * 1.2.2
 
 	+ `EPPZEditor_SliceRenamer`
