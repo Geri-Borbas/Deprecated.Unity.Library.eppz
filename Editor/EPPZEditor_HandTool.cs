@@ -19,7 +19,7 @@ using UnityEditor;
 using System.Collections;
 
 
-namespace EPPZ.Editor
+namespace EPPZ.EditorTools
 {
 
 
