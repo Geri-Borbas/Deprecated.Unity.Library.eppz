@@ -34,7 +34,10 @@ namespace EPPZ.NGUI
 				
 					SerializedProperty target = serializedObject.FindProperty("target");
 					NGUIEditorTools.DrawProperty("Target", target, false, GUILayout.MinWidth(130f));
-				
+
+					SerializedProperty constraint = serializedObject.FindProperty("constraint");
+					NGUIEditorTools.DrawProperty("Constraint", constraint, false, GUILayout.MinWidth(130f));
+
 					SerializedProperty multiplier = serializedObject.FindProperty("multiplier");
 					NGUIEditorTools.DrawProperty("Multiplier", multiplier, false, GUILayout.MinWidth(130f));
 				

@@ -18,6 +18,23 @@ namespace EPPZ.NGUI
 
 
 		/// <summary>
+		/// Foreign Widget to get size from.
+		/// </summary>
+		private UIWidget _target = null;
+		public UIWidget target = null;
+
+		/// <summary>
+		/// Which dimension to get from the target.
+		/// </summary>
+		public enum Constraint { Width, Height, Both }
+		public Constraint constraint = Constraint.Both;
+
+		/// <summary>
+		/// Scale the dimenstion got from the target.
+		/// </summary>
+		public float multiplier = 1.0f;
+		
+		/// <summary>
 		/// Widget to control on this GameObject.
 		/// </summary>
 		private UIWidget _widget;
@@ -26,94 +43,96 @@ namespace EPPZ.NGUI
 			get
 			{
 				if (_widget == null)
-				{ _widget = GetComponent<UIWidget>(); }
+				{
+					_widget = GetComponent<UIWidget>();
+
+					_widget.didUpdate -= WidgetDidUpdate;
+					_widget.didUpdate += TargetDidUpdate; // Add listener (once)
+				}
 				return _widget;
 			}
 		}
 
-		/// <summary>
-		/// Foreign Widget to get size from.
-		/// </summary>
-		public UIWidget target;
 
-
-		// Doing.
-		public float multiplier = 1.0f;
-
-
-		#region Events
+		#region Delegates
 
 		void Update()
 		{
-
-			// Should be OnBeforeUpdate
-
-			// Add widget listener lazy.
-			if (widget.onBeforeAnchor == null)
-			{ widget.onBeforeAnchor = OnBeforeAnchor; }
-
-			// Add target listener lazy.
-			if (target.onBeforeAnchor == null)
-			{ target.onBeforeAnchor = OnBeforeTargetAnchor; }
+			// Fake setter for `target`.
+			if (target != _target)
+			{ TargetChanged(); }
 		}
 
-		private void OnBeforeAnchor()
+		void TargetChanged()
 		{
-			Debug.Log(name+".OnBeforeAnchor()");
+			if (target == null)
+			{ _target.didUpdate -= TargetDidUpdate; } // Remove listener from previous
 			
-			LayoutDimensions();
-			AdjustAnchorsToDimensions(widget.width, widget.height);
+			_target = target;
+			
+			if (_target != null)
+			{
+				_target.didUpdate -= TargetDidUpdate;
+				_target.didUpdate += TargetDidUpdate; // Add listener (once)
+			}
 		}
-		
-		private void OnBeforeTargetAnchor()
-		{
-			Debug.Log(name+".OnBeforeTargetAnchor()");
 
-			LayoutDimensions();
-			AdjustAnchorsToDimensions(widget.width, widget.height);
+		void OnEnable()
+		{
+			if (widget != null)
+			{
+				widget.didUpdate -= WidgetDidUpdate;
+				widget.didUpdate += WidgetDidUpdate; // Add listener (once)
+			}
+			
+			if (target != null)
+			{
+				target.didUpdate -= TargetDidUpdate;
+				target.didUpdate += TargetDidUpdate; // Add listener (once)
+			}
 		}
+
+		void OnDisable()
+		{
+			if (widget != null)
+			{ widget.didUpdate -= WidgetDidUpdate; } // Remove listener
+
+			if (target != null)
+			{ target.didUpdate -= TargetDidUpdate; } // Remove listener
+		}
+
+		private void WidgetDidUpdate()
+		{ LayoutIfActive(); }
+		
+		private void TargetDidUpdate()
+		{ LayoutIfActive(); }
 
 		#endregion
 
 
 		#region Layout
 
-		private void LayoutDimensions()
+		private void LayoutIfActive()
 		{
-			Debug.Log(name+".LayoutDimensions()");
-			
-			int width = widget.width;
-			int height = Mathf.RoundToInt((float)target.height * multiplier);
-			
-			// Apply new dimensions (yet without Anchor adjustments).
-			// Comes with every NGUI feature (pixel snapping, handle rotations, power of two paddings, etc.).
-			widget.SetDimensions(width, height);
+			if (this.enabled == false) return; // Only if active
+			Layout();
 		}
 
-		// From `NGUIMath.AdjustWidget` implementation.
-		private void AdjustAnchorsToDimensions(int width, int height)
+		private void Layout()
 		{
-			// Vector3 bottomLeft = widget.localCorners[0];
-			// widget.SetRect(bottomLeft.x, bottomLeft.y, width, height);
-
-			Debug.Log(name+".AdjustAnchorsToDimensions()");
-
-			// Adjust Anchors if any.
-			if (widget.isAnchored)
-			{
-				Transform parentTransform = widget.cachedTransform.parent;
-				float x = widget.cachedTransform.localPosition.x - widget.pivotOffset.x * width;
-				float y = widget.cachedTransform.localPosition.y - widget.pivotOffset.y * height;
-				
-				if (widget.leftAnchor.target) widget.leftAnchor.SetHorizontal(parentTransform, x);
-				if (widget.rightAnchor.target) widget.rightAnchor.SetHorizontal(parentTransform, x + width);
-				if (widget.bottomAnchor.target) widget.bottomAnchor.SetVertical(parentTransform, y);
-				if (widget.topAnchor.target) widget.topAnchor.SetVertical(parentTransform, y + height);
-			}
+			int width = widget.width;
+			int height = widget.height;
 			
-			#if UNITY_EDITOR
-			NGUITools.SetDirty(widget);
-			#endif
+			switch (constraint)
+			{
+				case Constraint.Width: width = Mathf.RoundToInt((float)target.width * multiplier); break;
+				case Constraint.Height: height = Mathf.RoundToInt((float)target.height * multiplier); break;
+				case Constraint.Both: width = Mathf.RoundToInt((float)target.width * multiplier); height = Mathf.RoundToInt((float)target.height * multiplier); break;
+			}
+
+			// Handles Anchors, Aspect, and other NGUI stuff in setters.
+			widget.width = width;
+			widget.height = height;
 		}
 
 		#endregion

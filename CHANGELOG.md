@@ -1,3 +1,7 @@
+* 1.2.5
+
+	+ `EPPZNGUI_SizeConstraint`
+
 * 1.2.4
 
 	+ `EPPZNGUI_SizeConstraint`
