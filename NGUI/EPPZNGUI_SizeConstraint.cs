@@ -20,8 +20,19 @@ namespace EPPZ.NGUI
 		/// <summary>
 		/// Foreign Widget to get size from.
 		/// </summary>
-		private UIWidget _target = null;
-		public UIWidget target = null;
+		private UIWidget _targetWidget = null;
+		public UIWidget targetWidget
+		{
+			get
+			{ return _targetWidget; }
+
+			set
+			{
+				if (_targetWidget == value) return; // Only if changed
+				TargetWidgetWillChange(_targetWidget, value);
+				_targetWidget = value;
+			}
+		}
 
 		/// <summary>
 		/// Which dimension to get from the target.
@@ -45,9 +56,7 @@ namespace EPPZ.NGUI
 				if (_widget == null)
 				{
 					_widget = GetComponent<UIWidget>();
-
-					_widget.didUpdate -= WidgetDidUpdate;
-					_widget.didUpdate += TargetDidUpdate; // Add listener (once)
+					_widget.didUpdate += TargetDidUpdate; // Add listener
 				}
 				return _widget;
 			}
@@ -56,49 +65,47 @@ namespace EPPZ.NGUI
 
 		#region Delegates
 
-		void Update()
+		void TargetWidgetWillChange(UIWidget from, UIWidget to)
 		{
-			// Fake setter for `target`.
-			if (target != _target)
-			{ TargetChanged(); }
-		}
+			// Debug.
+			string fromName = (from) ? from.name : "<null>";
+			string toName = (to) ? to.name : "<null>";
+			Debug.Log("TargetWidgetWillChange("+fromName+", "+toName+")");
 
-		void TargetChanged()
-		{
-			if (target == null)
-			{ _target.didUpdate -= TargetDidUpdate; } // Remove listener from previous
-			
-			_target = target;
-			
-			if (_target != null)
+			if (from != null)
 			{
-				_target.didUpdate -= TargetDidUpdate;
-				_target.didUpdate += TargetDidUpdate; // Add listener (once)
-			}
+				from.didUpdate -= TargetDidUpdate;
+				Debug.Log("Removed subscription from `"+fromName+"`.");
+			} // Remove listener from previous
+			
+			if (to != null)
+			{
+				to.didUpdate += TargetDidUpdate;
+				Debug.Log("Added subscription to `"+toName+"`.");
+			} // Add listener
 		}
 
-		void OnEnable()
+		void OnDestroy()
 		{
+			Debug.Log("EPPZNGUI_SizeConstraint.OnDestroy()");
+			RemoveWidgetListeners();
+		}
+
+		public void RemoveWidgetListeners()
+		{
+			Debug.Log("RemoveWidgetListeners()");
+
 			if (widget != null)
 			{
 				widget.didUpdate -= WidgetDidUpdate;
-				widget.didUpdate += WidgetDidUpdate; // Add listener (once)
-			}
+				Debug.Log("Removed Widget subscription.");
+			} // Remove listener
 			
-			if (target != null)
+			if (targetWidget != null)
 			{
-				target.didUpdate -= TargetDidUpdate;
-				target.didUpdate += TargetDidUpdate; // Add listener (once)
-			}
-		}
-
-		void OnDisable()
-		{
-			if (widget != null)
-			{ widget.didUpdate -= WidgetDidUpdate; } // Remove listener
-
-			if (target != null)
-			{ target.didUpdate -= TargetDidUpdate; } // Remove listener
+				targetWidget.didUpdate -= TargetDidUpdate;
+				Debug.Log("Removed Target subscription.");
+			} // Remove listener
 		}
 
 		private void WidgetDidUpdate()
@@ -114,7 +121,9 @@ namespace EPPZ.NGUI
 
 		private void LayoutIfActive()
 		{
+			if (this == null) return; // Only if not destroyed
 			if (this.enabled == false) return; // Only if active
+			if (targetWidget == null) return; // Only if anything targeted
 			Layout();
 		}
 
@@ -125,9 +134,9 @@ namespace EPPZ.NGUI
 			
 			switch (constraint)
 			{
-				case Constraint.Width: width = Mathf.RoundToInt((float)target.width * multiplier); break;
-				case Constraint.Height: height = Mathf.RoundToInt((float)target.height * multiplier); break;
-				case Constraint.Both: width = Mathf.RoundToInt((float)target.width * multiplier); height = Mathf.RoundToInt((float)target.height * multiplier); break;
+				case Constraint.Width: width = Mathf.RoundToInt((float)targetWidget.width * multiplier); break;
+				case Constraint.Height: height = Mathf.RoundToInt((float)targetWidget.height * multiplier); break;
+				case Constraint.Both: width = Mathf.RoundToInt((float)targetWidget.width * multiplier); height = Mathf.RoundToInt((float)targetWidget.height * multiplier); break;
 			}
 
 			// Handles Anchors, Aspect, and other NGUI stuff in setters.

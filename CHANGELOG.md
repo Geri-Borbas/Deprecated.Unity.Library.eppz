@@ -1,3 +1,8 @@
+* 1.2.6
+
+	+ `EPPZNGUI_SizeConstraint`	
+	+ Delegate inspector
+
 * 1.2.5
 
 	+ `EPPZNGUI_SizeConstraint`

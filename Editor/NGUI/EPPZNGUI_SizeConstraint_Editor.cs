@@ -16,13 +16,10 @@ namespace EPPZ.NGUI
 
 		public override void OnInspectorGUI()
 		{
-			NGUIEditorTools.SetLabelWidth(80f);
+			NGUIEditorTools.SetLabelWidth(80.0f);
 			EditorGUILayout.Space();
-			
 			serializedObject.Update();
-
-				DrawSizeConstraint();
-
+			DrawSizeConstraint();
 			serializedObject.ApplyModifiedProperties();
 		}
 
@@ -31,15 +28,17 @@ namespace EPPZ.NGUI
 			if (NGUIEditorTools.DrawHeader("Size Constraint"))
 			{
 				NGUIEditorTools.BeginContents();
-				
-					SerializedProperty target = serializedObject.FindProperty("target");
-					NGUIEditorTools.DrawProperty("Target", target, false, GUILayout.MinWidth(130f));
 
+					// Properties.
+					EPPZNGUI_SizeConstraint sizeConstraint = target as EPPZNGUI_SizeConstraint;
+					sizeConstraint.targetWidget = EditorGUILayout.ObjectField("Target Widget", sizeConstraint.targetWidget, typeof(UIWidget), true) as UIWidget;
+
+					// Fields.
 					SerializedProperty constraint = serializedObject.FindProperty("constraint");
-					NGUIEditorTools.DrawProperty("Constraint", constraint, false, GUILayout.MinWidth(130f));
+					NGUIEditorTools.DrawProperty("Constraint", constraint, false, GUILayout.MinWidth(130.0f));
 
 					SerializedProperty multiplier = serializedObject.FindProperty("multiplier");
-					NGUIEditorTools.DrawProperty("Multiplier", multiplier, false, GUILayout.MinWidth(130f));
+					NGUIEditorTools.DrawProperty("Multiplier", multiplier, false, GUILayout.MinWidth(130.0f));
 				
 				NGUIEditorTools.EndContents();
 			}
