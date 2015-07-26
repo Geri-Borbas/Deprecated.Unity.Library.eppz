@@ -20,8 +20,8 @@ namespace EPPZ.NGUI
 
 		protected override void Draw()
 		{
-			EPPZNGUI_SizeConstraint sizeConstraint = target as EPPZNGUI_SizeConstraint;
-			sizeConstraint.targetWidget = EditorGUILayout.ObjectField("Target Widget", sizeConstraint.targetWidget, typeof(UIWidget), true) as UIWidget;
+			EPPZNGUI_SizeConstraint targetConstraint = target as EPPZNGUI_SizeConstraint;
+			targetConstraint.targetWidget = EditorGUILayout.ObjectField("Target Widget", targetConstraint.targetWidget, typeof(UIWidget), true) as UIWidget;
 
 			SerializedProperty constraint = serializedObject.FindProperty("constraint");
 			NGUIEditorTools.DrawProperty("Constraint", constraint, false, GUILayout.MinWidth(130.0f));

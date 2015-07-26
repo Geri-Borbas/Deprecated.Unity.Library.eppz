@@ -1,3 +1,7 @@
+* 1.2.8
+
+	+ `EPPZNGUI_PositionConstraint`	
+
 * 1.2.7
 
 	+ `EPPZNGUI_AspectConstraint`	

@@ -28,9 +28,28 @@ namespace EPPZ.NGUI
 		/// </summary>
 		public float multiplier = 1.0f;
 
+		/// <summary>
+		/// Tracking changes to spare calculations.
+		/// </summary>
+		private int _previousTargetWidth;
+		private int _previousTargetHeight;
+		private int _previousFrame;
 
 		protected override void Layout()
 		{
+			// Debug.
+			int frame = Time.frameCount;
+			bool doubleLayout = (frame == _previousFrame);
+			if (doubleLayout) Debug.Log("`"+name+"` Laid out twice this frame.");
+			_previousFrame = frame;
+
+			// Only if changed.
+			bool changed = (
+				(targetWidget.width != _previousTargetWidth) ||
+				(targetWidget.height != _previousTargetHeight)
+				);
+			if (changed == false) return;
+
 			int width = widget.width;
 			int height = widget.height;
 			
@@ -44,6 +63,13 @@ namespace EPPZ.NGUI
 			// Accessors handles Anchors, Aspect, and other NGUI stuff.
 			widget.width = width;
 			widget.height = height;
+
+			// widget.SetDimensions(width, height);
+			// widget.UpdateAnchors();
+
+			// Track changes.
+			_previousTargetWidth = targetWidget.width;
+			_previousTargetHeight = targetWidget.height;
 		}
 	}
 }
