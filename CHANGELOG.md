@@ -1,3 +1,9 @@
+* 1.2.7
+
+	+ `EPPZNGUI_AspectConstraint`	
+	+ Serialization
+	+ Delegate management on Play / Edit mode switches
+
 * 1.2.6
 
 	+ `EPPZNGUI_SizeConstraint`	
