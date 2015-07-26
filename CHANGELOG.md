@@ -1,3 +1,7 @@
+* 1.2.9
+
+	+ Refactor
+
 * 1.2.8
 
 	+ `EPPZNGUI_PositionConstraint`	

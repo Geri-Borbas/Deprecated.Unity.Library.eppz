@@ -29,9 +29,10 @@ namespace EPPZ.NGUI
 			set
 			{
 				if (_targetWidget == value) return; // Only if changed
-				TargetWidgetWillChange(_targetWidget, value);
+				RemoveTargetWidgetListener();
 				_targetWidget = value;
 				NGUITools.SetDirty(this);
+				AddTargetWidgetListener();
 			}
 		}
 
@@ -46,8 +47,8 @@ namespace EPPZ.NGUI
 				if (_widget == null)
 				{
 					_widget = GetComponent<UIWidget>();
-					_widget.didUpdate += TargetDidUpdate; // Add listener
 					NGUITools.SetDirty(this);
+					AddWidgetListener();
 				}
 				return _widget;
 			}
@@ -59,76 +60,53 @@ namespace EPPZ.NGUI
 		void Start()
 		{
 			Debug.Log("EPPZNGUI_Constraint.Start()");
-
-			// Add listeners removed by `OnDestroy()` calls on Play / Stop Mode changes.
-			AddWidgetListeners();
+			AddListeners(); // Add listeners removed by `OnDestroy()` calls on Play / Stop Mode changes
 		}
 
 		void OnDestroy()
 		{
 			Debug.Log("EPPZNGUI_Constraint.OnDestroy()");
-
-			// Remove listeners when component gets removed from the inspector (also at Play / Stop Mode changes)
-			RemoveWidgetListeners();
+			RemoveListeners(); // Remove listeners when component gets removed from the inspector (also at Play / Stop Mode changes)
 		}
 
-		void TargetWidgetWillChange(UIWidget from, UIWidget to)
-		{
-			// Debug.
-			string fromName = (from) ? from.name : "<null>";
-			string toName = (to) ? to.name : "<null>";
-			Debug.Log("TargetWidgetWillChange("+fromName+", "+toName+")");
-			
-			if (from != null)
-			{
-				from.didUpdate -= TargetDidUpdate;
-				Debug.Log("Removed subscription from `"+fromName+"`.");
-			} // Remove listener from previous
-			
-			if (to != null)
-			{
-				to.didUpdate += TargetDidUpdate;
-				Debug.Log("Added subscription to `"+toName+"`.");
-			} // Add listener
-		}
-
-		void AddWidgetListeners()
+		void AddListeners()
 		{
 			Debug.Log("AddWidgetListeners()");
-
-			if (widget != null) widget.didUpdate += TargetDidUpdate; // Add listener
-			if (targetWidget != null) targetWidget.didUpdate += TargetDidUpdate;  // Add listener
+			AddWidgetListener();
+			AddTargetWidgetListener();
 		}
 
-		public void RemoveWidgetListeners()
+		void RemoveListeners()
 		{
 			Debug.Log("RemoveWidgetListeners()");
-			
-			if (widget != null)
-			{
-				widget.didUpdate -= WidgetDidUpdate;
-				Debug.Log("Removed Widget subscription.");
-			} // Remove listener
-			
-			if (targetWidget != null)
-			{
-				targetWidget.didUpdate -= TargetDidUpdate;
-				Debug.Log("Removed Target subscription.");
-			} // Remove listener
+			RemoveWidgetListener();
+			RemoveTargetWidgetListener();
 		}
+
+		void AddWidgetListener()
+		{ if (widget != null) widget.didUpdate += WidgetChanged; }
+
+		void RemoveWidgetListener()
+		{ if (widget != null) widget.didUpdate -= WidgetChanged; }
+
+		void AddTargetWidgetListener()
+		{ if (targetWidget != null) targetWidget.didUpdate += TargetChanged; }
 		
-		private void WidgetDidUpdate()
-		{ LayoutIfActive(); }
-		
-		private void TargetDidUpdate()
-		{ LayoutIfActive(); }
+		void RemoveTargetWidgetListener()
+		{ if (targetWidget != null) targetWidget.didUpdate -= TargetChanged; }
 		
 		#endregion
 
 
 		#region Layout
+
+		void WidgetChanged()
+		{ LayoutIfActive(); }
 		
-		private void LayoutIfActive()
+		void TargetChanged()
+		{ LayoutIfActive(); }
+
+		void LayoutIfActive()
 		{
 			if (this == null) return; // Only if not destroyed
 			if (this.enabled == false) return; // Only if active
