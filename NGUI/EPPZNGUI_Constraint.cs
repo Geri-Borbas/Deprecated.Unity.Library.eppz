@@ -29,10 +29,16 @@ namespace EPPZ.NGUI
 			set
 			{
 				if (_targetWidget == value) return; // Only if changed
+
 				RemoveTargetWidgetListener();
 				_targetWidget = value;
-				NGUITools.SetDirty(this);
 				AddTargetWidgetListener();
+
+				LayoutIfActive();
+
+#if UNITY_EDITOR
+				NGUITools.SetDirty(this);
+#endif
 			}
 		}
 
@@ -47,8 +53,12 @@ namespace EPPZ.NGUI
 				if (_widget == null)
 				{
 					_widget = GetComponent<UIWidget>();
-					NGUITools.SetDirty(this);
+
 					AddWidgetListener();
+
+#if UNITY_EDITOR
+					NGUITools.SetDirty(this);
+#endif
 				}
 				return _widget;
 			}
@@ -84,26 +94,26 @@ namespace EPPZ.NGUI
 		}
 
 		void AddWidgetListener()
-		{ if (widget != null) widget.didUpdate += WidgetChanged; }
+		{ if (widget != null) widget.didUpdate += WidgetDidUpdate; }
 
 		void RemoveWidgetListener()
-		{ if (widget != null) widget.didUpdate -= WidgetChanged; }
+		{ if (widget != null) widget.didUpdate -= WidgetDidUpdate; }
 
 		void AddTargetWidgetListener()
-		{ if (targetWidget != null) targetWidget.didUpdate += TargetChanged; }
+		{ if (targetWidget != null) targetWidget.didUpdate += TargetDidUpdate; }
 		
 		void RemoveTargetWidgetListener()
-		{ if (targetWidget != null) targetWidget.didUpdate -= TargetChanged; }
+		{ if (targetWidget != null) targetWidget.didUpdate -= TargetDidUpdate; }
 		
 		#endregion
 
 
 		#region Layout
 
-		void WidgetChanged()
+		void WidgetDidUpdate()
 		{ LayoutIfActive(); }
 		
-		void TargetChanged()
+		void TargetDidUpdate()
 		{ LayoutIfActive(); }
 
 		void LayoutIfActive()

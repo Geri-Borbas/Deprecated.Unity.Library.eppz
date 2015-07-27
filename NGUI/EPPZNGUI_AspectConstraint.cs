@@ -25,8 +25,7 @@ namespace EPPZ.NGUI
 		
 		protected override void Layout()
 		{
-			float aspectRatio = targetWidget.aspectRatio * multiplier;
-			widget.aspectRatio = aspectRatio;
+			widget.aspectRatio = targetWidget.aspectRatio * multiplier;
 		}
 	}
 }

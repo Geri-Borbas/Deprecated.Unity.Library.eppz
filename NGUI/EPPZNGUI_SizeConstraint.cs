@@ -33,43 +33,58 @@ namespace EPPZ.NGUI
 		/// </summary>
 		private int _previousTargetWidth;
 		private int _previousTargetHeight;
-		private int _previousFrame;
+
 
 		protected override void Layout()
 		{
-			// Debug.
-			int frame = Time.frameCount;
-			bool doubleLayout = (frame == _previousFrame);
-			if (doubleLayout) Debug.Log("`"+name+"` Laid out twice this frame.");
-			_previousFrame = frame;
-
-			// Only if changed.
+			// Adjust only if changed.
 			bool changed = (
 				(targetWidget.width != _previousTargetWidth) ||
 				(targetWidget.height != _previousTargetHeight)
 				);
 			if (changed == false) return;
 
-			int width = widget.width;
-			int height = widget.height;
+			Adjust();
 			
-			switch (constraint)
-			{
-				case Constraint.Width: width = Mathf.RoundToInt((float)targetWidget.width * multiplier); break;
-				case Constraint.Height: height = Mathf.RoundToInt((float)targetWidget.height * multiplier); break;
-				case Constraint.Both: width = Mathf.RoundToInt((float)targetWidget.width * multiplier); height = Mathf.RoundToInt((float)targetWidget.height * multiplier); break;
-			}
-
-			// Accessors handles Anchors, Aspect, and other NGUI stuff.
-			widget.width = width;
-			widget.height = height;
-
-			// widget.SetDimensions(width, height);
-			// widget.UpdateAnchors();
+			#if UNITY_EDITOR
+			NGUITools.SetDirty(widget);
+			#endif
 
 			// Track changes.
 			_previousTargetWidth = targetWidget.width;
 			_previousTargetHeight = targetWidget.height;
 		}
+
+		void Adjust()
+		{
+			// Adjust Anchors directly if Widget is anchored.
+			if (widget.isAnchored)
+			{
+				// Get size difference.
+				int widthDifference = Mathf.RoundToInt(targetWidget.width * multiplier) - widget.width;
+				int heightDifference = Mathf.RoundToInt(targetWidget.height * multiplier) - widget.height;
+				
+				// Adjust horizontal anchors if needed.
+				if (constraint ==  Constraint.Width || constraint == Constraint.Both)
+				{
+					widget.leftAnchor.absolute -= (int)(widget.pivotOffset.x * widthDifference);
+					widget.rightAnchor.absolute += (int)((1.0f - widget.pivotOffset.x) * widthDifference);
+				}
+				
+				// Adjust vertical anchors if needed.
+				if (constraint == Constraint.Height || constraint == Constraint.Both)
+				{
+					widget.bottomAnchor.absolute -= (int)(widget.pivotOffset.y * heightDifference);
+					widget.topAnchor.absolute += (int)((1.0f - widget.pivotOffset.y) * widthDifference);
+				}
+			}
+
+			// Adjust dimensions only otherwise.
+			else
+			{
+				widget.SetDimensions(targetWidget.width, targetWidget.height);
+			}
+		}
+
 	}
 }
