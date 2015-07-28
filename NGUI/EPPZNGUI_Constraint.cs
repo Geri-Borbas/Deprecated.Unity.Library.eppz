@@ -49,7 +49,7 @@ namespace EPPZ.NGUI
 		/// Widget to control on this GameObject.
 		/// </summary>
 		private UIWidget _widget = null;
-		protected UIWidget widget
+		public UIWidget widget
 		{
 			get
 			{

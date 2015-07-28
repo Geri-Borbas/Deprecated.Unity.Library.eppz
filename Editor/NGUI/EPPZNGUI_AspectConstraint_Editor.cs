@@ -28,6 +28,10 @@ namespace EPPZ.NGUI
 
 			SerializedProperty multiplier = serializedObject.FindProperty("multiplier");
 			NGUIEditorTools.DrawProperty("Multiplier", multiplier, false, GUILayout.MinWidth(130.0f));
+
+			// Aspect layout message if needed.
+			if (targetConstraint.widget.keepAspectRatio == UIWidget.AspectRatioSource.Free)
+			{ EditorGUILayout.HelpBox("Constraint will have no effect. Widget Aspect is set to Free, please assign an Aspect layout rule (either Based On Width or Based On Height).", MessageType.Info); }
 		}
 	}
 }
