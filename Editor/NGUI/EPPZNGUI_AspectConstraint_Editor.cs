@@ -23,6 +23,9 @@ namespace EPPZ.NGUI
 			EPPZNGUI_AspectConstraint targetConstraint = target as EPPZNGUI_AspectConstraint;
 			targetConstraint.targetWidget = EditorGUILayout.ObjectField("Target Widget", targetConstraint.targetWidget, typeof(UIWidget), true) as UIWidget;
 
+			SerializedProperty updateConstraint = serializedObject.FindProperty("updateConstraint");
+			NGUIEditorTools.DrawProperty("Execute", updateConstraint, false, GUILayout.MinWidth(130.0f)); // NGUI like wording
+
 			SerializedProperty multiplier = serializedObject.FindProperty("multiplier");
 			NGUIEditorTools.DrawProperty("Multiplier", multiplier, false, GUILayout.MinWidth(130.0f));
 		}

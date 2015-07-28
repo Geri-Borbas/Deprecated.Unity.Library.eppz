@@ -19,7 +19,13 @@ namespace EPPZ.NGUI
 
 		protected override void Layout()
 		{
-			widget.cachedTransform.position = targetWidget.cachedTransform.position;
+			// Get local position difference.
+			Vector3 targetPosition = widget.cachedTransform.parent.InverseTransformPoint(targetWidget.cachedTransform.position);
+			Vector3 widgetPosition = widget.cachedTransform.localPosition;
+			Vector3 positionDifference = targetPosition - widgetPosition;
+
+			// Adjust every NGUI internal goodie under the hood (Anchors, Serialization, etc.).
+			NGUIMath.MoveWidget(widget, positionDifference.x, positionDifference.y);
 		}
 	}
 }

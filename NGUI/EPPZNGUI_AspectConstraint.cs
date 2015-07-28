@@ -26,6 +26,8 @@ namespace EPPZ.NGUI
 		protected override void Layout()
 		{
 			widget.aspectRatio = targetWidget.aspectRatio * multiplier;
+
+			// TODO: NGUI compatible layout using `NGUIMath.AdjustWidget`.
 		}
 	}
 }

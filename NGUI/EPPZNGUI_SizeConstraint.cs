@@ -31,60 +31,61 @@ namespace EPPZ.NGUI
 		/// <summary>
 		/// Tracking changes to spare calculations.
 		/// </summary>
+		private int _previousWidgetWidth;
+		private int _previousWidgetHeight;
 		private int _previousTargetWidth;
 		private int _previousTargetHeight;
 
 
 		protected override void Layout()
 		{
-			// Adjust only if changed.
-			bool changed = (
+			// Adjust only if something has changed.
+			bool targetChanged = (
 				(targetWidget.width != _previousTargetWidth) ||
 				(targetWidget.height != _previousTargetHeight)
 				);
-			if (changed == false) return;
+			bool widgetChanged = (
+				(widget.width != _previousWidgetWidth) ||
+				(widget.height != _previousWidgetHeight)
+				);
+			if (targetChanged == false && widgetChanged == false) return;
 
 			Adjust();
-			
-			#if UNITY_EDITOR
-			NGUITools.SetDirty(widget);
-			#endif
 
 			// Track changes.
+			_previousWidgetWidth = widget.width;
+			_previousWidgetHeight = widget.height;
 			_previousTargetWidth = targetWidget.width;
 			_previousTargetHeight = targetWidget.height;
 		}
 
 		void Adjust()
 		{
-			// Adjust Anchors directly if Widget is anchored.
-			if (widget.isAnchored)
+			// Get size difference.
+			float widthDifference = targetWidget.width * multiplier - widget.width;
+			float heightDifference = targetWidget.height * multiplier - widget.height;
+
+			float leftDifference = 0.0f;
+			float bottomDifference = 0.0f;
+			float rightDifference = 0.0f;
+			float topDifference = 0.0f;
+
+			// Calculate horizontal differences.
+			if (constraint ==  Constraint.Width || constraint == Constraint.Both)
 			{
-				// Get size difference.
-				int widthDifference = Mathf.RoundToInt(targetWidget.width * multiplier) - widget.width;
-				int heightDifference = Mathf.RoundToInt(targetWidget.height * multiplier) - widget.height;
-				
-				// Adjust horizontal anchors if needed.
-				if (constraint ==  Constraint.Width || constraint == Constraint.Both)
-				{
-					widget.leftAnchor.absolute -= (int)(widget.pivotOffset.x * widthDifference);
-					widget.rightAnchor.absolute += (int)((1.0f - widget.pivotOffset.x) * widthDifference);
-				}
-				
-				// Adjust vertical anchors if needed.
-				if (constraint == Constraint.Height || constraint == Constraint.Both)
-				{
-					widget.bottomAnchor.absolute -= (int)(widget.pivotOffset.y * heightDifference);
-					widget.topAnchor.absolute += (int)((1.0f - widget.pivotOffset.y) * widthDifference);
-				}
+				leftDifference = -(widget.pivotOffset.x * widthDifference);
+				rightDifference = (1.0f - widget.pivotOffset.x) * widthDifference;
+			}
+			
+			// Calculate vertical differences.
+			if (constraint == Constraint.Height || constraint == Constraint.Both)
+			{
+				bottomDifference = -(widget.pivotOffset.y * heightDifference);
+				topDifference = (1.0f - widget.pivotOffset.y) * heightDifference;
 			}
 
-			// Adjust dimensions only otherwise.
-			else
-			{
-				widget.SetDimensions(targetWidget.width, targetWidget.height);
-			}
+			// Adjust every NGUI internal goodie under the hood (Anchors, Serialization, Colliders, Aspect, etc.).
+			NGUIMath.AdjustWidget(widget, leftDifference, bottomDifference, rightDifference, topDifference);
 		}
-
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;	
 using System.Collections;
 
 
@@ -15,6 +16,11 @@ namespace EPPZ.NGUI
 	public abstract class EPPZNGUI_Constraint : MonoBehaviour
 	{
 
+		/// <summary>
+		/// Determine when to execute constrain layouts.
+		/// </summary>
+		public enum ConstraintUpdate { OnUpdate, OnTargetUpdate, OnBothUpdate }
+		public ConstraintUpdate updateConstraint = ConstraintUpdate.OnUpdate;
 
 		/// <summary>
 		/// Foreign Widget to get size from.
@@ -29,13 +35,10 @@ namespace EPPZ.NGUI
 			set
 			{
 				if (_targetWidget == value) return; // Only if changed
-
 				RemoveTargetWidgetListener();
 				_targetWidget = value;
 				AddTargetWidgetListener();
-
 				LayoutIfActive();
-
 #if UNITY_EDITOR
 				NGUITools.SetDirty(this);
 #endif
@@ -53,9 +56,7 @@ namespace EPPZ.NGUI
 				if (_widget == null)
 				{
 					_widget = GetComponent<UIWidget>();
-
 					AddWidgetListener();
-
 #if UNITY_EDITOR
 					NGUITools.SetDirty(this);
 #endif
@@ -69,26 +70,24 @@ namespace EPPZ.NGUI
 
 		void Start()
 		{
-			Debug.Log("EPPZNGUI_Constraint.Start()");
-			AddListeners(); // Add listeners removed by `OnDestroy()` calls on Play / Stop Mode changes
+			// Add listeners removed by `OnDestroy()` calls on Play / Stop Mode changes.
+			AddListeners();
 		}
 
 		void OnDestroy()
 		{
-			Debug.Log("EPPZNGUI_Constraint.OnDestroy()");
-			RemoveListeners(); // Remove listeners when component gets removed from the inspector (also at Play / Stop Mode changes)
+			// Remove listeners when component gets removed from the inspector (also at Play / Stop Mode changes).
+			RemoveListeners();
 		}
 
 		void AddListeners()
 		{
-			Debug.Log("AddWidgetListeners()");
 			AddWidgetListener();
 			AddTargetWidgetListener();
 		}
 
 		void RemoveListeners()
 		{
-			Debug.Log("RemoveWidgetListeners()");
 			RemoveWidgetListener();
 			RemoveTargetWidgetListener();
 		}
@@ -111,10 +110,18 @@ namespace EPPZ.NGUI
 		#region Layout
 
 		void WidgetDidUpdate()
-		{ LayoutIfActive(); }
+		{
+			if (updateConstraint == ConstraintUpdate.OnUpdate ||
+			    updateConstraint == ConstraintUpdate.OnBothUpdate)
+				LayoutIfActive();
+		}
 		
 		void TargetDidUpdate()
-		{ LayoutIfActive(); }
+		{ 
+			if (updateConstraint == ConstraintUpdate.OnTargetUpdate ||
+			    updateConstraint == ConstraintUpdate.OnBothUpdate)
+				LayoutIfActive();
+		}
 
 		void LayoutIfActive()
 		{
@@ -123,7 +130,7 @@ namespace EPPZ.NGUI
 			if (targetWidget == null) return; // Only if anything targeted
 			Layout();
 		}
-		
+
 		protected virtual void Layout()
 		{ }
 		

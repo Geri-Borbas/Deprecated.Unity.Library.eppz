@@ -23,6 +23,9 @@ namespace EPPZ.NGUI
 			EPPZNGUI_SizeConstraint targetConstraint = target as EPPZNGUI_SizeConstraint;
 			targetConstraint.targetWidget = EditorGUILayout.ObjectField("Target Widget", targetConstraint.targetWidget, typeof(UIWidget), true) as UIWidget;
 
+			SerializedProperty updateConstraint = serializedObject.FindProperty("updateConstraint");
+			NGUIEditorTools.DrawProperty("Execute", updateConstraint, false, GUILayout.MinWidth(130.0f)); // NGUI like wording
+
 			SerializedProperty constraint = serializedObject.FindProperty("constraint");
 			NGUIEditorTools.DrawProperty("Constraint", constraint, false, GUILayout.MinWidth(130.0f));
 			
