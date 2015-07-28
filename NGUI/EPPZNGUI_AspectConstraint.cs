@@ -61,10 +61,9 @@ namespace EPPZ.NGUI
 			{ width = height * aspect; }
 
 			// Do actual (NGUI safe) layout.
-
 			UIWidget.AspectRatioSource keepAspectRatio = widget.keepAspectRatio;
 			widget.keepAspectRatio = UIWidget.AspectRatioSource.Free;
-
+				
 				widget.AdjustSize(width, height);
 
 			widget.keepAspectRatio = keepAspectRatio;

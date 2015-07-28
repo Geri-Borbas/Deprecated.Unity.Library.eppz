@@ -29,9 +29,19 @@ namespace EPPZ.NGUI
 			SerializedProperty multiplier = serializedObject.FindProperty("multiplier");
 			NGUIEditorTools.DrawProperty("Multiplier", multiplier, false, GUILayout.MinWidth(130.0f));
 
-			// Aspect layout message if needed.
+			// Aspect layout alert.
 			if (targetConstraint.widget.keepAspectRatio == UIWidget.AspectRatioSource.Free)
-			{ EditorGUILayout.HelpBox("Constraint will have no effect. Widget Aspect is set to Free, please assign an Aspect layout rule (either Based On Width or Based On Height).", MessageType.Info); }
+			{ EditorGUILayout.HelpBox("Constraint will have no effect. Please assign some Aspect layout rule on the Widget other than Free.", MessageType.Info); }
+
+			// Same targets alert.
+			bool sameTargets = (
+				(targetConstraint.widget.leftAnchor.target == targetConstraint.targetWidget.cachedTransform) ||
+				(targetConstraint.widget.rightAnchor.target == targetConstraint.targetWidget.cachedTransform) ||
+				(targetConstraint.widget.bottomAnchor.target == targetConstraint.targetWidget.cachedTransform) ||
+				(targetConstraint.widget.topAnchor.target == targetConstraint.targetWidget.cachedTransform)
+				);
+			if (sameTargets && targetConstraint.updateConstraint != EPPZNGUI_Constraint.ConstraintUpdate.OnUpdate)
+			 { EditorGUILayout.HelpBox("Anchor target is the same as Constraint target. Please kindly expect some undesired behaviour.", MessageType.Info); }
 		}
 	}
 }
