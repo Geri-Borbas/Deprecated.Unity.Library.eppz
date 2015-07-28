@@ -8,7 +8,7 @@ namespace EPPZ.NGUI
 
 
 	/// <summary>
-	/// Abstract class for layout tool that binds foreign widget's properties to a widget on this GameObject.
+	/// Abstract class for layout tool that binds foreign Widget's properties to a Widget on this GameObject.
 	/// </summary>
 
 
@@ -16,11 +16,11 @@ namespace EPPZ.NGUI
 	public abstract class EPPZNGUI_Constraint : MonoBehaviour
 	{
 
+
 		/// <summary>
 		/// Determine when to execute constrain layouts.
 		/// </summary>
-		public enum ConstraintUpdate { OnUpdate, OnTargetUpdate, OnBothUpdate }
-		public ConstraintUpdate updateConstraint = ConstraintUpdate.OnUpdate;
+		public EPPZ.NGUI.ConstraintUpdate updateConstraint = EPPZ.NGUI.ConstraintUpdate.OnUpdate;
 
 		/// <summary>
 		/// Foreign Widget to get size from.
@@ -111,15 +111,15 @@ namespace EPPZ.NGUI
 
 		void WidgetDidUpdate()
 		{
-			if (updateConstraint == ConstraintUpdate.OnUpdate ||
-			    updateConstraint == ConstraintUpdate.OnBothUpdate)
+			if (updateConstraint == EPPZ.NGUI.ConstraintUpdate.OnUpdate ||
+			    updateConstraint == EPPZ.NGUI.ConstraintUpdate.OnBothUpdate)
 				LayoutIfActive();
 		}
 		
 		void TargetDidUpdate()
 		{ 
-			if (updateConstraint == ConstraintUpdate.OnTargetUpdate ||
-			    updateConstraint == ConstraintUpdate.OnBothUpdate)
+			if (updateConstraint == EPPZ.NGUI.ConstraintUpdate.OnTargetUpdate ||
+			    updateConstraint == EPPZ.NGUI.ConstraintUpdate.OnBothUpdate)
 				LayoutIfActive();
 		}
 

@@ -1,6 +1,6 @@
-* 1.2.9 - 1.3.2
+* 1.2.9 - 1.3.3
 
-	+ Refactor
+	+ Dense refactor / tests
 
 * 1.2.8
 

@@ -7,12 +7,6 @@ namespace EPPZ.NGUI
 
 
 	/// <summary>
-	/// Size constraint constants to use within namespace (use full name `EPPZ.NGUI.SizeConstraint` for safety).
-	/// </summary>
-	public enum SizeConstraint { Width, Height, Both }
-
-
-	/// <summary>
 	/// Layout tool that binds a foreign widget size to this widget dimensions.
 	/// </summary>
 
