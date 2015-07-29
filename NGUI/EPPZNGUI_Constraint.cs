@@ -123,12 +123,16 @@ namespace EPPZ.NGUI
 				LayoutIfActive();
 		}
 
+		protected virtual bool ShouldLayout()
+		{
+			return (targetWidget != null); // Layout only if anything targeted
+		}
+
 		void LayoutIfActive()
 		{
 			if (this == null) return; // Only if not destroyed
 			if (this.enabled == false) return; // Only if active
-			if (targetWidget == null) return; // Only if anything targeted
-			Layout();
+			if (ShouldLayout()) Layout();
 		}
 
 		protected virtual void Layout()

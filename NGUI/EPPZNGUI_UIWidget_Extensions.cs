@@ -11,7 +11,7 @@ namespace EPPZ.NGUI
 	/// </summary>
 
 
-	public static class EPPZNGUI_UIWidget
+	public static class EPPZNGUI_UIWidget_Extensions
 	{
 
 
