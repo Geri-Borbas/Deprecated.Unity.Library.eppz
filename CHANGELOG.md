@@ -1,3 +1,8 @@
+* 1.3.4
+
+	+ `EPPZNGUI_AnchorSizeConstraint`	
+	+ `EPPZNGUI_AspectRulesConstraint`
+
 * 1.2.9 - 1.3.3
 
 	+ Dense refactor / tests
