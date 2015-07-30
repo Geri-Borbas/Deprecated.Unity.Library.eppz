@@ -17,7 +17,7 @@ namespace EPPZ.NGUI
 	{
 
 
-		protected override void Layout()
+		public override void Layout()
 		{
 			// Get local position difference.
 			Vector3 targetPosition = widget.cachedTransform.parent.InverseTransformPoint(targetWidget.cachedTransform.position);

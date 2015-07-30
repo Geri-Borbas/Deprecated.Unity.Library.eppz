@@ -36,8 +36,8 @@ namespace EPPZ.NGUI
 		private int _previousTargetWidth;
 		private int _previousTargetHeight;
 		
-		
-		protected override void Layout()
+
+		protected override bool HasChanged()
 		{
 			// Adjust only if something has changed.
 			bool multiplierChanged = (multiplier != _previousMultiplier);
@@ -49,8 +49,11 @@ namespace EPPZ.NGUI
 				(widget.width != _previousWidgetWidth) ||
 				(widget.height != _previousWidgetHeight)
 				);
-			if (targetChanged == false && widgetChanged == false && multiplierChanged == false) return;
-			
+			return multiplierChanged || targetChanged || widgetChanged;
+		}
+
+		public override void Layout()
+		{
 			Adjust();
 			
 			// Track changes.
@@ -89,6 +92,9 @@ namespace EPPZ.NGUI
 					if (widget.bottomAnchor.target != null)
 					{ widget.bottomAnchor.absolute = Mathf.FloorToInt(bottom); }
 				}	
+
+				// Execute anchoring.
+				widget.UpdateAnchors();
 			}
 		}
 	}

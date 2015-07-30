@@ -37,7 +37,7 @@ namespace EPPZ.NGUI
 		private int _previousTargetHeight;
 
 
-		protected override void Layout()
+		public override void Layout()
 		{
 			// Adjust only if something has changed.
 			bool multiplierChanged = (multiplier != _previousMultiplier);

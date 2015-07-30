@@ -80,13 +80,13 @@ namespace EPPZ.NGUI
 			RemoveListeners();
 		}
 
-		void AddListeners()
+		protected void AddListeners()
 		{
 			AddWidgetListener();
 			AddTargetWidgetListener();
 		}
 
-		void RemoveListeners()
+		protected void RemoveListeners()
 		{
 			RemoveWidgetListener();
 			RemoveTargetWidgetListener();
@@ -128,14 +128,20 @@ namespace EPPZ.NGUI
 			return (targetWidget != null); // Layout only if anything targeted
 		}
 
+		protected virtual bool HasChanged()
+		{
+			return true; // Layout only if something has changed
+		}
+
 		void LayoutIfActive()
 		{
 			if (this == null) return; // Only if not destroyed
 			if (this.enabled == false) return; // Only if active
-			if (ShouldLayout()) Layout();
+			if (ShouldLayout() && (HasChanged()))
+			{ Layout(); }
 		}
 
-		protected virtual void Layout()
+		public virtual void Layout()
 		{ }
 		
 		#endregion
