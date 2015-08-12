@@ -1,3 +1,7 @@
+* 1.3.6
+
+	+ `EPPZNGUI_UICenterOnChild`
+
 * 1.3.4 - 1.3.5
 
 	+ `EPPZNGUI_AnchorSizeConstraint`	
