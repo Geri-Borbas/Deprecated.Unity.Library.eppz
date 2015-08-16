@@ -88,6 +88,8 @@ namespace EPPZ.NGUI
 		private int horizontalPageIndex_Snap = 0;
 		private int verticalPageIndex_Snap = 0;
 
+		public enum LayoutMode { Instant, Animated }
+
 
 		#region Delegates
 		
@@ -163,7 +165,7 @@ namespace EPPZ.NGUI
 		{ Layout(); }
 
 		void OnDragFinished()
-		{ Layout(); } // LayoutOnTouchFinished(); }
+		{ LayoutOnTouchFinished(); }
 
 
 		/// <summary>
@@ -173,9 +175,9 @@ namespace EPPZ.NGUI
 
 		[ContextMenu("Execute")]
 		public void Layout()
-		{ Layout(false); }
+		{ Layout(LayoutMode.Instant); }
 
-		public void Layout(bool animated)
+		public void Layout(LayoutMode layoutMode)
 		{
 			if (enabled == false) return; // Only if enabled
 
@@ -189,7 +191,7 @@ namespace EPPZ.NGUI
 			ClampPageIndices();
 			
 			// Apply the calculated value.
-			ScrollToPageIndices(animated);
+			ScrollToPageIndices(layoutMode);
 		}
 
 		void LayoutOnTouchFinished()
@@ -213,16 +215,16 @@ namespace EPPZ.NGUI
 			ClampPageIndices();
 
 			// Apply the calculated value.
-			ScrollToPageIndices(true);
+			ScrollToPageIndices(LayoutMode.Animated);
 		}
 
-		void ScrollToPageIndices(bool animated)
+		void ScrollToPageIndices(LayoutMode layoutMode)
 		{
 			// The result (paged scroll position).
 			Vector2 pagedContentPosition = ContentPositionForPageIndices(horizontalPageIndex, verticalPageIndex);
 			Vector3 localOffset = new Vector3(
-				contentPosition.x - pagedContentPosition.x,
-				contentPosition.y - pagedContentPosition.y,
+				pagedContentPosition.x - contentPosition.x,
+				pagedContentPosition.y - contentPosition.y,
 				0.0f
 				);
 
@@ -231,11 +233,12 @@ namespace EPPZ.NGUI
 			Debug.Log("localOffset: "+localOffset);
 
 			// Apply.
-			if (animated)
+			if (layoutMode == LayoutMode.Animated &&
+			    springStrength != 0.0f) // Another way to opt-out spring motion (mainly for debugging)
 			{
 				SpringPanel.Begin(
 					scrollView.panel.cachedGameObject,
-					scrollView.panel.cachedTransform.localPosition - localOffset,
+					scrollView.panel.cachedTransform.localPosition + localOffset,
 					springStrength
 					);
 			}
@@ -243,6 +246,7 @@ namespace EPPZ.NGUI
 			else
 			{
 				scrollView.MoveRelative(localOffset);
+				scrollView.momentumAmount = 0.0f; // No spring after release
 			}
 		}
 
@@ -270,8 +274,8 @@ namespace EPPZ.NGUI
 			bool isHorizontalFlick = (Mathf.Abs(touchOffset.x) > flickDistance) && (timeDistance < flickTime);
 			bool isVerticalFlick = (Mathf.Abs(touchOffset.y) > flickDistance) && (timeDistance < flickTime);
 			bool isFlick = (isHorizontalFlick || isVerticalFlick);
-			horizontalPageIndex_Flick = (isHorizontalFlick) ? -sign_x : 0;
-			verticalPageIndex_Flick = (isVerticalFlick) ? -sign_y : 0;
+			horizontalPageIndex_Flick = (isHorizontalFlick) ? sign_x : 0;
+			verticalPageIndex_Flick = (isVerticalFlick) ? sign_y : 0;
 
 			return isFlick;
 		}
@@ -286,10 +290,16 @@ namespace EPPZ.NGUI
 				int sign_x = (int)Mathf.Sign(normalizedPositionOffset.x);
 				int sign_y = (int)Mathf.Sign(normalizedPositionOffset.y);
 
-				bool isHorizontalSnap = (Mathf.Abs(normalizedPositionOffset.x) < normalizedPageSize_half.x) && (Mathf.Abs(normalizedPositionOffset.x) >= (normalizedPageSize.x * snapDistance));
-				bool isVerticalSnap = (Mathf.Abs(normalizedPositionOffset.y) < normalizedPageSize_half.y) && (Mathf.Abs(normalizedPositionOffset.y) >= (normalizedPageSize.y * snapDistance));
-				horizontalPageIndex_Snap = (isHorizontalSnap) ? -sign_x : 0;
-				verticalPageIndex_Snap = (isVerticalSnap) ? -sign_y : 0;
+				bool isHorizontalSnap = (
+					(Mathf.Abs(normalizedPositionOffset.x) < normalizedPageSize_half.x) && // Below the ususal half paging distance
+					(Mathf.Abs(normalizedPositionOffset.x) >= (normalizedPageSize_half.x * snapDistance)) // Above the desired snap treshold
+					);
+				bool isVerticalSnap = (
+					(Mathf.Abs(normalizedPositionOffset.y) < normalizedPageSize_half.y) && // Below the ususal half paging distance
+					(Mathf.Abs(normalizedPositionOffset.y) >= (normalizedPageSize_half.y * snapDistance)) // Above the desired snap treshold
+					);
+				horizontalPageIndex_Snap = (isHorizontalSnap) ? sign_x : 0;
+				verticalPageIndex_Snap = (isVerticalSnap) ? sign_y : 0;
 			}
 		}
 
