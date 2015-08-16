@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-	
-
-
 
 
 namespace EPPZ.NGUI
@@ -21,6 +18,13 @@ namespace EPPZ.NGUI
 	public class EPPZNGUI_ScrollViewPaging : MonoBehaviour
 	{
 
+
+		/// <summary>
+		/// Layout modes to use when scrolling to page positions.
+		/// `Instant` mode lays out on the current frame immediately, 
+		/// while `Animated` mode uses NGUI `SpringPanel`.
+		/// </summary>
+		public enum LayoutMode { Instant, Animated }
 
 		/// <summary>
 		/// UIScrollView to control (on this GameObject).
@@ -50,7 +54,6 @@ namespace EPPZ.NGUI
 		/// the cummulative bounds of every children (think of pull-to-refresh controls).
 		/// </summary>
 		public UIWidget content;
-
 
 		// Paging.
 		public float springStrength = 8.0f;
@@ -88,28 +91,20 @@ namespace EPPZ.NGUI
 		private int horizontalPageIndex_Snap = 0;
 		private int verticalPageIndex_Snap = 0;
 
-		public enum LayoutMode { Instant, Animated }
-
 
 		#region Delegates
 		
 		void Start()
 		{
 			// Add listeners removed by `OnDestroy()` calls on Play / Stop Mode changes.
-			AddListeners();
+			AddScrollViewListeners();
 		}
 		
 		void OnDestroy()
 		{
 			// Remove listeners when component gets removed from the inspector (also at Play / Stop Mode changes).
-			RemoveListeners();
+			RemoveScrollViewListeners();
 		}
-		
-		protected void AddListeners()
-		{ AddScrollViewListeners(); }
-		
-		protected void RemoveListeners()
-		{ RemoveScrollViewListeners(); }
 		
 		void AddScrollViewListeners()
 		{
@@ -146,38 +141,40 @@ namespace EPPZ.NGUI
 		#endregion
 
 
-		#region Paging
-		
+		#region Events
+
 		void OnDragStarted()
 		{
 			if (enabled == false) return; // Only if enabled
-
+			
 			// Track touch position for drag direction measurement later on.
 			CalculatePositions();
-
+			
 			// Capture.
 			touchTime = Time.time;
 			touchContentPosition = contentPosition;
 			normalizedTouchContentPosition = normalizedContentPosition;
 		}
-
+		
 		void OnScrollBarDragFinished()
 		{ Layout(); }
-
+		
 		void OnDragFinished()
 		{ LayoutOnTouchFinished(); }
 
+		#endregion
 
+
+		#region Paging
+	
 		/// <summary>
-		/// Something like `UICenterOnChild.Recenter`. Snap `UIScrollView` position to the nearest page.
+		/// Something like `UICenterOnChild.Recenter`.
+		/// Snap `UIScrollView` position to the nearest page position.
 		/// Can be happen animated upon request (using `SpringPanel`).
 		/// </summary>
 
 		[ContextMenu("Execute")]
 		public void Layout()
-		{ Layout(LayoutMode.Instant); }
-
-		public void Layout(LayoutMode layoutMode)
 		{
 			if (enabled == false) return; // Only if enabled
 
@@ -191,10 +188,10 @@ namespace EPPZ.NGUI
 			ClampPageIndices();
 			
 			// Apply the calculated value.
-			ScrollToPageIndices(layoutMode);
+			ScrollToPageIndices(LayoutMode.Instant);
 		}
 
-		void LayoutOnTouchFinished()
+		void LayoutOnTouchFinished() // Always animated
 		{ 
 			if (enabled == false) return; // Only if enabled
 			
@@ -223,15 +220,11 @@ namespace EPPZ.NGUI
 			// The result (paged scroll position).
 			Vector2 pagedContentPosition = ContentPositionForPageIndices(horizontalPageIndex, verticalPageIndex);
 			Vector3 localOffset = new Vector3(
-				pagedContentPosition.x - contentPosition.x,
-				pagedContentPosition.y - contentPosition.y,
+				- (pagedContentPosition.x - contentPosition.x), // Straight
+				+ (pagedContentPosition.y - contentPosition.y), // Flipped
 				0.0f
 				);
-
-			Debug.Log("`" + GetType() + "` Layout");
-			Debug.Log("pagedContentPosition: "+pagedContentPosition);
-			Debug.Log("localOffset: "+localOffset);
-
+			
 			// Apply.
 			if (layoutMode == LayoutMode.Animated &&
 			    springStrength != 0.0f) // Another way to opt-out spring motion (mainly for debugging)
@@ -304,7 +297,7 @@ namespace EPPZ.NGUI
 		}
 
 		void OnScroll(UIPanel panel)
-		{ 
+		{
 			bool hasPageControl = false;
 			if (hasPageControl == false) return; // Only having any `PageControl`
 		}
@@ -312,8 +305,8 @@ namespace EPPZ.NGUI
 		void CalculatePositions()
 		{
 			contentPosition = new Vector2(
-				- scrollView.panel.clipOffset.x,
-				- scrollView.panel.clipOffset.y
+				+ scrollView.panel.clipOffset.x, // Straight
+				- scrollView.panel.clipOffset.y  // Flipped
 				);
 			normalizedContentPosition = new Vector2(
 				(contentSize.x > pageSize.x) ? contentPosition.x / scrollSize.x : 0.0f,
