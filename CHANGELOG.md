@@ -1,3 +1,7 @@
+* 1.3.7
+
+	+ `EPPZNGUI_ScrollViewPaging`
+
 * 1.3.6
 
 	+ `EPPZNGUI_UICenterOnChild`
