@@ -1,3 +1,7 @@
+* 1.4.1
+
+	+ `EPPZNGUI_DragPerpendicularScrollViews`
+
 * 1.3.8 - 1.4.0
 
 	+ `EPPZNGUI_ScrollViewPaging` fixes
