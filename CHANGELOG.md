@@ -1,4 +1,4 @@
-* 1.3.8 - 1.3.9
+* 1.3.8 - 1.4.0
 
 	+ `EPPZNGUI_ScrollViewPaging` fixes
 

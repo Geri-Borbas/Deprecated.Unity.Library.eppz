@@ -207,8 +207,8 @@ namespace EPPZ.NGUI
 			
 			// Calculate desired page position.
 			CalculatePageIndices();
-			horizontalPageIndex += horizontalPageIndex_Flick + horizontalPageIndex_Snap;
-			verticalPageIndex += verticalPageIndex_Flick + verticalPageIndex_Snap;
+			horizontalPageIndex += (int)Mathf.Clamp(horizontalPageIndex_Flick + horizontalPageIndex_Snap, -1, 1);
+			verticalPageIndex += (int)Mathf.Clamp(verticalPageIndex_Flick + verticalPageIndex_Snap, -1, 1);
 			ClampPageIndices();
 
 			// Apply the calculated value.
