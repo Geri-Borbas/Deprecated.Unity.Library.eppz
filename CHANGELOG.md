@@ -1,7 +1,6 @@
-* 1.4.2
+* 1.4.2 - 1.4.3
 
 	+ `EPPZNGUI_ScrollViewPageControl`
-		+ Yet without prefab or buildup on `Start()`
 
 * 1.4.1
 

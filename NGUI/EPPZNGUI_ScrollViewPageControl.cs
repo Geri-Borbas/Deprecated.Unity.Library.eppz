@@ -12,18 +12,24 @@ namespace EPPZ.NGUI
 
 
 		public EPPZNGUI_ScrollViewPaging scrollViewPaging;
-		public Color normalColor;
-		public Color selectedColor;
 		public GameObject spritePrototypeObject;
-		public UIGrid spriteGrid;
 		public float spriteSpacing = 1.0f; // Percent of sprite width
 
-		public List<UISprite> sprites = new List<UISprite>();
-		public UISprite selectedSprite;
+		// Tint Colors
+		public Color normalColor;
+		public Color selectedColor;
+
+
+		private List<UISprite> sprites = new List<UISprite>();
+		private UISprite selectedSprite;
+		private UIGrid spriteGrid;
 
 
 		void Start()
 		{
+			// References.
+			spriteGrid = GetComponentInChildren<UIGrid>();
+
 			// Reverse hook.
 			if (scrollViewPaging != null)
 			{
@@ -55,11 +61,12 @@ namespace EPPZ.NGUI
 				GameObject eachSpriteObject = Instantiate(spritePrototypeObject) as GameObject;
 				eachSpriteObject.transform.SetParent(spritePrototypeObject.transform.parent, false); // UI-proof parenting
 				eachSpriteObject.name = spritePrototypeObject.name + " " + (index + 1); // Proper name
-				UISprite eachSprite = eachSpriteObject.GetComponent<UISprite>();
 
-				// Collect.
-				if (eachSprite != null) 
-				{ sprites.Add(eachSprite); }
+				UISprite eachSprite = eachSpriteObject.GetComponent<UISprite>();
+				if (eachSprite == null) continue;
+
+				eachSprite.depth = spritePrototype.depth + index + 1; // Depth
+				sprites.Add(eachSprite); // Collect
 			}
 			
 			// Layout grid.
