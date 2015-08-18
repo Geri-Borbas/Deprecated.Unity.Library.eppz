@@ -10,7 +10,7 @@ namespace EPPZ.NGUI
 	
 	[CanEditMultipleObjects]
 	[CustomEditor(typeof(EPPZNGUI_PositionConstraint), true)]
-	public class EPPZNGUI_PositionConstraint_Editor : EPPZNGUI_Constraint_Editor
+	public class EPPZNGUI_PositionConstraint_Editor : EPPZNGUI_Editor
 	{
 		
 		

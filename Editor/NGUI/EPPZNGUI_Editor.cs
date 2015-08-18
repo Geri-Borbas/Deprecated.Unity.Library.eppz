@@ -9,8 +9,7 @@ namespace EPPZ.NGUI
 	
 	
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(EPPZNGUI_Constraint), false)]
-	public class EPPZNGUI_Constraint_Editor : Editor
+	public class EPPZNGUI_Editor : Editor
 	{
 		
 		

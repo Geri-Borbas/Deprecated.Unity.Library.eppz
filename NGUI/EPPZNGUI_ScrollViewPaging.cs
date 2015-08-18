@@ -72,9 +72,13 @@ namespace EPPZ.NGUI
 		
 		public int horizontalPageIndex;
 		public int verticalPageIndex;
+		private int _previousHorizontalPageIndex; // Track change
+		private int _previousVerticalPageIndex; // Track change
 		
 		public float horizontalPageCount;
 		public float verticalPageCount;
+		private float _previousHorizontalPageCount; // Track change
+		private float _previousVerticalPageCount; // Track change
 
 		// Touch values.
 		private Vector2 touchContentPosition;
@@ -90,6 +94,9 @@ namespace EPPZ.NGUI
 		// Snapping.
 		private int horizontalPageIndex_Snap = 0;
 		private int verticalPageIndex_Snap = 0;
+
+		// Page Control.
+		[HideInInspector] public EPPZNGUI_ScrollViewPageControl pageControl; // Populated externally by Page Control
 
 
 		#region Delegates
@@ -162,6 +169,15 @@ namespace EPPZ.NGUI
 		void OnDragFinished()
 		{ LayoutOnTouchFinished(); }
 
+		void OnScroll(UIPanel panel)
+		{
+			// Calculate indices only, assuming no changes in dimensions during scroll.
+			CalculatePositions();
+			CalculatePageIndices();
+
+			LayoutPageControlPageIndexIfNeeded();
+		}
+
 		#endregion
 
 
@@ -170,7 +186,6 @@ namespace EPPZ.NGUI
 		/// <summary>
 		/// Something like `UICenterOnChild.Recenter`.
 		/// Snap `UIScrollView` position to the nearest page position.
-		/// Can be happen animated upon request (using `SpringPanel`).
 		/// </summary>
 
 		[ContextMenu("Execute")]
@@ -181,6 +196,7 @@ namespace EPPZ.NGUI
 			// Precalculations.
 			CalculateSizes();
 			CalculatePageDimensions();
+			CalculatePageCounts();
 			CalculatePositions();
 			
 			// Calculate desired page position.
@@ -198,6 +214,7 @@ namespace EPPZ.NGUI
 			// Precalculations.
 			CalculateSizes();
 			CalculatePageDimensions();
+			CalculatePageCounts();
 			CalculatePositions();
 
 			// Modifiers.
@@ -211,6 +228,26 @@ namespace EPPZ.NGUI
 			verticalPageIndex += (int)Mathf.Clamp(verticalPageIndex_Flick + verticalPageIndex_Snap, -1, 1);
 			ClampPageIndices();
 
+			// Apply the calculated value.
+			ScrollToPageIndices(LayoutMode.Animated);
+		}
+
+		void LayoutWithPageIndexModifier(int modifier) // Modifier should be either -1 or 1
+		{ 
+			if (enabled == false) return; // Only if enabled
+			
+			// Precalculations.
+			CalculateSizes();
+			CalculatePageDimensions();
+			CalculatePageCounts();
+			CalculatePositions();
+			
+			// Calculate desired page position.
+			CalculatePageIndices();
+			horizontalPageIndex += modifier;
+			verticalPageIndex += modifier;
+			ClampPageIndices();
+			
 			// Apply the calculated value.
 			ScrollToPageIndices(LayoutMode.Animated);
 		}
@@ -296,12 +333,6 @@ namespace EPPZ.NGUI
 			}
 		}
 
-		void OnScroll(UIPanel panel)
-		{
-			bool hasPageControl = false;
-			if (hasPageControl == false) return; // Only having any `PageControl`
-		}
-
 		void CalculatePositions()
 		{
 			contentPosition = new Vector2(
@@ -335,18 +366,18 @@ namespace EPPZ.NGUI
 
 		void CalculatePageIndices()
 		{
-			// Determine page indices.
 			horizontalPageIndex = (scrollSize.x <= 0.0f) ? 0 : Mathf.FloorToInt((normalizedContentPosition.x + (normalizedPageSize_half.x)) / normalizedPageSize.x);
 			verticalPageIndex = (scrollSize.y <= 0.0f) ? 0 : Mathf.FloorToInt((normalizedContentPosition.y + (normalizedPageSize_half.y)) / normalizedPageSize.y);
 		}
-		
-		void ClampPageIndices()
+
+		void CalculatePageCounts()
 		{
-			// Calculate page counts.
 			horizontalPageCount = Mathf.Floor(scrollSize.x / pageSize.x);
 			verticalPageCount = Mathf.Floor(scrollSize.y / pageSize.y);
-			
-			// Clamp.
+		}
+
+		void ClampPageIndices()
+		{
 			horizontalPageIndex = Mathf.FloorToInt(Mathf.Clamp((float)horizontalPageIndex, 0.0f, horizontalPageCount));
 			verticalPageIndex = Mathf.FloorToInt(Mathf.Clamp((float)verticalPageIndex, 0.0f, verticalPageCount));
 		}
@@ -357,6 +388,80 @@ namespace EPPZ.NGUI
 				pageSize.x * (float)horizontalPageIndex_,
 				pageSize.y * (float)verticalPageIndex_
 				);
+		}
+
+		#endregion
+
+
+		#region PageControl events
+
+		public void OnPageControlPreviousPress()
+		{ LayoutWithPageIndexModifier(-1); }
+
+		public void OnPageControlNextPress()
+		{ LayoutWithPageIndexModifier(+1); }
+
+		#endregion
+
+
+		#region PageControl layout
+
+		public void LayoutPageControl() // Called by Page Control upon Start once it is hooked up to this Scroll View (a bit reverse, but less property accessor code)
+		{
+			// Necessary precalculations.
+			CalculateSizes();
+			CalculatePageCounts();
+			CalculatePageIndices();
+
+			// Force layout.
+			LayoutPageControlPageCount();
+			LayoutPageControlPageIndex();
+		}
+		
+		void LayoutPageControlPageCountIfNeeded()
+		{
+			// Layout Page Control if count changed.
+			bool pageCountChanged = ((horizontalPageCount != _previousHorizontalPageCount) || (verticalPageCount != _previousVerticalPageCount));
+			if (pageCountChanged)
+			{
+				LayoutPageControlPageCount();
+				
+				// Track.
+				_previousHorizontalPageCount = horizontalPageCount;
+				_previousVerticalPageCount = verticalPageCount;
+			}
+		}
+
+		void LayoutPageControlPageCount()
+		{
+			if (pageControl == null) return; // Only having Page Control
+
+			// Assume either horizontal or vertical movement.
+			int pageCount = (scrollView.movement == UIScrollView.Movement.Horizontal) ? Mathf.FloorToInt(horizontalPageCount) : Mathf.FloorToInt(verticalPageCount);
+			pageCount++; // `EPPZNGUI_ScrollViewPaging` uses 0 based `pageCount` values for easier `pageIndex` interaction
+			pageControl.LayoutPageCount(pageCount);
+		}
+
+		void LayoutPageControlPageIndexIfNeeded()
+		{
+			bool pageIndicesChanged = ((horizontalPageIndex != _previousHorizontalPageIndex) || (verticalPageIndex != _previousVerticalPageIndex));
+			if (pageIndicesChanged == false) return; // Only if changed
+			if (pageControl == null) return; // Only having any `PageControl`
+			
+			// Track.
+			_previousHorizontalPageIndex = horizontalPageIndex;
+			_previousVerticalPageIndex = verticalPageIndex;
+			
+			LayoutPageControlPageIndex();
+		}
+
+		void LayoutPageControlPageIndex()
+		{
+			if (pageControl == null) return; // Only having Page Control
+
+			// Assume either horizontal or vertical movement.
+			int pageIndex = (scrollView.movement == UIScrollView.Movement.Horizontal) ? horizontalPageIndex : verticalPageIndex;
+			pageControl.LayoutPageIndex(pageIndex);
 		}
 
 		#endregion
