@@ -256,12 +256,20 @@ namespace EPPZ.NGUI
 		{
 			// The result (paged scroll position).
 			Vector2 pagedContentPosition = ContentPositionForPageIndices(horizontalPageIndex, verticalPageIndex);
+			float localOffset_x = - (pagedContentPosition.x - contentPosition.x); // Straight
+			float localOffset_y = + (pagedContentPosition.y - contentPosition.y); // Flipped
+
+			// Clamp.
+			if (scrollView.movement == UIScrollView.Movement.Horizontal) localOffset_y = 0.0f;
+			if (scrollView.movement == UIScrollView.Movement.Vertical) localOffset_x = 0.0f;
+
+			// Scroll amount.
 			Vector3 localOffset = new Vector3(
-				- (pagedContentPosition.x - contentPosition.x), // Straight
-				+ (pagedContentPosition.y - contentPosition.y), // Flipped
+				localOffset_x,
+				localOffset_y,
 				0.0f
 				);
-			
+
 			// Apply.
 			if (layoutMode == LayoutMode.Animated &&
 			    springStrength != 0.0f) // Another way to opt-out spring motion (mainly for debugging)
