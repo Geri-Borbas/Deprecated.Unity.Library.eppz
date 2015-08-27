@@ -28,4 +28,14 @@ public static class EPPZKit_String
 			ReferenceEquals(value, null) ||
 				string.IsNullOrEmpty(value.Trim(' '));
 	}
+
+	public static string RemoveLastWord(this string value)
+	{
+		if (value == null) return ""; // Only if any
+
+		string result = value;
+		int index = value.LastIndexOf(" ");
+		if (index > -1) result = value.Remove(index);
+		return result;
+	}
 }

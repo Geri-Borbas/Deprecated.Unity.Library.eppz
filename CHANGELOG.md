@@ -1,3 +1,7 @@
+* 1.4.5
+
+	+ `EPPZKit_String`
+
 * 1.4.2 - 1.4.4
 
 	+ `EPPZNGUI_ScrollViewPageControl`
