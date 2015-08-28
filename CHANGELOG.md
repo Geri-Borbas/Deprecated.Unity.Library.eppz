@@ -1,3 +1,8 @@
+* 1.4.6
+
+	+ `EPPZNGUI_ScrollViewPaging`
+		+ Delegate hooks
+
 * 1.4.5
 
 	+ `EPPZKit_String`
