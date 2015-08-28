@@ -69,16 +69,20 @@ namespace EPPZ.NGUI
 		// Positions.
 		public Vector2 contentPosition;
 		public Vector2 normalizedContentPosition;
-		
+
+		public delegate void OnPageIndexChange(EPPZNGUI_ScrollViewPaging scrollViewPaging);
+		public OnPageIndexChange onPageIndexChange;
+
+		private bool pageIndicesChanged;
 		public int horizontalPageIndex;
 		public int verticalPageIndex;
-		private int _previousHorizontalPageIndex; // Track change
-		private int _previousVerticalPageIndex; // Track change
+		private int _previousHorizontalPageIndex = -1; // Track change
+		private int _previousVerticalPageIndex = -1; // Track change
 		
 		public float horizontalPageCount;
 		public float verticalPageCount;
-		private float _previousHorizontalPageCount; // Track change
-		private float _previousVerticalPageCount; // Track change
+		private float _previousHorizontalPageCount = -1; // Track change
+		private float _previousVerticalPageCount = -1; // Track change
 
 		// Touch values.
 		private Vector2 touchContentPosition;
@@ -175,6 +179,7 @@ namespace EPPZ.NGUI
 			CalculatePositions();
 			CalculatePageIndices();
 
+			LookUpPageIndexChange();
 			LayoutPageControlPageIndexIfNeeded();
 		}
 
@@ -401,6 +406,25 @@ namespace EPPZ.NGUI
 		#endregion
 
 
+		#region Delegate events
+
+		void LookUpPageIndexChange()
+		{
+			pageIndicesChanged = ((horizontalPageIndex != _previousHorizontalPageIndex) || (verticalPageIndex != _previousVerticalPageIndex));
+			if (pageIndicesChanged)
+			{
+				// Delegate call.
+				if (onPageIndexChange != null) onPageIndexChange(this);
+
+				// Track.
+				_previousHorizontalPageIndex = horizontalPageIndex;
+				_previousVerticalPageIndex = verticalPageIndex;
+			}
+		}
+
+		#endregion
+
+
 		#region PageControl events
 
 		public void OnPageControlPreviousPress()
@@ -452,13 +476,8 @@ namespace EPPZ.NGUI
 
 		void LayoutPageControlPageIndexIfNeeded()
 		{
-			bool pageIndicesChanged = ((horizontalPageIndex != _previousHorizontalPageIndex) || (verticalPageIndex != _previousVerticalPageIndex));
 			if (pageIndicesChanged == false) return; // Only if changed
 			if (pageControl == null) return; // Only having any `PageControl`
-			
-			// Track.
-			_previousHorizontalPageIndex = horizontalPageIndex;
-			_previousVerticalPageIndex = verticalPageIndex;
 			
 			LayoutPageControlPageIndex();
 		}
