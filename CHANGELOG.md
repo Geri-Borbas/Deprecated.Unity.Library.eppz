@@ -1,3 +1,7 @@
+* 1.4.7
+
+	+ `EPPZNGUI_ScrollViewPageControl` fixes
+
 * 1.4.6
 
 	+ `EPPZNGUI_ScrollViewPaging`

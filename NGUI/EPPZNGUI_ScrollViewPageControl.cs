@@ -72,7 +72,7 @@ namespace EPPZ.NGUI
 			// Layout grid.
 			spriteGrid.cellWidth = spritePrototype.width * (spriteSpacing + 1.0f);
 			spritePrototypeObject.SetActive(false); // Hide prototype
-			spriteGrid.Reposition();
+			spriteGrid.enabled = true; // Invoke `Reposition()` within
 		}
 
 		public void LayoutPageIndex(int pageIndex)
