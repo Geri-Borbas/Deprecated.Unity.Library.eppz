@@ -13,13 +13,21 @@ namespace EPPZ.Utils
 
 
 		public float updateInterval = 1.0f; // Seconds
-		private UILabel label = null;
+		private UILabel _label;
+		private UILabel label
+		{
+			get
+			{
+				if (_label == null)
+				{ _label = GetComponent<UILabel>(); }
+				return _label;
+			}
+		}
 		private List<float> fpsWindow = new List<float>();
 		private List<float> fixedFpsWindow = new List<float>();
 
 		void Awake()
 		{
-			label = this.GetComponent<UILabel>();
 			StartCoroutine("Tick");
 		}
 
@@ -38,7 +46,9 @@ namespace EPPZ.Utils
 			{
 				float fps = AverageOfFloatList(fpsWindow);
 				float fixedFps = AverageOfFloatList(fixedFpsWindow);
-				label.text = string.Format("Frame (Average FPS) {0:##.##} \nFixed (Average FPS) {1:##.##}", fps, fixedFps);
+
+				if (label != null)
+				{ label.text = string.Format("Frame (Average FPS) {0:##.##} \nFixed (Average FPS) {1:##.##}", fps, fixedFps); }
 
 				fpsWindow.Clear();
 				fixedFpsWindow.Clear();

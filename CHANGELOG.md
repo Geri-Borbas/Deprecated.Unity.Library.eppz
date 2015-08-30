@@ -1,3 +1,7 @@
+* 1.4.9
+
+	+ Some `null` check
+
 * 1.4.8
 
 	+ Tracing utils uses NGUI labels

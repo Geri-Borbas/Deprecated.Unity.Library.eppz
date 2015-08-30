@@ -360,6 +360,10 @@ namespace EPPZ.NGUI
 
 		void CalculateSizes()
 		{
+			// Debug.
+			if (scrollView.panel == null)
+			{ Debug.LogWarning(name+".scrollView.panel is null (probably GameObject is inactive)."); }
+
 			pageSize = scrollView.panel.GetViewSize();
 			contentSize = content.localSize;
 			scrollSize = new Vector2(
