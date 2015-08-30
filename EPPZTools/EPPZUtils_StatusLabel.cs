@@ -11,7 +11,7 @@ namespace EPPZ.Utils
 	{
 
 
-		public static Text label = null;
+		public static UILabel label = null;
 		public static void Log(string message)
 		{
 			if (label == null) return;
@@ -20,7 +20,7 @@ namespace EPPZ.Utils
 
 		void Awake()
 		{
-			label = this.GetComponent<Text>();
+			label = this.GetComponent<UILabel>();
 		}
 	}
 

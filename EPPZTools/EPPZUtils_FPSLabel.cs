@@ -13,13 +13,13 @@ namespace EPPZ.Utils
 
 
 		public float updateInterval = 1.0f; // Seconds
-		private Text label = null;
+		private UILabel label = null;
 		private List<float> fpsWindow = new List<float>();
 		private List<float> fixedFpsWindow = new List<float>();
 
 		void Awake()
 		{
-			label = this.GetComponent<Text>();
+			label = this.GetComponent<UILabel>();
 			StartCoroutine("Tick");
 		}
 

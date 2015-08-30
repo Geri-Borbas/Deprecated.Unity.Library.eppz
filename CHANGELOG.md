@@ -1,3 +1,7 @@
+* 1.4.8
+
+	+ Tracing utils uses NGUI labels
+
 * 1.4.7
 
 	+ `EPPZNGUI_ScrollViewPageControl` fixes
