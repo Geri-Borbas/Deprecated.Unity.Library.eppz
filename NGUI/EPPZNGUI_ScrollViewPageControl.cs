@@ -20,8 +20,8 @@ namespace EPPZ.NGUI
 		public Color selectedColor;
 
 
-		private List<UISprite> sprites = new List<UISprite>();
-		private UISprite selectedSprite;
+		private List<UIWidget> spriteWidgets = new List<UIWidget>();
+		private UIWidget selectedSpriteWidget;
 		private UIGrid spriteGrid;
 
 
@@ -45,12 +45,12 @@ namespace EPPZ.NGUI
 		{
 			if (Application.isPlaying == false) return; // Only in play mode
 			if (spritePrototypeObject == null) return; // Only having sprite prototype object
-			UISprite spritePrototype = spritePrototypeObject.GetComponent<UISprite>();
-			if (spritePrototype == null) return; // Only having sprite prototype
+			UIWidget spriteWidgetPrototype = spritePrototypeObject.GetComponent<UIWidget>();
+			if (spriteWidgetPrototype == null) return; // Only having sprite prototype
 
 			// Flush previous.
-			foreach (UISprite eachSprite in sprites) { Destroy(eachSprite.gameObject); }
-			sprites.Clear();
+			foreach (UIWidget eachSpriteWidget in spriteWidgets) { Destroy(eachSpriteWidget.gameObject); }
+			spriteWidgets.Clear();
 
 			// Activate prototype.
 			spritePrototypeObject.SetActive(true);
@@ -62,15 +62,15 @@ namespace EPPZ.NGUI
 				eachSpriteObject.transform.SetParent(spritePrototypeObject.transform.parent, false); // UI-proof parenting
 				eachSpriteObject.name = spritePrototypeObject.name + " " + (index + 1); // Proper name
 
-				UISprite eachSprite = eachSpriteObject.GetComponent<UISprite>();
-				if (eachSprite == null) continue;
+				UIWidget eachSpriteWidget = eachSpriteObject.GetComponent<UIWidget>();
+				if (eachSpriteWidget == null) continue;
 
-				eachSprite.depth = spritePrototype.depth + index + 1; // Depth
-				sprites.Add(eachSprite); // Collect
+				eachSpriteWidget.depth = spriteWidgetPrototype.depth + index + 1; // Depth
+				spriteWidgets.Add(eachSpriteWidget); // Collect
 			}
 			
 			// Layout grid.
-			spriteGrid.cellWidth = spritePrototype.width * (spriteSpacing + 1.0f);
+			spriteGrid.cellWidth = spriteWidgetPrototype.width * (spriteSpacing + 1.0f);
 			spritePrototypeObject.SetActive(false); // Hide prototype
 			spriteGrid.enabled = true; // Invoke `Reposition()` within
 		}
@@ -79,12 +79,12 @@ namespace EPPZ.NGUI
 		{
 			// Some index validating.
 			if (pageIndex < 0) return;
-			if (pageIndex > (sprites.Count - 1)) return;
+			if (pageIndex > (spriteWidgets.Count - 1)) return;
 
 			// Switch sprite colors.
-			if (selectedSprite != null) selectedSprite.color = normalColor;
-			selectedSprite = sprites[pageIndex];
-			selectedSprite.color = selectedColor;
+			if (selectedSpriteWidget != null) selectedSpriteWidget.color = normalColor;
+			selectedSpriteWidget = spriteWidgets[pageIndex];
+			selectedSpriteWidget.color = selectedColor;
 		}
 
 		#endregion

@@ -1,3 +1,7 @@
+* 1.5.0
+
+	+ `EPPZNGUI_ScrollViewPageControl` fixes
+
 * 1.4.9
 
 	+ Some `null` check
