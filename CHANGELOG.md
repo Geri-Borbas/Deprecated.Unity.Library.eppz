@@ -1,3 +1,8 @@
+* 1.5.1
+
+	+ Namings
+		+ Containing folder to `Assets/eppz!`
+
 * 1.5.0
 
 	+ `EPPZNGUI_ScrollViewPageControl` fixes
