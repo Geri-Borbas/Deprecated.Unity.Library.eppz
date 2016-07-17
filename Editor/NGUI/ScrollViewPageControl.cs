@@ -4,13 +4,13 @@ using UnityEditor;
 using System.Collections.Generic;
 
 
-namespace EPPZ.NGUI
+namespace EPPZ.NGUI.Editor
 {
 	
 	
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(EPPZNGUI_ScrollViewPageControl), true)]
-	public class EPPZNGUI_ScrollViewPageControl_Editor : EPPZNGUI_Editor
+	[CustomEditor(typeof(EPPZ.NGUI.ScrollViewPageControl), true)]
+	public class ScrollViewPageControl : EditorBase
 	{
 		
 		

@@ -12,7 +12,7 @@ namespace EPPZ.NGUI
 	/// </summary>
 
 	[AddComponentMenu("eppz!/NGUI/Drag Perpendicular Scroll Views")]
-	public class EPPZNGUI_DragPerpendicularScrollViews : MonoBehaviour
+	public class DragPerpendicularScrollViews : MonoBehaviour
 	{
 
 

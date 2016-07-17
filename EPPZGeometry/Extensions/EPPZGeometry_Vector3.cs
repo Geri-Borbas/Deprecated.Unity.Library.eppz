@@ -6,7 +6,7 @@ namespace EPPZGeometry
 {
 
 
-	public static class EPPZGeometry_Vector3
+	public static class _Vector3
 	{
 		
 

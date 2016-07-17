@@ -7,11 +7,11 @@ namespace EPPZ.NGUI
 {
 
 
-	public class EPPZNGUI_ScrollViewPageControl : MonoBehaviour
+	public class ScrollViewPageControl : MonoBehaviour
 	{
 
 
-		public EPPZNGUI_ScrollViewPaging scrollViewPaging;
+		public ScrollViewPaging scrollViewPaging;
 		public GameObject spritePrototypeObject;
 		public float spriteSpacing = 1.0f; // Percent of sprite width
 

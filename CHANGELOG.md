@@ -1,3 +1,9 @@
+* 1.5.5
+
+	+ Naming (with automatic scene / prefab updates)
+		+ `NGUI`
+		+ `Editor`
+
 * 1.5.4
 
 	+ Namings (with automatic scene / prefab updates)

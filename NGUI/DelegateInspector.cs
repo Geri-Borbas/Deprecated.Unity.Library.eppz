@@ -15,7 +15,7 @@ namespace EPPZ.NGUI
 	
 	[ExecuteInEditMode]
 	[AddComponentMenu("eppz!/NGUI/Debug/Delegate Inspector")]
-	public class EPPZNGUI_DelegateInspector : MonoBehaviour
+	public class DelegateInspector : MonoBehaviour
 	{
 
 

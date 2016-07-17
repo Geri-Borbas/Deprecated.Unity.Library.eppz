@@ -13,14 +13,14 @@ namespace EPPZ.NGUI
 	
 	[ExecuteInEditMode]
 	[AddComponentMenu("eppz!/NGUI/Anchor Size Constraint")]
-	public class EPPZNGUI_AnchorSizeConstraint : EPPZNGUI_Constraint
+	public class AnchorSizeConstraint : Constraint
 	{
 		
 		
 		/// <summary>
 		/// Which dimension to get from the target.
 		/// </summary>
-		public EPPZ.NGUI.SizeConstraint constraint = EPPZ.NGUI.SizeConstraint.Both;
+		public EPPZ.NGUI.SizeConstraintType constraint = EPPZ.NGUI.SizeConstraintType.Both;
 		
 		/// <summary>
 		/// Scale the dimension got from the target.
@@ -75,7 +75,7 @@ namespace EPPZ.NGUI
 
 			if (widget.isAnchored)
 			{
-				if (constraint == EPPZ.NGUI.SizeConstraint.Width || constraint == EPPZ.NGUI.SizeConstraint.Both)
+				if (constraint == EPPZ.NGUI.SizeConstraintType.Width || constraint == EPPZ.NGUI.SizeConstraintType.Both)
 				{
 					if (widget.leftAnchor.target != null)
 					{ widget.leftAnchor.absolute = Mathf.FloorToInt(left); }
@@ -84,7 +84,7 @@ namespace EPPZ.NGUI
 					{ widget.rightAnchor.absolute = Mathf.FloorToInt(right); }
 				}
 
-				if (constraint == EPPZ.NGUI.SizeConstraint.Height || constraint == EPPZ.NGUI.SizeConstraint.Both)
+				if (constraint == EPPZ.NGUI.SizeConstraintType.Height || constraint == EPPZ.NGUI.SizeConstraintType.Both)
 				{
 					if (widget.topAnchor.target != null)
 					{ widget.topAnchor.absolute = Mathf.FloorToInt(top); }

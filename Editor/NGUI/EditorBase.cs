@@ -4,12 +4,12 @@ using UnityEditor;
 using System.Collections.Generic;
 
 
-namespace EPPZ.NGUI
+namespace EPPZ.NGUI.Editor
 {
 	
 	
 	[CanEditMultipleObjects]
-	public class EPPZNGUI_Editor : UnityEditor.Editor
+	public class EditorBase : UnityEditor.Editor
 	{
 		
 		

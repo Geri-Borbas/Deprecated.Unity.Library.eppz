@@ -13,7 +13,7 @@ namespace EPPZ.NGUI
 
 
 	[ExecuteInEditMode]
-	public abstract class EPPZNGUI_Constraint : MonoBehaviour
+	public abstract class Constraint : MonoBehaviour
 	{
 
 

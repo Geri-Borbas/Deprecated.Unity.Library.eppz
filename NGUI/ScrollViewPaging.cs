@@ -15,7 +15,7 @@ namespace EPPZ.NGUI
 
 
 	[AddComponentMenu("eppz!/NGUI/Scroll View Paging")]
-	public class EPPZNGUI_ScrollViewPaging : MonoBehaviour
+	public class ScrollViewPaging : MonoBehaviour
 	{
 
 
@@ -70,7 +70,7 @@ namespace EPPZ.NGUI
 		public Vector2 contentPosition;
 		public Vector2 normalizedContentPosition;
 
-		public delegate void OnPageIndexChange(EPPZNGUI_ScrollViewPaging scrollViewPaging);
+		public delegate void OnPageIndexChange(ScrollViewPaging scrollViewPaging);
 		public OnPageIndexChange onPageIndexChange;
 
 		private bool pageIndicesChanged;
@@ -100,7 +100,7 @@ namespace EPPZ.NGUI
 		private int verticalPageIndex_Snap = 0;
 
 		// Page Control.
-		[HideInInspector] public EPPZNGUI_ScrollViewPageControl pageControl; // Populated externally by Page Control
+		[HideInInspector] public ScrollViewPageControl pageControl; // Populated externally by Page Control
 
 
 		#region Delegates

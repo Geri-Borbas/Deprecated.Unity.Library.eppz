@@ -7,26 +7,26 @@ namespace EPPZ.NGUI
 
 
 	/// <summary>
-	/// Layout tool that binds a foreign widget size to this widget dimensions.
+	/// Layout tool that binds a foreign widget aspect ratio to this widget.
 	/// </summary>
-
-
+	
+	
 	[ExecuteInEditMode]
-	[AddComponentMenu("eppz!/NGUI/Size Constraint")]
-	public class EPPZNGUI_SizeConstraint : EPPZNGUI_Constraint
+	[AddComponentMenu("eppz!/NGUI/Aspect Constraint")]
+	public class AspectConstraint : Constraint
 	{
 
 
 		/// <summary>
-		/// Which dimension to get from the target.
+		/// Which dimension to preserve (get other dimension from the target).
 		/// </summary>
-		public EPPZ.NGUI.SizeConstraint constraint = EPPZ.NGUI.SizeConstraint.Both;
+		public EPPZ.NGUI.AspectConstraintType keepAspectRatio = EPPZ.NGUI.AspectConstraintType.BasedOnWidth;
 
 		/// <summary>
-		/// Scale the dimension got from the target.
+		/// Scale the aspect got from the target (when not using Free aspect).
 		/// </summary>
 		public float multiplier = 1.0f;
-
+		
 		/// <summary>
 		/// Tracking changes to spare layout calculations.
 		/// </summary>
@@ -51,19 +51,43 @@ namespace EPPZ.NGUI
 				);
 			if (targetChanged == false && widgetChanged == false && multiplierChanged == false) return;
 
-			// Do actual layout.
-			widget.AdjustSize(
-				targetWidget.width * multiplier,
-				targetWidget.height * multiplier,
-				constraint
-				);
-
+			Adjust();
+			
 			// Track changes.
 			_previousMultiplier = multiplier;
 			_previousWidgetWidth = widget.width;
 			_previousWidgetHeight = widget.height;
 			_previousTargetWidth = targetWidget.width;
 			_previousTargetHeight = targetWidget.height;
+		}
+
+		void Adjust()
+		{
+			// Calculate new size.
+			float width = widget.width;
+			float height = widget.height;
+			float targetAspect = (float)targetWidget.width / (float)targetWidget.height; // Calculate aspect on the fly (!)
+			float aspect = targetAspect * multiplier;
+			EPPZ.NGUI.SizeConstraintType constraint = EPPZ.NGUI.SizeConstraintType.Height;
+			
+			if (keepAspectRatio == EPPZ.NGUI.AspectConstraintType.BasedOnWidth)
+			{
+				height = width / aspect;
+				constraint = EPPZ.NGUI.SizeConstraintType.Height;
+			}
+			
+			if (keepAspectRatio == EPPZ.NGUI.AspectConstraintType.BasedOnHeight)
+			{
+				width = height * aspect;
+				constraint = EPPZ.NGUI.SizeConstraintType.Width;
+			}
+			
+			// Do actual (NGUI safe) layout.
+			widget.AdjustSize(
+				width,
+				height,
+				constraint
+				);
 		}
 	}
 }

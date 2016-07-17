@@ -4,13 +4,13 @@ using UnityEditor;
 using System.Collections.Generic;
 
 
-namespace EPPZ.NGUI
+namespace EPPZ.NGUI.Editor
 {
 	
 	
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(EPPZNGUI_PositionConstraint), true)]
-	public class EPPZNGUI_PositionConstraint_Editor : EPPZNGUI_Editor
+	[CustomEditor(typeof(EPPZ.NGUI.PositionConstraint), true)]
+	public class PositionConstraint : EditorBase
 	{
 		
 		
@@ -20,7 +20,7 @@ namespace EPPZ.NGUI
 		
 		protected override void Draw()
 		{
-			EPPZNGUI_PositionConstraint targetConstraint = target as EPPZNGUI_PositionConstraint;
+			EPPZ.NGUI.PositionConstraint targetConstraint = target as EPPZ.NGUI.PositionConstraint;
 			targetConstraint.targetWidget = EditorGUILayout.ObjectField("Target Widget", targetConstraint.targetWidget, typeof(UIWidget), true) as UIWidget;
 
 			SerializedProperty updateConstraint = serializedObject.FindProperty("updateConstraint");

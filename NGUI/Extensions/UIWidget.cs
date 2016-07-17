@@ -11,14 +11,14 @@ namespace EPPZ.NGUI
 	/// </summary>
 
 
-	public static class EPPZNGUI_UIWidget_Extensions
+	public static class _UIWidget
 	{
 
 
 		public static void AdjustSize(this UIWidget widget, float width, float height)
-		{ widget.AdjustSize(width, height, EPPZ.NGUI.SizeConstraint.Both); }
+		{ widget.AdjustSize(width, height, EPPZ.NGUI.SizeConstraintType.Both); }
 
-		public static void AdjustSize(this UIWidget widget, float width, float height, EPPZ.NGUI.SizeConstraint constraint)
+		public static void AdjustSize(this UIWidget widget, float width, float height, EPPZ.NGUI.SizeConstraintType constraint)
 		{
 			// Get size difference.
 			float widthDifference = width - widget.width;
@@ -30,14 +30,14 @@ namespace EPPZ.NGUI
 			float topDifference = 0.0f;
 			
 			// Calculate horizontal differences.
-			if (constraint == EPPZ.NGUI.SizeConstraint.Width || constraint == EPPZ.NGUI.SizeConstraint.Both)
+			if (constraint == EPPZ.NGUI.SizeConstraintType.Width || constraint == EPPZ.NGUI.SizeConstraintType.Both)
 			{
 				leftDifference = -(widget.pivotOffset.x * widthDifference);
 				rightDifference = (1.0f - widget.pivotOffset.x) * widthDifference;
 			}
 			
 			// Calculate vertical differences.
-			if (constraint == EPPZ.NGUI.SizeConstraint.Height || constraint == EPPZ.NGUI.SizeConstraint.Both)
+			if (constraint == EPPZ.NGUI.SizeConstraintType.Height || constraint == EPPZ.NGUI.SizeConstraintType.Both)
 			{
 				bottomDifference = -(widget.pivotOffset.y * heightDifference);
 				topDifference = (1.0f - widget.pivotOffset.y) * heightDifference;

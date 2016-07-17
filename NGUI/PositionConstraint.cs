@@ -13,7 +13,7 @@ namespace EPPZ.NGUI
 	
 	[ExecuteInEditMode]
 	[AddComponentMenu("eppz!/NGUI/Position Constraint")]
-	public class EPPZNGUI_PositionConstraint : EPPZNGUI_Constraint
+	public class PositionConstraint : Constraint
 	{
 
 

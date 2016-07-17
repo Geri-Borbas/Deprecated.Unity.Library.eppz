@@ -14,10 +14,10 @@ namespace EPPZ.NGUI
 	/// <summary>
 	/// Size constraint constants to use within namespace (use full name `EPPZ.NGUI.SizeConstraint` for safety).
 	/// </summary>
-	public enum SizeConstraint { Width, Height, Both }
+	public enum SizeConstraintType { Width, Height, Both }
 
 	/// <summary>
 	/// Aspect constraint constants to use within namespace (use full name `EPPZ.NGUI.AspectConstraint` for safety).
 	/// </summary>
-	public enum AspectConstraint { BasedOnWidth, BasedOnHeight }
+	public enum AspectConstraintType { BasedOnWidth, BasedOnHeight }
 }

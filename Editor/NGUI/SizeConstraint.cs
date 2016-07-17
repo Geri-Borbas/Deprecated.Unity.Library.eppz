@@ -4,13 +4,13 @@ using UnityEditor;
 using System.Collections.Generic;
 
 
-namespace EPPZ.NGUI
+namespace EPPZ.NGUI.Editor
 {
 
 
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(EPPZNGUI_SizeConstraint), true)]
-	public class EPPZNGUI_SizeConstraint_Editor : EPPZNGUI_Editor
+	[CustomEditor(typeof(EPPZ.NGUI.SizeConstraint), true)]
+	public class SizeConstraint : EditorBase
 	{
 
 
@@ -20,7 +20,7 @@ namespace EPPZ.NGUI
 
 		protected override void Draw()
 		{
-			EPPZNGUI_SizeConstraint targetConstraint = target as EPPZNGUI_SizeConstraint;
+			EPPZ.NGUI.SizeConstraint targetConstraint = target as EPPZ.NGUI.SizeConstraint;
 			targetConstraint.targetWidget = EditorGUILayout.ObjectField("Target Widget", targetConstraint.targetWidget, typeof(UIWidget), true) as UIWidget;
 
 			SerializedProperty updateConstraint = serializedObject.FindProperty("updateConstraint");
