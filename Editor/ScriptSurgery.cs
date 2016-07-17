@@ -1,9 +1,9 @@
 ﻿//
-//  EPPZEditor_SpriteSliceRenamer.cs
-//  Sprite sheet slice renamer tool
+//  EPPZ.EditorTools.ScriptSurgery.cs
+//  Helper to fix missing script references
 //
 //  Created by Borbás Geri on 16/07/16
-//  Copyright (c) 2016 eppz! development, LLC.
+//  Copyright (c) 2016 eppz! mobile.
 //
 //  follow http://www.twitter.com/_eppz
 //
