@@ -2,7 +2,12 @@
 
 	+ More namings
 		+ `EPPZDebug.EPPZ_DebugCamera` to `EPPZ.DebugTools.DebugCamera`
-
+		+ `EPPZDebug.EPPZ_DebugCamera` to `EPPZ.DebugTools.DebugCamera`
+		+ `EPPZDebug.EPPZ_DebugRenderer` to `EPPZ.DebugTools.DebugRenderer`
+		+ `EPPZDebug.EPPZDebug_CornerDebugRenderer` to `EPPZ.DebugTools.CornerDebugRenderer`
+		+ `EPPZDebug.EPPZDebug_PolygonDebugRendrer` to `EPPZ.DebugTools.PolygonDebugRenderer`
+		+ `EPPZDebug.EPPZDebug_SegmentDebugRenderer` to `EPPZ.DebugTools.SegmentDebugRenderer`
+		+ With corresponding Script reference updates in scenes / prefabs
 
 * 1.5.1
 
