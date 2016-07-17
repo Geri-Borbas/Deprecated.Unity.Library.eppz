@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using EPPZGeometry;
-using EPPZDebug;
+using EPPZ.DebugTools;
 
 
 public class TestScene_01_Controller : MonoBehaviour
@@ -17,9 +17,9 @@ public class TestScene_01_Controller : MonoBehaviour
 	public EPPZGeometry_PolygonSource polygonSource;
 	public EPPZGeometry_SegmentSource segmentSourceA;
 	public EPPZGeometry_SegmentSource segmentSourceB;
-	public EPPZDebug_PolygonDebugRenderer polygonRenderer;
-	public EPPZDebug_SegmentDebugRenderer segmentRendererA;
-	public EPPZDebug_SegmentDebugRenderer segmentRendererB;
+	public PolygonDebugRenderer polygonRenderer;
+	public SegmentDebugRenderer segmentRendererA;
+	public SegmentDebugRenderer segmentRendererB;
 
 	private Polygon polygon { get { return polygonSource.polygon; } }
 	private Segment segment_a { get { return segmentSourceA.segment; } }

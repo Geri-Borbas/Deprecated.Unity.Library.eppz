@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using EPPZGeometry;
-using EPPZDebug;
+using EPPZ.DebugTools;
 
 
 public class EPPZPolygon_2_Controller : MonoBehaviour
@@ -13,8 +13,8 @@ public class EPPZPolygon_2_Controller : MonoBehaviour
 
 	public EPPZGeometry_PolygonSource starSource;
 	public EPPZGeometry_PolygonSource squareSource;
-	public EPPZDebug_PolygonDebugRenderer starRenderer;
-	public EPPZDebug_PolygonDebugRenderer squareRenderer;
+	public PolygonDebugRenderer starRenderer;
+	public PolygonDebugRenderer squareRenderer;
 
 	private Polygon star { get { return starSource.polygon; } }
 	private Polygon square { get { return squareSource.polygon; } }

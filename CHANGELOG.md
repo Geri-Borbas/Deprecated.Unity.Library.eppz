@@ -1,3 +1,9 @@
+* 1.5.2
+
+	+ More namings
+		+ `EPPZDebug.EPPZ_DebugCamera` to `EPPZ.DebugTools.DebugCamera`
+
+
 * 1.5.1
 
 	+ Namings

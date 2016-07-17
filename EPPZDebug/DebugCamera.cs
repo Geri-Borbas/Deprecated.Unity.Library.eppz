@@ -2,7 +2,7 @@
 using System.Collections;
 
 
-namespace EPPZDebug
+namespace EPPZ.DebugTools
 {
 
 
@@ -12,22 +12,22 @@ namespace EPPZDebug
 	 * gonna be notified by this component after this camera
 	 * finished rendering.
 	 */
-	public class EPPZ_DebugCamera : MonoBehaviour
+	public class DebugCamera : MonoBehaviour
 	{
 
 
-		private EPPZ_DebugRenderer[] debugRenderers;
+		private DebugRenderer[] debugRenderers;
 
 
 		void Awake()
 		{
 			// Collect every debug renderer in the scene.
-			debugRenderers = FindObjectsOfType(typeof(EPPZ_DebugRenderer)) as EPPZ_DebugRenderer[];
+			debugRenderers = FindObjectsOfType(typeof(DebugRenderer)) as DebugRenderer[];
 		}
 
 		void OnPostRender()
 		{
-			foreach (EPPZ_DebugRenderer eachDebugRenderer in debugRenderers)
+			foreach (DebugRenderer eachDebugRenderer in debugRenderers)
 			{
 				eachDebugRenderer.OnDebugCameraPostRender(this.GetComponent<Camera>());
 			}

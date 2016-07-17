@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using EPPZGeometry;
 
 
-namespace EPPZDebug
+namespace EPPZ.DebugTools
 {
 
 
-	public class EPPZ_DebugRenderer : MonoBehaviour
+	public class DebugRenderer : MonoBehaviour
 	{
 
 		

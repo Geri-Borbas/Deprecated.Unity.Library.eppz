@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using EPPZGeometry;
-using EPPZDebug;
+using EPPZ.DebugTools;
 
 
 public class TestScene_02_Controller : MonoBehaviour
@@ -19,7 +19,7 @@ public class TestScene_02_Controller : MonoBehaviour
 
 	public EPPZGeometry_PolygonSource polygonSource;
 	public GameObject pointSource;
-	public EPPZDebug_PolygonDebugRenderer polygonRenderer;
+	public PolygonDebugRenderer polygonRenderer;
 
 	private Polygon polygon { get { return polygonSource.polygon; } }
 	private Vector2 point  { get { return pointSource.transform.position.xy(); } }

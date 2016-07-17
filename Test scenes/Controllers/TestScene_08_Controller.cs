@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using EPPZGeometry;
-using EPPZDebug;
+using EPPZ.DebugTools;
 
 
 public class TestScene_08_Controller : MonoBehaviour
@@ -17,8 +17,8 @@ public class TestScene_08_Controller : MonoBehaviour
 
 	public EPPZGeometry_SegmentSource segmentSourceA;
 	public EPPZGeometry_SegmentSource segmentSourceB;
-	public EPPZDebug_SegmentDebugRenderer segmentRendererA;
-	public EPPZDebug_SegmentDebugRenderer segmentRendererB;
+	public SegmentDebugRenderer segmentRendererA;
+	public SegmentDebugRenderer segmentRendererB;
 
 	public GameObject intersectionPointObject;
 

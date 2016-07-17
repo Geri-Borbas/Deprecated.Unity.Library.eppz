@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using EPPZGeometry;
-using EPPZDebug;
+using EPPZ.DebugTools;
 
 
 public class TestScene_06_Controller : MonoBehaviour
@@ -10,7 +10,7 @@ public class TestScene_06_Controller : MonoBehaviour
 	public Material validNormalMaterial;
 	public Material invalidNormalMaterial;
 
-	public EPPZDebug_CornerDebugRenderer cornerRenderer;
+	public CornerDebugRenderer cornerRenderer;
 	public Renderer normalPointRenderer;
 
 	public Transform[] segmentATransforms;

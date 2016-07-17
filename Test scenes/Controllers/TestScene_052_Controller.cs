@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using EPPZGeometry;
-using EPPZDebug;
+using EPPZ.DebugTools;
 
 
 public class TestScene_052_Controller : MonoBehaviour
@@ -16,8 +16,8 @@ public class TestScene_052_Controller : MonoBehaviour
 
 	public EPPZGeometry_PolygonSource polygonSource;
 	public EPPZGeometry_PolygonSource squareSource;
-	public EPPZDebug_PolygonDebugRenderer polygonRenderer;
-	public EPPZDebug_PolygonDebugRenderer squareRenderer;
+	public PolygonDebugRenderer polygonRenderer;
+	public PolygonDebugRenderer squareRenderer;
 
 	private Polygon polygon { get { return polygonSource.polygon; } }
 	private Polygon square { get { return squareSource.polygon; } }
