@@ -1,6 +1,12 @@
+* 1.5.3
+
+	+ Namings (with scene / prefab updates)
+		+ `EPPZMesh.EPPZ_CircleMesh2D` to `EPPZ.Meshes.CicleMesh`
+		+ `EPPZMesh.EPPZ_RingMesh2D` to `EPPZ.Meshes.RingMesh`
+
 * 1.5.2
 
-	+ More namings
+	+ Namings
 		+ `EPPZDebug.EPPZ_DebugCamera` to `EPPZ.DebugTools.DebugCamera`
 		+ `EPPZDebug.EPPZ_DebugCamera` to `EPPZ.DebugTools.DebugCamera`
 		+ `EPPZDebug.EPPZ_DebugRenderer` to `EPPZ.DebugTools.DebugRenderer`

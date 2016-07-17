@@ -6,11 +6,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-namespace EPPZ
+namespace EPPZ.Meshes
 {
 
 
-	public class EPPZ_CircleMesh2D : MonoBehaviour
+	public class CircleMesh : MonoBehaviour
 	{
 
 		
@@ -200,14 +200,14 @@ namespace EPPZ
 
 
 	#if UNITY_EDITOR
-	[CustomEditor(typeof(EPPZ_CircleMesh2D))]
+	[CustomEditor(typeof(CircleMesh))]
 	public class EPPZ_CircleMesh2D_Editor : Editor
 	{
 		public override void OnInspectorGUI()
 		{
 			base.OnInspectorGUI();
 			
-			EPPZ_CircleMesh2D circleMesh = target as EPPZ_CircleMesh2D;
+			CircleMesh circleMesh = target as CircleMesh;
 			
 			circleMesh.radius = EditorGUILayout.FloatField("Radius", circleMesh.radius);
 			circleMesh.segments = EditorGUILayout.IntField("Segments", circleMesh.segments);

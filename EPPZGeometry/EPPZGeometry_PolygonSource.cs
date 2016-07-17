@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Serialization;
 
 
 namespace EPPZGeometry
@@ -12,7 +13,7 @@ namespace EPPZGeometry
 
 		public Transform[] pointTransforms;
 		public Polygon.WindingDirection windingDirection = Polygon.WindingDirection.Unknown;
-		public bool updateModel = false;
+		[FormerlySerializedAs("updating")] public bool updateModel = false;
 
 		public Polygon polygon;
 

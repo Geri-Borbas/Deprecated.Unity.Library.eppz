@@ -6,11 +6,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-namespace EPPZ
+namespace EPPZ.Meshes
 {
 
 
-	public class EPPZ_RingMesh2D : MonoBehaviour
+	public class RingMesh : MonoBehaviour
 	{
 
 
@@ -270,18 +270,18 @@ namespace EPPZ
 	}
 
 	#if UNITY_EDITOR
-	[CustomEditor(typeof(EPPZ_RingMesh2D))]
+	[CustomEditor(typeof(RingMesh))]
 	public class EPPZ_RingMesh2D_Editor : Editor
 	{
 		public override void OnInspectorGUI()
 		{
 			base.OnInspectorGUI();
 			
-			EPPZ_RingMesh2D ringMesh = target as EPPZ_RingMesh2D;
+			RingMesh ringMesh = target as RingMesh;
 			ringMesh.radius = EditorGUILayout.FloatField("Radius", ringMesh.radius);
 			ringMesh.width = EditorGUILayout.FloatField("Width", ringMesh.width);
 			ringMesh.segments = EditorGUILayout.IntField("Segments", ringMesh.segments);
-			ringMesh.mapping = (EPPZ_RingMesh2D.Mapping)EditorGUILayout.EnumPopup("Mapping", ringMesh.mapping);
+			ringMesh.mapping = (RingMesh.Mapping)EditorGUILayout.EnumPopup("Mapping", ringMesh.mapping);
 		}
 	}
 	#endif
