@@ -1,3 +1,11 @@
+* 1.5.4
+
+	+ Namings (with automatic scene / prefab updates)
+		+ `EditorUtils`
+		+ `Extensions`
+		+ `UI`
+		+ `Utils`
+
 * 1.5.3
 
 	+ Namings (with scene / prefab updates)

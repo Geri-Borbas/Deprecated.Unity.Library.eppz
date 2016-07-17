@@ -8,7 +8,7 @@ namespace EPPZ.Utils
 {
 
 
-	public class EPPZUtils_FPSLabel : MonoBehaviour
+	public class FPSLabel : MonoBehaviour
 	{
 
 

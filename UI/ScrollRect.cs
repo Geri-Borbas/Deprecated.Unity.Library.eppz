@@ -10,7 +10,7 @@ namespace EPPZ.UI
 {
 	
 	
-	public class EPPZUI_ScrollRect : ScrollRect
+	public class ScrollRect : UnityEngine.UI.ScrollRect
 	{
 
 
@@ -96,7 +96,7 @@ namespace EPPZ.UI
 				// Dispatch inital touch data.
 				if (perpendicularScrollRect.GetType() == this.GetType())
 				{
-					EPPZUI_ScrollRect perpendicularEppzScrollRect = perpendicularScrollRect as EPPZUI_ScrollRect;
+					ScrollRect perpendicularEppzScrollRect = perpendicularScrollRect as ScrollRect;
 					perpendicularEppzScrollRect.CaptureTouchData(touchPosition, touchTime);
 				}
 

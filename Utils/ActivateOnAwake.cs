@@ -6,7 +6,7 @@ namespace EPPZ.Utils
 {
 
 
-	public class EPPZUtils_ActivateOnAwake : MonoBehaviour
+	public class ActivateOnAwake : MonoBehaviour
 	{
 
 

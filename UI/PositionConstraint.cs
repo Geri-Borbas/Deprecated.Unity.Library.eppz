@@ -13,7 +13,7 @@ namespace EPPZ.UI
 
 
 	[ExecuteInEditMode]
-	public class EPPZUI_PositionConstraint : UIBehaviour
+	public class PositionConstraint : UIBehaviour
 	{
 
 

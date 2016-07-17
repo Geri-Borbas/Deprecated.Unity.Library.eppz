@@ -1,5 +1,5 @@
 ﻿//
-//  EPPZEditor_HandTool.cs
+//  EPPZ.EditorUtils.HandTool.cs
 //  Hold Spacebar for Hand Tool
 //
 //  Created by Borbás Geri on 19/03/15
@@ -19,12 +19,12 @@ using UnityEditor;
 using System.Collections;
 
 
-namespace EPPZ.EditorTools
+namespace EPPZ.EditorUtils
 {
 
 
 	[InitializeOnLoad]
-	public class EPPZEditor_HandTool
+	public class HandTool
 	{
 
 
@@ -32,7 +32,7 @@ namespace EPPZ.EditorTools
 		public static bool spaceIsDown;
 
 
-		static EPPZEditor_HandTool()
+		static HandTool()
 		{
 			// Register callback.
 			SceneView.onSceneGUIDelegate += _OnSceneGUI;

@@ -13,7 +13,7 @@ namespace EPPZ.UI
 
 
 	[ExecuteInEditMode]
-	public class EPPZUI_SizeConstraint : MonoBehaviour
+	public class SizeConstraint : MonoBehaviour
 	{
 
 

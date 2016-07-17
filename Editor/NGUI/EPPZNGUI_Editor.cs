@@ -9,7 +9,7 @@ namespace EPPZ.NGUI
 	
 	
 	[CanEditMultipleObjects]
-	public class EPPZNGUI_Editor : Editor
+	public class EPPZNGUI_Editor : UnityEditor.Editor
 	{
 		
 		

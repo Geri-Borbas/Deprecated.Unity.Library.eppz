@@ -2,9 +2,11 @@
 using System.Collections;
 
 
-// From http://stackoverflow.com/questions/3174152/isnulloremptyorwhitespace-problem-in-c-sharp
-public static class EPPZKit_String
+public static class _String
 {
+
+
+	// Mainly from http://stackoverflow.com/questions/3174152/isnulloremptyorwhitespace-problem-in-c-sharp
 
 
 	public static bool IsNullOrWhiteSpace(this string value)

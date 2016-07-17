@@ -7,7 +7,7 @@ namespace EPPZ.Utils
 {
 
 
-	public class EPPZUtils_StatusLabel : MonoBehaviour
+	public class StatusLabel : MonoBehaviour
 	{
 
 
@@ -24,5 +24,5 @@ namespace EPPZ.Utils
 		}
 	}
 
-	public class Status : EPPZUtils_StatusLabel { }
+	public class Status : StatusLabel { }
 }

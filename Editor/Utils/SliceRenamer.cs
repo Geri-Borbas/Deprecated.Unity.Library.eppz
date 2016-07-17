@@ -1,5 +1,5 @@
 ﻿//
-//  EPPZEditor_SpriteSliceRenamer.cs
+//  EPPZ.EditorUtils.SpriteSliceRenamer.cs
 //  Sprite sheet slice renamer tool
 //
 //  Created by Borbás Geri on 22/04/15
@@ -23,7 +23,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
 
-namespace EPPZ.EditorTools
+namespace EPPZ.EditorUtils
 {
 
 
@@ -78,7 +78,7 @@ namespace EPPZ.EditorTools
 	}
 
 
-	public class EPPZEditor_SliceRenamer : EditorWindow
+	public class SliceRenamer : EditorWindow
 	{
 
 		// Properties.
@@ -131,7 +131,7 @@ namespace EPPZ.EditorTools
 		public static void ShowWindow()
 		{
 			// Show window.
-			EditorWindow.GetWindow(typeof(EPPZEditor_SliceRenamer), false,  "Slice Renamer");
+			EditorWindow.GetWindow(typeof(SliceRenamer), false,  "Slice Renamer");
 		}
 
 		void OnEnable()

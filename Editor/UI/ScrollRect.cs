@@ -4,12 +4,12 @@ using UnityEditor;
 using System.Collections;
 
 
-namespace EPPZ.UI
+namespace EPPZ.UI.Editor
 {
 
 
-	[CustomEditor(typeof(EPPZUI_ScrollRect))]
-	public class EPPZUI_ScrollRect_Editor : UnityEditor.Editor
+	[CustomEditor(typeof(EPPZ.UI.ScrollRect))]
+	public class ScrollRect : UnityEditor.Editor
 	{
 
 

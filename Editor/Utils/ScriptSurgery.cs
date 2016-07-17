@@ -1,5 +1,5 @@
 ﻿//
-//  EPPZ.EditorTools.ScriptSurgery.cs
+//  EPPZ.EditorUtils.ScriptSurgery.cs
 //  Helper to fix missing script references
 //
 //  Created by Borbás Geri on 16/07/16
@@ -23,7 +23,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
 
-namespace EPPZ.EditorTools
+namespace EPPZ.EditorUtils
 {
 
 

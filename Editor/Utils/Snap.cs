@@ -4,11 +4,11 @@ using UnityEditor;
 using System.Collections;
 
 
-namespace EPPZ.EditorTools
+namespace EPPZ.EditorUtils
 {
 
 
-	public class Editor_Snap : ScriptableObject
+	public class Snap : ScriptableObject
 	{	
 		[MenuItem ("eppz!/Snap center to Grid &%g")] // Alt + CMD + G
 		static void MenuSnapToGrid()

@@ -9,7 +9,7 @@ namespace EPPZ.UI
 {
 
 
-	public class EPPZUI_Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+	public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 	{
 
 

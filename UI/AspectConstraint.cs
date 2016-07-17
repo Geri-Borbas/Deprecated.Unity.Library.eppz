@@ -13,7 +13,7 @@ namespace EPPZ.UI
 	
 	
 	[ExecuteInEditMode]
-	public class EPPZUI_AspectConstraint : MonoBehaviour
+	public class AspectConstraint : MonoBehaviour
 	{
 
 

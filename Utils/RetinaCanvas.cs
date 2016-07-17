@@ -7,7 +7,7 @@ namespace EPPZ.Utils
 {
 
 
-	public class EPPZUtils_RetinaCanvas : MonoBehaviour
+	public class RetinaCanvas : MonoBehaviour
 	{
 
 
