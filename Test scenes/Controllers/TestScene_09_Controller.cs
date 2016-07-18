@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using EPPZGeometry;
+using EPPZ.Geometry;
 using EPPZ.DebugTools;
 
 
@@ -12,14 +12,14 @@ public class TestScene_09_Controller : MonoBehaviour
 	public Material offsetPolygonMaterial;
 	public float offset = 0.5f;
 
-	public EPPZGeometry_PolygonSource polygonSource;
+	public PolygonSource polygonSource;
 	public PolygonDebugRenderer offsetPolygonRenderer;
 
 	private Polygon offsetPolygon;
 	private Polygon polygon { get { return polygonSource.polygon; } }
 
-	public EPPZGeometry_Polygon_Inspector polygonInspector;
-	public EPPZGeometry_Polygon_Inspector offsetPolygonInspector;
+	public PolygonInspector polygonInspector;
+	public PolygonInspector offsetPolygonInspector;
 
 
 	void Start()

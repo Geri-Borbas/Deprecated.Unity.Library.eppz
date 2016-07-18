@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using EPPZGeometry;
+using EPPZ.Geometry;
 
 
 namespace EPPZ.DebugTools
@@ -19,7 +19,7 @@ namespace EPPZ.DebugTools
 		void Start()
 		{
 			// Model reference.
-			EPPZGeometry_SegmentSource segmentSource_ = GetComponent<EPPZGeometry_SegmentSource>();
+			SegmentSource segmentSource_ = GetComponent<SegmentSource>();
 			segment = segmentSource_.segment;
 		}
 		

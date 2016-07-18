@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using EPPZGeometry;
+using EPPZ.Geometry;
 using EPPZ.DebugTools;
 
 
@@ -15,8 +15,8 @@ public class TestScene_08_Controller : MonoBehaviour
 	public Material passingMaterial;
 	public float accuracy = 0.0f;
 
-	public EPPZGeometry_SegmentSource segmentSourceA;
-	public EPPZGeometry_SegmentSource segmentSourceB;
+	public SegmentSource segmentSourceA;
+	public SegmentSource segmentSourceB;
 	public SegmentDebugRenderer segmentRendererA;
 	public SegmentDebugRenderer segmentRendererB;
 

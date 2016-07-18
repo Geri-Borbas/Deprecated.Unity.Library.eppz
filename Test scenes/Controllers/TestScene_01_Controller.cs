@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using EPPZGeometry;
+using EPPZ.Geometry;
 using EPPZ.DebugTools;
 
 
@@ -14,9 +14,9 @@ public class TestScene_01_Controller : MonoBehaviour
 	public Material polygonMaterial;
 	public Material passingMaterial;
 
-	public EPPZGeometry_PolygonSource polygonSource;
-	public EPPZGeometry_SegmentSource segmentSourceA;
-	public EPPZGeometry_SegmentSource segmentSourceB;
+	public PolygonSource polygonSource;
+	public SegmentSource segmentSourceA;
+	public SegmentSource segmentSourceB;
 	public PolygonDebugRenderer polygonRenderer;
 	public SegmentDebugRenderer segmentRendererA;
 	public SegmentDebugRenderer segmentRendererB;

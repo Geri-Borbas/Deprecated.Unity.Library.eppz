@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using EPPZGeometry;
+using EPPZ.Geometry;
 
 
 namespace EPPZ.DebugTools

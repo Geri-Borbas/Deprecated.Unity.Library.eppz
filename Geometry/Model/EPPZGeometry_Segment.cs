@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-namespace EPPZGeometry
+namespace EPPZ.Geometry
 {
 
 
@@ -36,7 +36,7 @@ namespace EPPZGeometry
 		 * 
 		 */
 		
-		public static Segment SegmentWithSource(EPPZGeometry_SegmentSource segmentSource)
+		public static Segment SegmentWithSource(SegmentSource segmentSource)
 		{
 			return Segment.SegmentWithPointTransforms(segmentSource.pointTransforms);
 		}
@@ -61,7 +61,7 @@ namespace EPPZGeometry
 		 * 
 		 */ 
 		
-		public void UpdateWithSource(EPPZGeometry_SegmentSource segmentSource) // Assuming unchanged point count
+		public void UpdateWithSource(SegmentSource segmentSource) // Assuming unchanged point count
 		{
 			UpdateWithTransforms(segmentSource.pointTransforms);
 		}

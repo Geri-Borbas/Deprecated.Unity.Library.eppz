@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
-using EPPZGeometry;
+using EPPZ.Geometry;
 
 
 namespace EPPZ.UI

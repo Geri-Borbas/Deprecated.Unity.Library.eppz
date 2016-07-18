@@ -2,7 +2,7 @@
 using System.Collections;
 
 
-namespace EPPZGeometry
+namespace EPPZ.Geometry
 {
 
 

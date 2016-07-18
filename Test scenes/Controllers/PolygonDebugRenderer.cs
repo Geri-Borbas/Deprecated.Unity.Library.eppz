@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using EPPZGeometry;
+using EPPZ.Geometry;
 
 
 namespace EPPZ.DebugTools
@@ -26,7 +26,7 @@ namespace EPPZ.DebugTools
 		void Start()
 		{
 			// Model reference.
-			EPPZGeometry_PolygonSource polygonSource_ = GetComponent<EPPZGeometry_PolygonSource>();
+			PolygonSource polygonSource_ = GetComponent<PolygonSource>();
 			if (polygonSource_ != null)
 			{ polygon = polygonSource_.polygon; }
 		}

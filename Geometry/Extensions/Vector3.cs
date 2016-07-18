@@ -2,7 +2,7 @@
 using UnityEngine;
 
 
-namespace EPPZGeometry
+namespace EPPZ.Geometry
 {
 
 

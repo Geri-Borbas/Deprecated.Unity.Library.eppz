@@ -2,14 +2,16 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 3
+  serializedVersion: 6
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: EPPZ_TestMaterial
+  m_Name: eppz! test material
   m_Shader: {fileID: 4800000, guid: da5454b1466974256b25bcfe8a9743f1, type: 3}
-  m_ShaderKeywords: []
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
   m_CustomRenderQueue: -1
+  stringTagMap: {}
   m_SavedProperties:
     serializedVersion: 2
     m_TexEnvs:
@@ -20,7 +22,27 @@ Material:
           m_Texture: {fileID: 2800000, guid: 52a73df6ebc584bdcb4d0f1514fe0119, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
-    m_Floats: {}
+    m_Floats:
+      data:
+        first:
+          name: _Stencil
+        second: 0
+      data:
+        first:
+          name: _StencilComp
+        second: 8
+      data:
+        first:
+          name: _StencilOp
+        second: 0
+      data:
+        first:
+          name: _StencilReadMask
+        second: 255
+      data:
+        first:
+          name: _StencilWriteMask
+        second: 255
     m_Colors:
       data:
         first:

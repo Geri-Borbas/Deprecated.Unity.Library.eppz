@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using EPPZGeometry;
+using EPPZ.Geometry;
 using EPPZ.DebugTools;
 
 
@@ -11,8 +11,8 @@ public class EPPZPolygon_2_Controller : MonoBehaviour
 	public Material polygonMaterial;
 	public Material intersectingMaterial;
 
-	public EPPZGeometry_PolygonSource starSource;
-	public EPPZGeometry_PolygonSource squareSource;
+	public PolygonSource starSource;
+	public PolygonSource squareSource;
 	public PolygonDebugRenderer starRenderer;
 	public PolygonDebugRenderer squareRenderer;
 

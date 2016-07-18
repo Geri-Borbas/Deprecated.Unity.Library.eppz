@@ -2,11 +2,11 @@
 using System.Collections;
 
 
-namespace EPPZGeometry
+namespace EPPZ.Geometry
 {
 
 
-	public class EPPZGeometry_SegmentSource : MonoBehaviour
+	public class SegmentSource : MonoBehaviour
 	{
 
 

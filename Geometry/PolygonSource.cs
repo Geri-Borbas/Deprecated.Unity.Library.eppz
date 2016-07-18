@@ -3,11 +3,11 @@ using System.Collections;
 using UnityEngine.Serialization;
 
 
-namespace EPPZGeometry
+namespace EPPZ.Geometry
 {
 
 
-	public class EPPZGeometry_PolygonSource : MonoBehaviour
+	public class PolygonSource : MonoBehaviour
 	{
 
 

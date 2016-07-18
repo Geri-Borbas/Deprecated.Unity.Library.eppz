@@ -1,3 +1,8 @@
+* 1.5.6
+
+	+ Naming (with automatic scene / prefab updates)
+		+ `Geometry`
+
 * 1.5.5
 
 	+ Naming (with automatic scene / prefab updates)

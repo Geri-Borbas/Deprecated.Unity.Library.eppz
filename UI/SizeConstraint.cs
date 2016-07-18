@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEditor;
 #endif
 using System.Collections;
-using EPPZGeometry;
+using EPPZ.Geometry;
 
 
 namespace EPPZ.UI

@@ -7,7 +7,7 @@ using System.Linq;
 using ClipperLib;
 
 
-namespace EPPZGeometry
+namespace EPPZ.Geometry
 {
 
 
@@ -61,7 +61,7 @@ namespace EPPZGeometry
 		public static Polygon PolygonWithPointList(List<Vector2> pointList)
 		{ return Polygon.PolygonWithPoints(pointList.ToArray()); }
 
-		public static Polygon PolygonWithSource(EPPZGeometry_PolygonSource polygonSource)
+		public static Polygon PolygonWithSource(PolygonSource polygonSource)
 		{
 			Polygon rootPolygon = Polygon.PolygonWithPointTransforms(polygonSource.pointTransforms, polygonSource.windingDirection);
 
@@ -69,7 +69,7 @@ namespace EPPZGeometry
 			foreach (Transform eachChildTransform in polygonSource.gameObject.transform)
 			{
 				GameObject eachChildGameObject = eachChildTransform.gameObject;
-				EPPZGeometry_PolygonSource eachChildPolygonSource = eachChildGameObject.GetComponent<EPPZGeometry_PolygonSource>();
+				PolygonSource eachChildPolygonSource = eachChildGameObject.GetComponent<PolygonSource>();
 				if (eachChildPolygonSource != null)
 				{
 					Polygon eachSubPolygon = Polygon.PolygonWithSource(eachChildPolygonSource);
@@ -135,7 +135,7 @@ namespace EPPZGeometry
 		 * 
 		 */ 
 
-		public void UpdatePointPositionsWithSource(EPPZGeometry_PolygonSource polygonSource) // Assuming unchanged point count
+		public void UpdatePointPositionsWithSource(PolygonSource polygonSource) // Assuming unchanged point count
 		{
 			UpdatePointPositionsWithTransforms(polygonSource.pointTransforms);
 		}
