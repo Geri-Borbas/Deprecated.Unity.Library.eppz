@@ -1,3 +1,8 @@
+* 1.5.7
+
+	+ Encapsulated folder structure
+		+ `Editor`, `Scenes` are all package contained
+
 * 1.5.6
 
 	+ Naming (with automatic scene / prefab updates)
