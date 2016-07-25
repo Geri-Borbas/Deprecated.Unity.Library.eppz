@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using EPPZ.Geometry;
-using EPPZ.DebugTools;
+using EPPZ.Lines;
 
 
 public class TestScene_00_Controller : MonoBehaviour
@@ -16,7 +16,7 @@ public class TestScene_00_Controller : MonoBehaviour
 
 	public PolygonSource polygonSource;
 	public GameObject[] pointObjects;
-	public PolygonDebugRenderer polygonRenderer;
+	public PolygonLineRenderer polygonRenderer;
 
 	private Polygon polygon { get { return polygonSource.polygon; } }
 		
@@ -41,7 +41,7 @@ public class TestScene_00_Controller : MonoBehaviour
 	{
 		// Set corresponding materials.
 		Material currentMaterial = (testResult) ? passingMaterial : polygonMaterial;
-		polygonRenderer.lineMaterial = currentMaterial;
+		polygonRenderer.lineColor = currentMaterial.color;
 		foreach (GameObject eachPointObject in pointObjects)
 		{ eachPointObject.GetComponent<Renderer>().material = currentMaterial; }
 	}

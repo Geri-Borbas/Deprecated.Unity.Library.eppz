@@ -1925,6 +1925,8 @@ MonoBehaviour:
   debugMode: 1
   lineMaterial: {fileID: 2100000, guid: 7c061e9fd66494953b8c6f5e8551732f, type: 2}
   boundsMaterial: {fileID: 2100000, guid: ff5c72e3a51bc4271ac0cb1ec4a82616, type: 2}
+  lineColor: {r: 0.9843137, g: 0.9843137, b: 0.44313726, a: 1}
+  boundsColor: {r: 0.39607844, g: 0.85882354, b: 0.6666667, a: 1}
   windingDirectionObject: {fileID: 0}
   areaTextMesh: {fileID: 0}
   normals: 0
@@ -2399,7 +2401,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1793616301}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00997064b684b476cade2ba65d3f1c41, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f318a18c4cd7490a9956b7d7e4da03e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1805503811

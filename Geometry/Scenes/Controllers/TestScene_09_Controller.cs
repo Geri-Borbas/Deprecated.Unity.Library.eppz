@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using EPPZ.Geometry;
-using EPPZ.DebugTools;
+using EPPZ.Lines;
 
 
 public class TestScene_09_Controller : MonoBehaviour
@@ -13,7 +13,7 @@ public class TestScene_09_Controller : MonoBehaviour
 	public float offset = 0.5f;
 
 	public PolygonSource polygonSource;
-	public PolygonDebugRenderer offsetPolygonRenderer;
+	public PolygonLineRenderer offsetPolygonRenderer;
 
 	private Polygon offsetPolygon;
 	private Polygon polygon { get { return polygonSource.polygon; } }

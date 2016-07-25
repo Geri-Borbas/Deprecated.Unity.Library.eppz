@@ -3,16 +3,16 @@ using System.Collections;
 using EPPZ.Geometry;
 
 
-namespace EPPZ.DebugTools
+namespace EPPZ.Lines
 {
 
 
-	public class PolygonDebugRenderer : DebugRenderer
+	public class PolygonLineRenderer : LineRenderer
 	{
 
 
-		public Material lineMaterial;
-		public Material boundsMaterial;
+		public Color lineColor;
+		public Color boundsColor;
 		public GameObject windingDirectionObject;
 		public TextMesh areaTextMesh;
 		public bool normals = false;
@@ -61,8 +61,8 @@ namespace EPPZ.DebugTools
 		{
 			if (polygon == null) return; // Only having polygon
 
-			DrawRect(polygon.bounds, boundsMaterial.color);
-			DrawPolygonWithTransform(polygon, lineMaterial.color, transform, normals);
+			DrawRect(polygon.bounds, boundsColor);
+			DrawPolygonWithTransform(polygon, lineColor, transform, normals);
 		}
 	}
 }

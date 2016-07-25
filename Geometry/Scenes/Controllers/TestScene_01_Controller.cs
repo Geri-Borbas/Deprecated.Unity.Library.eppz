@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using EPPZ.Geometry;
-using EPPZ.DebugTools;
+using EPPZ.Lines;
 
 
 public class TestScene_01_Controller : MonoBehaviour
@@ -17,9 +17,9 @@ public class TestScene_01_Controller : MonoBehaviour
 	public PolygonSource polygonSource;
 	public SegmentSource segmentSourceA;
 	public SegmentSource segmentSourceB;
-	public PolygonDebugRenderer polygonRenderer;
-	public SegmentDebugRenderer segmentRendererA;
-	public SegmentDebugRenderer segmentRendererB;
+	public PolygonLineRenderer polygonRenderer;
+	public SegmentLineRenderer segmentRendererA;
+	public SegmentLineRenderer segmentRendererB;
 
 	private Polygon polygon { get { return polygonSource.polygon; } }
 	private Segment segment_a { get { return segmentSourceA.segment; } }
@@ -43,8 +43,8 @@ public class TestScene_01_Controller : MonoBehaviour
 	{
 		// Set corresponding materials.
 		Material currentMaterial = (testResult) ? passingMaterial : polygonMaterial;
-		polygonRenderer.lineMaterial = currentMaterial;
-		segmentRendererA.lineMaterial = currentMaterial;
-		segmentRendererB.lineMaterial = currentMaterial;
+		polygonRenderer.lineColor = currentMaterial.color;
+		segmentRendererA.lineColor = currentMaterial.color;
+		segmentRendererB.lineColor = currentMaterial.color;
 	}
 }

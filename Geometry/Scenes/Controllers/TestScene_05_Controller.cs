@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using EPPZ.Geometry;
-using EPPZ.DebugTools;
+using EPPZ.Lines;
 
 
 public class TestScene_05_Controller : MonoBehaviour
@@ -16,8 +16,8 @@ public class TestScene_05_Controller : MonoBehaviour
 
 	public PolygonSource starSource;
 	public PolygonSource squareSource;
-	public PolygonDebugRenderer starRenderer;
-	public PolygonDebugRenderer squareRenderer;
+	public PolygonLineRenderer starRenderer;
+	public PolygonLineRenderer squareRenderer;
 
 	private Polygon star { get { return starSource.polygon; } }
 	private Polygon square { get { return squareSource.polygon; } }
@@ -63,7 +63,7 @@ public class TestScene_05_Controller : MonoBehaviour
 	{
 		// Set corresponding materials.
 		Material renderMaterial = (testResult) ? intersectingMaterial : polygonMaterial;
-		starRenderer.lineMaterial = renderMaterial;
-		squareRenderer.lineMaterial = renderMaterial;
+		starRenderer.lineColor = renderMaterial.color;
+		squareRenderer.lineColor = renderMaterial.color;
 	}
 }

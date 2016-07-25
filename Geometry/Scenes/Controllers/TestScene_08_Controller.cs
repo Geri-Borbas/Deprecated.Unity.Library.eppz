@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using EPPZ.Geometry;
-using EPPZ.DebugTools;
+using EPPZ.Lines;
 
 
 public class TestScene_08_Controller : MonoBehaviour
@@ -17,8 +17,8 @@ public class TestScene_08_Controller : MonoBehaviour
 
 	public SegmentSource segmentSourceA;
 	public SegmentSource segmentSourceB;
-	public SegmentDebugRenderer segmentRendererA;
-	public SegmentDebugRenderer segmentRendererB;
+	public SegmentLineRenderer segmentRendererA;
+	public SegmentLineRenderer segmentRendererB;
 
 	public GameObject intersectionPointObject;
 
@@ -51,8 +51,8 @@ public class TestScene_08_Controller : MonoBehaviour
 	{
 		// Set corresponding materials.
 		Material currentMaterial = (testResult) ? passingMaterial : polygonMaterial;
-		segmentRendererA.lineMaterial = currentMaterial;
-		segmentRendererB.lineMaterial = currentMaterial;
+		segmentRendererA.lineColor = currentMaterial.color;
+		segmentRendererB.lineColor = currentMaterial.color;
 
 		// Show / hide intersection point.
 		intersectionPointObject.GetComponent<Renderer>().enabled = testResult;

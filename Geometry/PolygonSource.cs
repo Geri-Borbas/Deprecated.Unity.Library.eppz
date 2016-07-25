@@ -13,7 +13,7 @@ namespace EPPZ.Geometry
 
 		public Transform[] pointTransforms;
 		public Polygon.WindingDirection windingDirection = Polygon.WindingDirection.Unknown;
-		[FormerlySerializedAs("updating")] public bool updateModel = false;
+		public bool updateModel = false;
 
 		public Polygon polygon;
 

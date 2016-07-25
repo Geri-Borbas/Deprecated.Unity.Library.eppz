@@ -1,3 +1,10 @@
+* 1.5.9
+
+	+ `DebugRenderer` refactor
+		+ Namespace to `EPPZ.Lines`
+		+ Renamed to `LineRenderer` (which is actually does)
+		+ More batching (collect each line)
+
 * 1.5.8
 
 	+ `DebugRenderer` refactor

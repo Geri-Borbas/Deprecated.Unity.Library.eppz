@@ -3,16 +3,16 @@ using System.Collections;
 using EPPZ.Geometry;
 
 
-namespace EPPZ.DebugTools
+namespace EPPZ.Lines
 {
 
 
-	public class SegmentDebugRenderer : DebugRenderer
+	public class SegmentLineRenderer : LineRenderer
 	{
 
 
-		public Material lineMaterial;
-		public Material boundsMaterial;
+		public Color lineColor;
+		public Color boundsColor;
 		private Segment segment;
 		
 		
@@ -25,8 +25,8 @@ namespace EPPZ.DebugTools
 		
 		protected override void OnDraw()
 		{
-			DrawRect(segment.bounds, boundsMaterial.color);
-			DrawSegment(segment, lineMaterial.color);
+			DrawRect(segment.bounds, boundsColor);
+			DrawSegment(segment, lineColor);
 		}
 	}
 }
