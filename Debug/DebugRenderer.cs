@@ -10,17 +10,28 @@ namespace EPPZ.DebugTools
 
 	public class DebugRenderer : MonoBehaviour
 	{
-
 		
+
 		public bool debugMode = false;
+
+		// Material for drawing.
+		Material _material;
+		Material material
+		{
+			get
+			{ 
+				if (_material == null) _material = new Material(Shader.Find("eppz!/Vertex color"));
+				return _material;
+			}
+		}
 
 		public class DebugLine
 		{
 			public Vector2 from;
 			public Vector2 to;
-			public Material material;
+			public Color color;
 		}
-		protected List <DebugLine> debugLines = new List<DebugLine>();
+		protected List<DebugLine> lines = new List<DebugLine>();
 
 				
 		/**
@@ -32,18 +43,15 @@ namespace EPPZ.DebugTools
 			
 			GL.PushMatrix();
 			GL.LoadProjectionMatrix(camera_.projectionMatrix);
-			
-			// Draw debug lines.
-			foreach (DebugLine eachDebugLine in debugLines)
-			{
-				DrawLine(
-					this.transform.TransformPoint(eachDebugLine.from),
-					this.transform.TransformPoint(eachDebugLine.to),
-					eachDebugLine.material
-					);
-			}
 
+			// Clear line batch.
+			lines.Clear();
+
+			// Collect more lines to the batch.
 			OnDraw();
+
+			// Do it.
+			DrawCall();
 			
 			GL.PopMatrix();
 		}
@@ -53,44 +61,44 @@ namespace EPPZ.DebugTools
 			// Subclass template.
 		}
 
-		public void AddDebugLine(Vector2 from, Vector2 to, Material material)
+		public void AddDebugLine(Vector2 from, Vector2 to, Color color)
 		{
 			// Create.
 			DebugLine debugLine = new DebugLine();
 			debugLine.from = from;
 			debugLine.to = to;
-			debugLine.material = material;
+			debugLine.color = color;
 			
 			// Collect.
-			debugLines.Add(debugLine);
+			lines.Add(debugLine);
 		}
 
-		protected void DrawSegment(Segment segment, Material material)	
-		{ DrawLine(segment.a, segment.b, material); }
+		protected void DrawSegment(Segment segment, Color color)	
+		{ DrawLine(segment.a, segment.b, color); }
 
-		protected void DrawPolygon(Polygon polygon, Material material)
-		{ polygon.EnumerateEdgesRecursive((Edge eachEdge) => DrawLine(eachEdge.a, eachEdge.b, material)); }
+		protected void DrawPolygon(Polygon polygon, Color color)
+		{ polygon.EnumerateEdgesRecursive((Edge eachEdge) => DrawLine(eachEdge.a, eachEdge.b, color)); }
 
-		protected void DrawPolygonWithTransform(Polygon polygon, Material material, Transform transform_)
-		{ DrawPolygonWithTransform (polygon, material, transform_, false); }
+		protected void DrawPolygonWithTransform(Polygon polygon, Color color, Transform transform_)
+		{ DrawPolygonWithTransform(polygon, color, transform_, false); }
 
-		protected void DrawPolygonWithTransform(Polygon polygon, Material material, Transform transform_, bool drawNormals)
+		protected void DrawPolygonWithTransform(Polygon polygon, Color color, Transform transform_, bool drawNormals)
 		{
 			polygon.EnumerateEdgesRecursive((Edge eachEdge) =>
 			{
-				DrawLineWithTransform(eachEdge.a, eachEdge.b, material, transform_);
+				DrawLineWithTransform(eachEdge.a, eachEdge.b, color, transform_);
 				if (drawNormals)
 				{
 					Vector2 halfie = eachEdge.a + ((eachEdge.b - eachEdge.a) / 2.0f);
-					DrawLineWithTransform(halfie, halfie + eachEdge.normal * 0.1f, material, transform_);
+					DrawLineWithTransform(halfie, halfie + eachEdge.normal * 0.1f, color, transform_);
 				}
 			});
 		}
 
-		protected void DrawPoints(Vector2[] points, Material material)
-		{ DrawPointsWithTransform(points, material, this.transform); }
+		protected void DrawPoints(Vector2[] points, Color color)
+		{ DrawPointsWithTransform(points, color, this.transform); }
 
-		protected void DrawPointsWithTransform(Vector2[] points, Material material, Transform transform_)
+		protected void DrawPointsWithTransform(Vector2[] points, Color color, Transform transform_)
 		{
 			for (int index = 0; index < points.Length; index++)
 			{
@@ -102,14 +110,14 @@ namespace EPPZ.DebugTools
 				eachNextPoint = transform_.TransformPoint(eachNextPoint);
 				
 				// Draw.
-				DrawLine(eachPoint, eachNextPoint, material);
+				DrawLine(eachPoint, eachNextPoint, color);
 			}
 		}
 
-		protected void DrawRect(Rect rect, Material material)
-		{ DrawRectWithTransform(rect, material, this.transform); }
+		protected void DrawRect(Rect rect, Color color)
+		{ DrawRectWithTransform(rect, color, this.transform); }
 
-		protected void DrawRectWithTransform(Rect rect, Material material, Transform transform_)
+		protected void DrawRectWithTransform(Rect rect, Color color, Transform transform_)
 		{
 			Vector2 leftTop = transform_.TransformPoint(new Vector2(rect.xMin, rect.yMin));
 			Vector2 rightTop = transform_.TransformPoint(new Vector2(rect.xMax, rect.yMin));
@@ -119,45 +127,76 @@ namespace EPPZ.DebugTools
 			DrawLine(
 				leftTop,
 				rightTop,
-				material);
+				color);
 			
 			DrawLine(
 				rightTop,
 				rightBottom,
-				material);
+				color);
 			
 			DrawLine(
 				rightBottom,
 				leftBottom,
-				material);
+				color);
 			
 			DrawLine(
 				leftTop,
 				leftBottom,
-				material);
+				color);
 		}
 
-		private void DrawLineWithTransform(Vector2 from, Vector2 to, Material material, Transform transform_)
+		private void DrawLineWithTransform(Vector2 from, Vector2 to, Color color, Transform transform_)
 		{
 			Vector2 from_ = transform_.TransformPoint(from);
 			Vector2 to_ = transform_.TransformPoint(to);
-			DrawLine (from_, to_, material);
+			DrawLine (from_, to_, color);
 		}
 
-		protected void DrawLine(Vector2 from, Vector2 to, Material material)
+		protected void DrawLine(Vector2 from, Vector2 to, Color color)
 		{
 			if (Application.isPlaying)
 			{
-				Debug.DrawLine(new Vector3(from.x, from.y, 0.0f), new Vector3(to.x, to.y, 0.0f), material.color);
+				Debug.DrawLine(new Vector3(from.x, from.y, 0.0f), new Vector3(to.x, to.y, 0.0f), color);
 
-				material.SetPass(0);
-				GL.Color(Color.white);
-				
-				GL.Begin(GL.LINES);
-				GL.Vertex (new Vector3(from.x, from.y, 0.0f));
-				GL.Vertex (new Vector3(to.x, to.y, 0.0f));
-				GL.End();
+				// Create and collect.
+				DebugLine line = new DebugLine();
+				line.from = from;
+				line.to = to;
+				line.color = color;
+				lines.Add(line);
 			}
+		}
+
+		void DrawCall()
+		{
+			// Assign vertex color material.
+			material.SetPass(0); // Single draw call (set pass call)
+
+			// Send vertices in immediate mode.
+			GL.Begin(GL.LINES);
+			Vector3 cursor = Vector3.zero;
+			foreach (DebugLine eachLine in lines)
+			{
+				Vector3 eachFrom = new Vector3 (eachLine.from.x, eachLine.from.y, 0.0f);
+				Vector3 eachTo = new Vector3 (eachLine.to.x, eachLine.to.y, 0.0f);
+
+				// Fake "MoveTo" (if needed).
+				if (eachFrom != cursor)
+				{
+					GL.Color(Color.clear);
+					GL.Vertex (cursor);
+					GL.Vertex (eachFrom);
+				}
+
+				// Draw actual line.
+				GL.Color(eachLine.color);
+				GL.Vertex(eachFrom);
+				GL.Vertex(eachTo);
+
+				// Adjust "Caret".
+				cursor = eachTo;
+			}
+			GL.End();
 		}
 	}
 }

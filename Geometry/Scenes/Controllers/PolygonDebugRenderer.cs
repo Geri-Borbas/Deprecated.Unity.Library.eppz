@@ -61,8 +61,8 @@ namespace EPPZ.DebugTools
 		{
 			if (polygon == null) return; // Only having polygon
 
-			DrawRect(polygon.bounds, boundsMaterial);
-			DrawPolygonWithTransform(polygon, lineMaterial, transform, normals);
+			DrawRect(polygon.bounds, boundsMaterial.color);
+			DrawPolygonWithTransform(polygon, lineMaterial.color, transform, normals);
 		}
 	}
 }

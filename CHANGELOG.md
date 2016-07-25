@@ -1,3 +1,10 @@
+* 1.5.8
+
+	+ `DebugRenderer` refactor
+		+ Single drawcall
+		+ Using colors intead materials
+		+ Shader using vertex color
+
 * 1.5.7
 
 	+ Encapsulated folder structure

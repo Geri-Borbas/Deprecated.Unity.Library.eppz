@@ -25,8 +25,8 @@ namespace EPPZ.DebugTools
 		
 		protected override void OnDraw()
 		{
-			DrawRect(segment.bounds, boundsMaterial);
-			DrawSegment(segment, lineMaterial);
+			DrawRect(segment.bounds, boundsMaterial.color);
+			DrawSegment(segment, lineMaterial.color);
 		}
 	}
 }

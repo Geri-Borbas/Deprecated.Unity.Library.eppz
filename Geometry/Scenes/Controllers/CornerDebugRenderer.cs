@@ -22,9 +22,9 @@ namespace EPPZ.DebugTools
 		
 		protected override void OnDraw()
 		{
-			DrawSegment(segmentA, segmentAMaterial);
-			DrawSegment(segmentB, segmentBMaterial);
-			DrawSegment(normal, segmentNormalMaterial);
+			DrawSegment(segmentA, segmentAMaterial.color);
+			DrawSegment(segmentB, segmentBMaterial.color);
+			DrawSegment(normal, segmentNormalMaterial.color);
 		}
 	}
 }
