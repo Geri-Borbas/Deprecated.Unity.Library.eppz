@@ -1,3 +1,9 @@
+* 1.6.0
+
+	+ `EPPZ.Lines`
+		+ Some naming
+		+ Added `CachedLineRenderer` (behaves almost like `UnityEngine.LineRenderer`)
+
 * 1.5.9
 
 	+ `DebugRenderer` refactor

@@ -24,8 +24,9 @@ namespace EPPZ.Lines
 		private Camera _camera;
 
 		// Renderers.
-		private LineRenderer[] lineRenderers;
-		private List<LineRenderer.Line> lines = new List<LineRenderer.Line>(); 
+		private DirectLineRenderer[] directLineRenderers;
+		private CachedLineRenderer[] cachedLineRenderers;
+		private List<EPPZ.Lines.Line> lineBatch = new List<EPPZ.Lines.Line>(); 
 
 		// Material for drawing (lazy).
 		Material _material;
@@ -45,7 +46,8 @@ namespace EPPZ.Lines
 			_camera = GetComponent<Camera>();
 
 			// Collect every debug renderer in the scene.
-			lineRenderers = FindObjectsOfType(typeof(EPPZ.Lines.LineRenderer)) as EPPZ.Lines.LineRenderer[];
+			directLineRenderers = FindObjectsOfType(typeof(EPPZ.Lines.DirectLineRenderer)) as EPPZ.Lines.DirectLineRenderer[];
+			cachedLineRenderers = FindObjectsOfType(typeof(EPPZ.Lines.CachedLineRenderer)) as EPPZ.Lines.CachedLineRenderer[];
 		}
 
 		void OnPreRender()
@@ -53,34 +55,38 @@ namespace EPPZ.Lines
 
 		void Update()
 		{
-			// Flush line batch.
-			lines.Clear();
-
-			// Batch lines from renderers.
-			foreach (EPPZ.Lines.LineRenderer eachDebugRenderer in lineRenderers)
-			{ eachDebugRenderer.OnLineRendererCameraPostRender(); }
-
-			// Draw debug lines before render.
+			BatchLines();
 			DrawDebugLines();
+		}
+
+		void BatchLines()
+		{
+			// Flush.
+			lineBatch.Clear();
+
+			// Batch lines from direct renderers.
+			foreach (EPPZ.Lines.DirectLineRenderer eachDirectLineRenderer in directLineRenderers)
+			{ eachDirectLineRenderer.OnLineRendererCameraPostRender(); }
+
+			// Add up line collections from cached renderers.
+			foreach (EPPZ.Lines.CachedLineRenderer eachCachedLineRenderer in cachedLineRenderers)
+			{ lineBatch.AddRange(eachCachedLineRenderer.lines); }
 		}
 
 		void OnPostRender()
 		{
 			GL.PushMatrix();
 			GL.LoadProjectionMatrix(_camera.projectionMatrix);
-
-			// Draw line batch.
 			DrawCall();
-
 			GL.PopMatrix();
 		}
 
-		public void BatchLine(EPPZ.Lines.LineRenderer.Line line)
-		{ lines.Add(line); }
+		public void BatchLine(EPPZ.Lines.Line line)
+		{ lineBatch.Add(line); }
 
 		void DrawDebugLines()
 		{
-			foreach (EPPZ.Lines.LineRenderer.Line eachLine in lines)
+			foreach (EPPZ.Lines.Line eachLine in lineBatch)
 			{
 				Vector3 eachFrom = new Vector3 (eachLine.from.x, eachLine.from.y, 0.0f);
 				Vector3 eachTo = new Vector3 (eachLine.to.x, eachLine.to.y, 0.0f);
@@ -98,10 +104,10 @@ namespace EPPZ.Lines
 			// Send vertices in immediate mode.
 			GL.Begin(GL.LINES);
 			Vector3 cursor = Vector3.zero;
-			foreach (EPPZ.Lines.LineRenderer.Line eachLine in lines)
+			foreach (EPPZ.Lines.Line eachLine in lineBatch)
 			{
-				Vector3 eachFrom = new Vector3 (eachLine.from.x, eachLine.from.y, 0.0f);
-				Vector3 eachTo = new Vector3 (eachLine.to.x, eachLine.to.y, 0.0f);
+				Vector3 eachFrom = new Vector3(eachLine.from.x, eachLine.from.y, 0.0f);
+				Vector3 eachTo = new Vector3(eachLine.to.x, eachLine.to.y, 0.0f);
 
 				// Faking "MoveTo" (if needed).
 				if (eachFrom != cursor)

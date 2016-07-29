@@ -8,40 +8,41 @@ using EPPZ.Geometry;
 namespace EPPZ.Lines
 {
 
-
-	public class LineRenderer : MonoBehaviour
+	/**
+	 * Base class for two types of line renderers.
+	 * Not meant for direct client useage.
+	 */
+	public class LineRendererBase : MonoBehaviour
 	{
-		
 
-		[FormerlySerializedAs("debugMode")] // Preserve backward compatibility
+
+		// Preserve backward compatibility.
+		[FormerlySerializedAs("debugMode")]
 		public bool isActive = false;
-
-		// Model.
-		public class Line
-		{
-			public Vector2 from;
-			public Vector2 to;
-			public Color color;
-		}
 
 
 		#region Events
 
-			// Internally invoked by `LineRendererCamera.OnPostRender` if any.
-			public void OnLineRendererCameraPostRender()
-			{
-				if (isActive == false) return; // Only if active
-				OnDraw(); // Collect lines to the batch from subclasses
-			}
-			
-			protected virtual void OnDraw()
+			// Internally invoked by `LineRendererCamera.OnPostRender` (if any).
+			public virtual void OnLineRendererCameraPostRender()
 			{
 				// Subclass template.
 			}
 
 		#endregion
 
-		#region Drawing methods
+
+		#region Batch lines
+
+			protected virtual void DrawLine(Vector2 from, Vector2 to, Color color)
+			{ 
+				// Subclass template.
+			}
+
+		#endregion
+
+
+		#region `EPPZ.Geometry` drawing methods
 
 			protected void DrawSegment(Segment segment, Color color)	
 			{ DrawLine(segment.a, segment.b, color); }
@@ -55,14 +56,14 @@ namespace EPPZ.Lines
 			protected void DrawPolygonWithTransform(Polygon polygon, Color color, Transform transform_, bool drawNormals)
 			{
 				polygon.EnumerateEdgesRecursive((Edge eachEdge) =>
-				{
-					DrawLineWithTransform(eachEdge.a, eachEdge.b, color, transform_);
-					if (drawNormals)
 					{
-						Vector2 halfie = eachEdge.a + ((eachEdge.b - eachEdge.a) / 2.0f);
-						DrawLineWithTransform(halfie, halfie + eachEdge.normal * 0.1f, color, transform_);
-					}
-				});
+						DrawLineWithTransform(eachEdge.a, eachEdge.b, color, transform_);
+						if (drawNormals)
+						{
+							Vector2 halfie = eachEdge.a + ((eachEdge.b - eachEdge.a) / 2.0f);
+							DrawLineWithTransform(halfie, halfie + eachEdge.normal * 0.1f, color, transform_);
+						}
+					});
 			}
 
 			protected void DrawPoints(Vector2[] points, Color color)
@@ -74,11 +75,11 @@ namespace EPPZ.Lines
 				{
 					Vector2 eachPoint = points[index];
 					Vector2 eachNextPoint = (index < points.Length - 1) ? points[index + 1] : points[0];
-					
+
 					// Apply shape transform.
 					eachPoint = transform_.TransformPoint(eachPoint);
 					eachNextPoint = transform_.TransformPoint(eachNextPoint);
-					
+
 					// Draw.
 					DrawLine(eachPoint, eachNextPoint, color);
 				}
@@ -98,17 +99,17 @@ namespace EPPZ.Lines
 					leftTop,
 					rightTop,
 					color);
-				
+
 				DrawLine(
 					rightTop,
 					rightBottom,
 					color);
-				
+
 				DrawLine(
 					rightBottom,
 					leftBottom,
 					color);
-				
+
 				DrawLine(
 					leftTop,
 					leftBottom,
@@ -125,23 +126,5 @@ namespace EPPZ.Lines
 		#endregion
 
 
-		#region Batch lines
-
-		protected void DrawLine(Vector2 from, Vector2 to, Color color)
-		{
-			if (Application.isPlaying)
-			{
-				// Create and batch.
-				Line line = new Line();
-				line.from = from;
-				line.to = to;
-				line.color = color;
-
-				// Collect.
-				LineRendererCamera.shared.BatchLine(line);
-			}
-		}
-
-		#endregion
 	}
 }
