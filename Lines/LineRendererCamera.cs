@@ -88,11 +88,8 @@ namespace EPPZ.Lines
 		{
 			foreach (EPPZ.Lines.Line eachLine in lineBatch)
 			{
-				Vector3 eachFrom = new Vector3 (eachLine.from.x, eachLine.from.y, 0.0f);
-				Vector3 eachTo = new Vector3 (eachLine.to.x, eachLine.to.y, 0.0f);
-
 				// Draw in Scene view.
-				Debug.DrawLine(eachFrom, eachTo, eachLine.color);
+				Debug.DrawLine(eachLine.from, eachLine.to, eachLine.color);
 			}
 		}
 
@@ -106,24 +103,21 @@ namespace EPPZ.Lines
 			Vector3 cursor = Vector3.zero;
 			foreach (EPPZ.Lines.Line eachLine in lineBatch)
 			{
-				Vector3 eachFrom = new Vector3(eachLine.from.x, eachLine.from.y, 0.0f);
-				Vector3 eachTo = new Vector3(eachLine.to.x, eachLine.to.y, 0.0f);
-
 				// Faking "MoveTo" (if needed).
-				if (eachFrom != cursor)
+				if (eachLine.from != cursor)
 				{
 					GL.Color(Color.clear);
-					GL.Vertex (cursor);
-					GL.Vertex (eachFrom);
+					GL.Vertex(cursor);
+					GL.Vertex(eachLine.from);
 				}
 
 				// Draw actual line.
 				GL.Color(eachLine.color);
-				GL.Vertex(eachFrom);
-				GL.Vertex(eachTo);
+				GL.Vertex(eachLine.from);
+				GL.Vertex(eachLine.to);
 
 				// Adjust "Caret".
-				cursor = eachTo;
+				cursor = eachLine.to;
 			}
 			GL.End();
 		}

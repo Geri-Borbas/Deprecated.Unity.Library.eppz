@@ -8,6 +8,7 @@ using EPPZ.Geometry;
 namespace EPPZ.Lines
 {
 
+
 	/**
 	 * Base class for two types of line renderers.
 	 * Not meant for direct client useage.

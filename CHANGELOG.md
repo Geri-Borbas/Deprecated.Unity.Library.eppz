@@ -1,3 +1,8 @@
+* 1.6.1
+
+	+ `EPPZ.Lines`
+		+ Removed 2D restriction from `EPPZ.Lines.Line`
+
 * 1.6.0
 
 	+ `EPPZ.Lines`
