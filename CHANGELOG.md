@@ -1,3 +1,8 @@
+* 1.6.2
+
+	+ `EPPZ.Lines`
+		+ Example scenes
+
 * 1.6.1
 
 	+ `EPPZ.Lines`

@@ -19,7 +19,8 @@ namespace EPPZ.Lines
 
 		// Preserve backward compatibility.
 		[FormerlySerializedAs("debugMode")]
-		public bool isActive = false;
+		[HideInInspector]
+		public bool isActive = true;
 
 
 		#region Events
