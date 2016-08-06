@@ -118,6 +118,50 @@ namespace EPPZ.Lines
 					color);
 			}
 
+			protected void DrawCircle(Vector2 center, float radius, int segments, Color color)
+			{ DrawCircleWithTransform(center, radius, segments, color, this.transform); }
+
+			protected void DrawCircleWithTransform(Vector2 center, float radius, int segments, Color color, Transform transform)
+			{
+				Vector2[] vertices = new Vector2[segments];
+
+				// Compose a half circle (and mirrored) in normalized space (at 0,0).
+				float angularStep = Mathf.PI * 2.0f / (float)segments;
+				for (int index = 0; index < 1 + segments / 2; index++)
+				{
+					// Trigonometry.
+					float angle = (float)index * angularStep;
+					float x = Mathf.Sin(angle);
+					float y = Mathf.Cos(angle);
+
+					Vector2 vertex = new Vector2(x * radius, y * radius);
+					Vector2 mirrored =  new Vector2(-x * radius, y * radius);
+
+					// Save right, then left.
+					vertices[index] = vertex;
+					if (index > 0) vertices[segments-index] = mirrored;
+				}
+
+				// Draw around center.
+				for (int index = 0; index < segments - 1; index++)
+				{
+					DrawLineWithTransform(
+						center + vertices[index],
+						center + vertices[index + 1],
+						color,
+						transform
+					);
+				}
+
+				// Last segment.
+				DrawLineWithTransform(
+					center + vertices[segments - 1],
+					center + vertices[0],
+					color,
+					transform
+				);
+			}
+
 			protected void DrawLineWithTransform(Vector2 from, Vector2 to, Color color, Transform transform_)
 			{
 				Vector2 from_ = transform_.TransformPoint(from);

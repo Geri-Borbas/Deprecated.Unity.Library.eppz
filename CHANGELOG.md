@@ -1,3 +1,8 @@
+* 1.6.3
+
+	+ `EPPZ.Lines`
+		+ Circle drawing moved into
+
 * 1.6.2
 
 	+ `EPPZ.Lines`
