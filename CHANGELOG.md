@@ -1,3 +1,8 @@
+* 1.6.4
+
+	+ `EPPZ.Lines`
+		+ Inactive when component disabled
+
 * 1.6.3
 
 	+ `EPPZ.Lines`

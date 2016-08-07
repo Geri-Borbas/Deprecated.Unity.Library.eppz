@@ -22,7 +22,7 @@ namespace EPPZ.Lines
 
 			public override void OnLineRendererCameraPostRender()
 			{
-				if (isActive == false) return; // Only if active
+			if (this.isActiveAndEnabled == false) return; // Only if active
 				OnDraw(); // Collect lines to the batch from subclasses
 			}
 
