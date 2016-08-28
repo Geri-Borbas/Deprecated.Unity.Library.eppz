@@ -7,7 +7,7 @@ namespace EPPZ.Lines
 {
 
 
-	public class SegmentLineRenderer : DirectLineRenderer
+	public class SegmentLineRenderer : GeometryLineRenderer
 	{
 
 

@@ -1,3 +1,8 @@
+* 1.6.6
+
+	+ `EPPZ.Lines`
+		+ Removed `EPPZ.Geometry` dependencies
+
 * 1.6.5
 
 	+ `EPPZ.Lines`

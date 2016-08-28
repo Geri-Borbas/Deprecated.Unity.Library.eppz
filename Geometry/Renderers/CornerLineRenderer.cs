@@ -7,7 +7,7 @@ namespace EPPZ.Lines
 {
 
 
-	public class CornerLineRenderer : DirectLineRenderer
+	public class CornerLineRenderer : GeometryLineRenderer
 	{
 
 

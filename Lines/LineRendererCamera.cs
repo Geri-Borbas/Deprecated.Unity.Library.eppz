@@ -56,7 +56,7 @@ namespace EPPZ.Lines
 		void Update()
 		{
 			BatchLines();
-			DrawDebugLines();
+			DrawLines();
 		}
 
 		void BatchLines()
@@ -84,7 +84,7 @@ namespace EPPZ.Lines
 		public void BatchLine(EPPZ.Lines.Line line)
 		{ lineBatch.Add(line); }
 
-		void DrawDebugLines()
+		void DrawLines()
 		{
 			foreach (EPPZ.Lines.Line eachLine in lineBatch)
 			{

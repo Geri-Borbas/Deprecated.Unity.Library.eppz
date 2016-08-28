@@ -7,7 +7,7 @@ namespace EPPZ.Lines
 {
 
 
-	public class PolygonLineRenderer : DirectLineRenderer
+	public class PolygonLineRenderer : GeometryLineRenderer
 	{
 
 
