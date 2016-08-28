@@ -98,26 +98,13 @@ namespace EPPZ.Lines
 			// Assign vertex color material.
 			material.SetPass(0); // Single draw call (set pass call)
 
-			// Send vertices in immediate mode.
+			// Send vertices in GL_LINES Immediate Mode.
 			GL.Begin(GL.LINES);
-			Vector3 cursor = Vector3.zero;
 			foreach (EPPZ.Lines.Line eachLine in lineBatch)
 			{
-				// Faking "MoveTo" (if needed).
-				if (eachLine.from != cursor)
-				{
-					GL.Color(Color.clear);
-					GL.Vertex(cursor);
-					GL.Vertex(eachLine.from);
-				}
-
-				// Draw actual line.
 				GL.Color(eachLine.color);
 				GL.Vertex(eachLine.from);
 				GL.Vertex(eachLine.to);
-
-				// Adjust "Caret".
-				cursor = eachLine.to;
 			}
 			GL.End();
 		}

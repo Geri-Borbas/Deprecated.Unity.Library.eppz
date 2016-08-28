@@ -1,3 +1,8 @@
+* 1.6.5
+
+	+ `EPPZ.Lines`
+		+ Removed unnecessary transparent lines
+
 * 1.6.4
 
 	+ `EPPZ.Lines`
