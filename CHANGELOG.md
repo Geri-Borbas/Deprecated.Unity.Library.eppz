@@ -1,3 +1,8 @@
+* 1.6.8
+
+	+ Added `Triangle.Net`
+		+ Along releated `EPPZ.Geometry` / `Polygon` extensions
+
 * 1.6.7
 
 	+ Mostly refactoring
