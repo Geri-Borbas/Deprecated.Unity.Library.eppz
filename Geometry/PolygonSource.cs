@@ -13,6 +13,7 @@ namespace EPPZ.Geometry
 
 		public Transform[] pointTransforms;
 		public Polygon.WindingDirection windingDirection = Polygon.WindingDirection.Unknown;
+		[Range (-2,2)] public float offset = 0.0f;
 		public bool updateModel = false;
 
 		public Polygon polygon;
@@ -22,6 +23,7 @@ namespace EPPZ.Geometry
 		{
 			// Construct a polygon model from transforms (if not created by a root polygon already).
 			if (polygon == null) polygon = Polygon.PolygonWithSource(this);
+			if (offset != 0.0f) polygon = polygon.OffsetPolygon(offset);
 		}
 
 		void Update()
@@ -30,6 +32,7 @@ namespace EPPZ.Geometry
 			{
 				// Update polygon model with transforms, also update calculations.
 				polygon.UpdatePointPositionsWithSource(this);
+				if (offset != 0.0f) polygon = polygon.OffsetPolygon(offset);
 			}
 		}
 	}

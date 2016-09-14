@@ -1,3 +1,7 @@
+* 1.6.9
+
+	+ `PolygonSource` can have `offset`
+
 * 1.6.8
 
 	+ Added `Triangle.Net`
