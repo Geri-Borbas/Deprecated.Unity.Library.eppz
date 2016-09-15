@@ -1,3 +1,7 @@
+* 1.7.0
+
+	+ `NGUI/Scroll View Page Control` now uses 2D colliders
+
 * 1.6.9
 
 	+ `PolygonSource` can have `offset`
