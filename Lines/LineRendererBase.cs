@@ -45,12 +45,13 @@ namespace EPPZ.Lines
 
 		#region Drawing methods
 
-			protected void DrawPoints(Vector2[] points, Color color)
-			{ DrawPointsWithTransform(points, color, this.transform); }
+			protected void DrawPoints(Vector2[] points, Color color, bool closed = true)
+			{ DrawPointsWithTransform(points, color, this.transform, closed); }
 
-			protected void DrawPointsWithTransform(Vector2[] points, Color color, Transform transform_)
+			protected void DrawPointsWithTransform(Vector2[] points, Color color, Transform transform_, bool closed = true)
 			{
-				for (int index = 0; index < points.Length; index++)
+				int lastIndex = (closed) ? points.Length : points.Length - 1;
+				for (int index = 0; index < lastIndex; index++)
 				{
 					Vector2 eachPoint = points[index];
 					Vector2 eachNextPoint = (index < points.Length - 1) ? points[index + 1] : points[0];

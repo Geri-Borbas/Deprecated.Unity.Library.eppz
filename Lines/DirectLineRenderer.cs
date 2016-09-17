@@ -19,6 +19,12 @@ namespace EPPZ.Lines
 
 		#region Events
 
+			void Awake()
+			{
+				// Collect.
+				LineRendererCamera.AddDirectRenderer(this);
+			}
+
 			public override void OnLineRendererCameraPostRender()
 			{
 			if (this.isActiveAndEnabled == false) return; // Only if active

@@ -24,8 +24,8 @@ namespace EPPZ.Lines
 		private Camera _camera;
 
 		// Renderers.
-		private DirectLineRenderer[] directLineRenderers;
-		private CachedLineRenderer[] cachedLineRenderers;
+		private List<DirectLineRenderer> directLineRenderers = new List<DirectLineRenderer>();
+		private List<CachedLineRenderer> cachedLineRenderers = new List<CachedLineRenderer>();
 		private List<EPPZ.Lines.Line> lineBatch = new List<EPPZ.Lines.Line>(); 
 
 		// Material for drawing (lazy).
@@ -40,14 +40,16 @@ namespace EPPZ.Lines
 		}
 
 
+		public static void AddDirectRenderer(DirectLineRenderer renderer)
+		{ shared.directLineRenderers.Add(renderer); }
+
+		public static void AddCachedRenderer(CachedLineRenderer renderer)
+		{ shared.cachedLineRenderers.Add(renderer); }
+
 		void Awake()
 		{
 			shared = this; 
 			_camera = GetComponent<Camera>();
-
-			// Collect every debug renderer in the scene.
-			directLineRenderers = FindObjectsOfType(typeof(EPPZ.Lines.DirectLineRenderer)) as EPPZ.Lines.DirectLineRenderer[];
-			cachedLineRenderers = FindObjectsOfType(typeof(EPPZ.Lines.CachedLineRenderer)) as EPPZ.Lines.CachedLineRenderer[];
 		}
 
 		void OnPreRender()
@@ -66,11 +68,17 @@ namespace EPPZ.Lines
 
 			// Batch lines from direct renderers.
 			foreach (EPPZ.Lines.DirectLineRenderer eachDirectLineRenderer in directLineRenderers)
-			{ eachDirectLineRenderer.OnLineRendererCameraPostRender(); }
+			{
+				if (eachDirectLineRenderer == null) continue;
+				eachDirectLineRenderer.OnLineRendererCameraPostRender();
+			}
 
 			// Add up line collections from cached renderers.
 			foreach (EPPZ.Lines.CachedLineRenderer eachCachedLineRenderer in cachedLineRenderers)
-			{ lineBatch.AddRange(eachCachedLineRenderer.lines); }
+			{
+				if (eachCachedLineRenderer == null) continue;
+				lineBatch.AddRange(eachCachedLineRenderer.lines);
+			}
 		}
 
 		void OnPostRender()

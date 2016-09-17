@@ -1,3 +1,9 @@
+* 1.7.1
+
+	+ `EPPZ.Lines`
+		+ Not collected upfront, but on instance creation
+		+ `DrawPoints` can be open ended
+
 * 1.7.0
 
 	+ `NGUI/Scroll View Page Control` now uses 2D colliders

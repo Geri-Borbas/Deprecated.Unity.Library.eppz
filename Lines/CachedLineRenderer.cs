@@ -28,6 +28,13 @@ namespace EPPZ.Lines
 			 * rendered each frame.
 			 */
 
+
+		void Awake()
+		{
+			// Collect.
+			LineRendererCamera.AddCachedRenderer(this);
+		}
+
 		#endregion
 
 
