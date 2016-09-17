@@ -12,6 +12,12 @@ namespace EPPZ.Lines
 	 * Base class for two types of line renderers.
 	 * Not meant for direct client useage.
 	 */
+
+
+	using ExecutionOrder;
+
+
+	[ExecutionOrder (1100)]
 	public class LineRendererBase : MonoBehaviour
 	{
 

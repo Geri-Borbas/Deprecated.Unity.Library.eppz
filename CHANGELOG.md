@@ -1,3 +1,10 @@
+* 1.7.2
+
+	+ `EPPZ.ExecutionOrder`
+		+ Added `ExecutionOrder` attribute to Mono classes
+	+ `EPPZ.Lines`
+		+ Arranged execution order (`LineRendererCamera` first, then all the `LineRendererBase` instances)
+
 * 1.7.1
 
 	+ `EPPZ.Lines`

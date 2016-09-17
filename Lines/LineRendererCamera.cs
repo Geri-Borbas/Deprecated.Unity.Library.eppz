@@ -13,6 +13,12 @@ namespace EPPZ.Lines
 	 * on Awake) gonna be notified by this component after
 	 * this camera finished rendering.
 	 */
+
+
+	using ExecutionOrder;
+
+
+	[ExecutionOrder (1000)]
 	public class LineRendererCamera : MonoBehaviour
 	{
 
