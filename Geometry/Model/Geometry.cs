@@ -168,6 +168,37 @@ namespace EPPZ.Geometry
 				bool isOdd = (windingNumber % 2 != 0); // Odd winding number means point falls outside
 				return isOdd;
 			}
+
+		public static Vector2 CentroidOfPolygons(Polygon[] polygons, Polygon.WindingDirection windingDirection = Polygon.WindingDirection.Unknown)
+		{
+			if (windingDirection == Polygon.WindingDirection.Unknown)
+			{ windingDirection = polygons[0].windingDirection; }
+
+			// From https://en.wikipedia.org/wiki/Centroid#By_geometric_decomposition
+			float ΣxA = 0.0f;
+			float ΣyA = 0.0f;
+			float ΣA = 0.0f;
+			foreach (Polygon eachPolygon in polygons)
+			{
+				// Add or subtract area.
+				float sign = (eachPolygon.windingDirection == windingDirection) ? 1.0f : -1.0f;
+				float eachSignedArea = eachPolygon.area * sign;
+
+				// Get centroid.
+				Vector2 eachCentroid = eachPolygon.centroid;
+
+				// Sum weighted.
+				ΣxA += eachCentroid.x * eachSignedArea;
+				ΣyA += eachCentroid.y * eachSignedArea;
+				ΣA += eachSignedArea;	
+			}
+
+			// "Remove" area.
+			float x = ΣxA / ΣA;
+			float y = ΣyA / ΣA;
+
+			return new Vector2(x, y);
+		}
 			
 		#endregion
 

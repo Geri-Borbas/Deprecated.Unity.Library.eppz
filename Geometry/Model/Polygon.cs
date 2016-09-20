@@ -51,6 +51,10 @@ namespace EPPZ.Geometry
 		private float _signedArea;
 		public float signedArea { get { return _signedArea; } }
 
+		// Yet for single polygons only (see centroid of compound polygons).
+		private Vector2 _centroid;
+		public Vector2 centroid { get { return _centroid; } }
+
 
 		/*
 		 * 
@@ -114,6 +118,7 @@ namespace EPPZ.Geometry
 			polygon.CalculateBounds();
 			polygon.CalculateWindingDirectionIfNeeded();
 			polygon.CalculateArea();
+			polygon.CalculateCentroid();
 
 			// Create members.
 			polygon.CreateVerticesFromPoints();
@@ -151,6 +156,7 @@ namespace EPPZ.Geometry
 			// Polygon calculations.
 			CalculateBounds();
 			CalculateArea();
+			CalculateCentroid();
 			_windingDirection = WindingDirection.Unknown;
 			CalculateWindingDirectionIfNeeded();
 		}
@@ -161,6 +167,8 @@ namespace EPPZ.Geometry
 
 			// Polygon calculations.
 			CalculateBounds();
+			CalculateArea();
+			CalculateCentroid();
 		}
 		
 		/*
@@ -365,6 +373,25 @@ namespace EPPZ.Geometry
 
 			_area = _area + subPolygonAreas;
 		}
+
+		private void CalculateCentroid()
+		{
+			// Enumerate points.
+			float Σx = 0.0f;
+			float Σy = 0.0f;
+			EnumeratePoints((Vector2 eachPoint) =>
+			{				
+				Σx += eachPoint.x;
+				Σy += eachPoint.y;
+			});
+
+			// Average.
+			float x = Σx / pointCount;
+			float y = Σy / pointCount;
+
+			// Assign.
+			_centroid = new Vector2(x, y);
+		}
 		
 		private float CalculatedArea()
 		{
@@ -372,11 +399,17 @@ namespace EPPZ.Geometry
 			return _area;
 		}
 
+		private Vector2 CalculatedCentroid()
+		{
+			CalculateCentroid();
+			return _centroid;
+		}
+
 		private void CalculateWindingDirectionIfNeeded()
 		{
 			if (_windingDirection == WindingDirection.Unknown) // Only if unknown
 			{
-				_windingDirection = (Mathf.Sign (_signedArea) > 0.0f) ? WindingDirection.CCW : WindingDirection.CW;
+				_windingDirection = (Mathf.Sign(_signedArea) > 0.0f) ? WindingDirection.CCW : WindingDirection.CW;
 			}
 		}
 
@@ -606,9 +639,10 @@ namespace EPPZ.Geometry
 				eachPolygon.Scale(scale);
 			}
 			
-			// Update (bounds, area).
+			// Polygon calculations.
 			CalculateBounds();
 			CalculateArea();
+			CalculateCentroid();
 		}
 	}
 

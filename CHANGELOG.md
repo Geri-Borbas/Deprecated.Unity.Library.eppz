@@ -1,3 +1,9 @@
+* 1.7.3
+
+	+ Centroid calculations
+		+ `Polygon.centroid`
+		+ `Geometry.CentroidOfPolygons`
+
 * 1.7.2
 
 	+ `EPPZ.ExecutionOrder`
