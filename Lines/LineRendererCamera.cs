@@ -34,16 +34,8 @@ namespace EPPZ.Lines
 		private List<CachedLineRenderer> cachedLineRenderers = new List<CachedLineRenderer>();
 		private List<EPPZ.Lines.Line> lineBatch = new List<EPPZ.Lines.Line>(); 
 
-		// Material for drawing (lazy).
-		Material _material;
-		Material material
-		{
-			get
-			{ 
-				if (_material == null) _material = new Material(Shader.Find("eppz!/Vertex color"));
-				return _material;
-			}
-		}
+		// Material for drawing (should be `eppz! vertex color`).
+		public Material material;
 
 
 		public static void AddDirectRenderer(DirectLineRenderer renderer)

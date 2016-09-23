@@ -1,3 +1,8 @@
+* 1.7.4
+
+	+ `LineRendererCamera` now needs explicit material (to work on device)
+	+ `ExecutionOrders` runs only in Editor
+
 * 1.7.3
 
 	+ Centroid calculations
